@@ -1,0 +1,340 @@
+[
+Version=1
+]
+[
+ObjTp=FSgntr
+Sgntr=UserMacro
+RelVrs=4.02.16
+IntStrVrs=2
+MinSMWVrs=0
+MinTIOVrs=0
+SavedBy=SMW4.02.16
+]
+[
+ObjTp=Hd
+S0Nd=1
+S1Nd=2
+SLNd=3
+PrNm=CrestronHome Oscillators.umc
+CmVr=1.00.28
+DbVr=40.00.011.00
+DvcDbVr=50.05.004.00
+OpVr=Version 5.04.10-x   5/06/99
+PgmNm=Crestron Electronics
+CltNm=Generates the oscilating signals used for feedback by other CrestronHome modules
+McNm=CrestronHome Oscillators
+SmVr=863
+DvVr=863
+TpN1=1
+TpN2=2
+TpN3=3
+TpN4=4
+TpN5=5
+APg=1
+FltTmp=1
+FpCS=0
+EnType=0
+ZeroOnIoOk=0
+Cmn1=FILENAME: CrestronHome Oscillators\\SIMPLWINDOWS NAME: CrestronHome||1
+Cmn2=Oscillators\\\\CATEGORY: CrestronHome\\\\MODULE VERSION: 1.0\\CRESTRONHOME||1
+Cmn3=PACKAGE VERSION: 1.0\\\\SUMMARY: Generates fast, medium, and slow||1
+Cmn4=oscillating signals for use with other\\         CrestronHome modules\\
+Cmn5=\\MODULE DESCRIPTION:\\This module generates three different oscillating||1
+Cmn6=signals for use with the CrestronHome\\modules. All three signals||1
+Cmn7=are generated from the same base Oscillator symbol, thus\\lowering||1
+Cmn8=processing time and keeping all 3 in synch to create a more asthetically||1
+Cmn9=pleasing\\feedback result.\\\\CRESTRON HARDWARE REQUIRED: CNX-series||1
+Cmn10=or ST-CP control processor, CNX-PAD8, CN-WP12F,\\||?
+Cmn11=||=and CN-WP12N\\\\INPUT DESCRIPTIONS: \\\\Name||7
+Cmn12=||6Type Description\\---------------------------------\\enable||1
+Cmn13=||<D  The oscillators will run as long as this signal is||1
+Cmn14=high.\\\\OUTPUT DESCRIPTIONS: \\\\Name             Type Description\\
+Cmn15=---------------------------------\\fast_blink         D  Connect||1
+Cmn16=to the CrestronHome Room Control module and the CrestronHome\\||2
+Cmn17=||DRoom Keypad module ("enter_btn_blink")\\med_blink||1
+Cmn18=||9D  Connect to the CrestronHome Room Control module and||1
+Cmn19=the CrestronHome\\slow_blink         D  Connect to the CrestronHome||1
+Cmn20=Room Control module and the CrestronHome\\\\PARAMETER DESCRIPTIONS:
+Cmn21=||1\\\\Name                  Type     Description\\---------------
+Cmn22=---------------------------\\"fast blink hi time"  TIME     Determines||1
+Cmn23=how long the fast_blink signal goes high for. This,\\||;
+Cmn24=||Din combination with the second parameter determines||1
+Cmn25=the speed\\                               of the oscillator which||1
+Cmn26=is used to generate all three outputs.\\"fast blink lo time"  TIME||1
+Cmn27=||4Determines how long the fast_blink signal goes low for.\\\\OPS||1
+Cmn28=USED FOR TESTING: 5.04.10x\\\\COMPILER USED FOR TESTING: 1.00.28\\
+Cmn29=\\SAMPLE PROGRAM: CrestronHome demo\\\\REVISION HISTORY: This is||1
+Cmn30=the first release
+]
+[
+ObjTp=Bk
+Nm1=\
+Sx1=0
+Sy1=0
+Mx1=0
+]
+[
+ObjTp=Symbol
+Name=CrestronHome Oscillators
+Code=1
+SmplCName=CrestronHome Oscillators.umc
+Smpl-C=3
+CompilerTimePrecision=Single_Or_Double_Precision
+Hint=Generates the oscilating signals used for feedback by other CrestronHome modules
+SMWRev=0
+TIORev=0
+HelpID=1055
+APg=1
+StdCmd=0
+FltTmp=1
+FpCS=0
+NumFixedInputs=1
+NumFixedOutputs=3
+NumFixedParams=2
+MinVariableInputs=0
+MinVariableInputsList2=0
+MinVariableInputsList3=0
+MinVariableOutputs=0
+MinVariableOutputsList2=0
+MinVariableOutputsList3=0
+MinVariableParams=0
+SymbolTree=32
+ParamSigType1=Time
+ParamSigType2=Time
+InputCue1=enable
+OutputCue1=fast_blink
+OutputCue2=med_blink
+OutputCue3=slow_blink
+ParamCue1=fast blink hi time
+ParamCue2=fast blink lo time
+FileName=CrestronHome Oscillators.umc
+EncodingType=0
+ZeroOnIoOk=0
+]
+[
+ObjTp=Sm
+H=1
+SmC=157
+Nm=Central Control Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=2
+SmC=157
+Nm=Network Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=3
+SmC=157
+Nm=Ethernet
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=4
+SmC=156
+Nm=Logic
+ObjVer=1
+CF=2
+mC=1
+C1=7
+]
+[
+ObjTp=Sm
+H=5
+SmC=157
+Nm=DefineArguments
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mC=1
+C1=6
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=6
+SmC=55
+Nm=Argument Definition
+ObjVer=1
+PrH=5
+CF=2
+n1I=1
+n1O=3
+mI=1
+I1=4
+mO=3
+tO=3
+O1=9
+O2=10
+O3=12
+mP=2
+P1=fast blink hi time
+P2=fast blink lo time
+]
+[
+ObjTp=Sm
+H=7
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=oscillators for blinking feedback
+mC=5
+C1=8
+C2=9
+C3=10
+C4=11
+C5=12
+]
+[
+ObjTp=Sm
+H=8
+SmC=13
+Nm=Toggle
+ObjVer=1
+PrH=7
+CF=2
+n1I=3
+n1O=2
+Cmn1=medium blink
+mI=3
+I3=9
+mO=2
+tO=2
+O1=10
+]
+[
+ObjTp=Sm
+H=9
+SmC=13
+Nm=Toggle
+ObjVer=1
+PrH=7
+CF=2
+n1I=3
+n1O=2
+Cmn1=medium slow blink
+mI=3
+I3=10
+mO=2
+tO=2
+O1=11
+]
+[
+ObjTp=Sm
+H=10
+SmC=13
+Nm=Toggle
+ObjVer=1
+PrH=7
+CF=2
+n1I=3
+n1O=2
+Cmn1=slow blink
+mI=3
+I3=11
+mO=2
+tO=2
+O1=5
+]
+[
+ObjTp=Sm
+H=11
+SmC=4
+Nm=NOR
+ObjVer=1
+PrH=7
+CF=2
+n1I=2
+n1O=1
+mI=2
+I1=5
+I2=11
+mO=1
+tO=1
+O1=12
+]
+[
+ObjTp=Sm
+H=12
+SmC=8
+Nm=Oscillator
+ObjVer=1
+PrH=7
+CF=2
+n1I=1
+n1O=1
+Cmn1=fast blink
+mI=1
+I1=4
+mO=1
+tO=1
+O1=9
+mP=2
+P1=#fast blink hi time
+P2=#fast blink lo time
+]
+[
+ObjTp=Sg
+H=4
+Nm=enable
+]
+[
+ObjTp=Sg
+H=5
+Nm=slow_blink_50%
+]
+[
+ObjTp=Sg
+H=9
+Nm=fast_blink
+]
+[
+ObjTp=Sg
+H=10
+Nm=med_blink
+]
+[
+ObjTp=Sg
+H=11
+Nm=med_slow_blink
+]
+[
+ObjTp=Sg
+H=12
+Nm=slow_blink
+]
