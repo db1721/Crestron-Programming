@@ -1,0 +1,3084 @@
+/*******************************************************************************************
+
+	WolfVision GmbH
+	Oberes Ried 14, 6833 Klaus
+	Phone: +43-(0)5523-52250
+	Email: wolfvision@wolfvision.com
+	http://www.wolfvision.com
+
+	Module Name	: Cynap_Client
+	Comments	:
+	
+	Version	Date(dd/mm/yy)	Remarks 
+	------------------------------------------------------------------------------
+	1.00	03/04/19		offical release of Pure module
+	1.01	20/08/19		added power down mode options
+		  
+	Notes:
+	This version only works with 3-series.
+
+*******************************************************************************************/	
+
+/*******************************************************************************************
+  Compiler Directives
+*******************************************************************************************/
+#SYMBOL_NAME "Cynap Pure Client 1.01"
+#HINT "Version 1.01"
+#HELP_PDF_FILE "Cynap_Pure_Module_Help.pdf"
+
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+#PRINT_TO_TRACE
+#ENCODING_ASCII
+
+#USER_SIMPLSHARP_LIBRARY "SSLInterface"
+
+#DEFINE_CONSTANT	FALSE	0x00
+#DEFINE_CONSTANT	TRUE	0x01
+
+//#DEFINE_CONSTANT	DEBUG						1 							// Debug information for general functions
+//#DEFINE_CONSTANT	DEBUG_POLL					1 							// Debug information for polling data
+//#DEFINE_CONSTANT	DEBUG_PROGRAM				1 							// Debug information for general program data
+//#DEFINE_CONSTANT	DEBUG_JSON					1 							// JSON Debug information written to console out
+//#DEFINE_CONSTANT	DEBUG_RESPONSE				1							// Shows generic response parsing message
+//#DEFINE_CONSTANT	DEBUG_CRITICAL				1							// Critical error or notices
+//#DEFINE_CONSTANT	DEBUG_TRANSMISSION			1							// Shows generic debug messages for transmitting data
+//#DEFINE_CONSTANT	DEBUG_ERROR					1							// Shows error debug messages
+//#DEFINE_CONSTANT	DEBUG_VIZ					1							// Debug information for all vizualizer functions
+//#DEFINE_CONSTANT	ERRORLOG					1
+
+#DEFINE_CONSTANT	VERSION_MAJOR				1
+#DEFINE_CONSTANT	VERSION_MINOR				01
+#DEFINE_CONSTANT	VERSION_BUG					00
+
+#DEFINE_CONSTANT	ETH_STATUS_NO_CONNECT					0				//Status constants for ethernet errors
+#DEFINE_CONSTANT	ETH_STATUS_WAITING	 					1
+#DEFINE_CONSTANT	ETH_STATUS_CONNECTED 					2
+#DEFINE_CONSTANT	ETH_STATUS_CONNECTION_FAILED 			3
+#DEFINE_CONSTANT	ETH_STATUS_CONNECTION_BROKEN_REMOTELY 	4  
+#DEFINE_CONSTANT	ETH_STATUS_CONNECTION_BROKEN_LOCALLY 	5
+#DEFINE_CONSTANT	ETH_STATUS_DNS_LOOKUP					6	
+#DEFINE_CONSTANT	ETH_STATUS_DNS_LOOKUP_FAILED			7
+#DEFINE_CONSTANT	ETH_STATUS_DNS_LOOKUP_RESOLVED			8
+#DEFINE_CONSTANT	ETH_STATUS_CABLE_UNPLUGGED				9
+
+
+#DEFINE_CONSTANT	WAIT_FOR_CONNECTION_DELAY 	2000						// How long should the initial connection max. take 2000 = 20 sec. 
+
+#DEFINE_CONSTANT	LOGIN_DELAY					1000						// Delay between heartbeart. 100 = 1 sec.
+                                        		
+#DEFINE_CONSTANT	Brodcast_IP					"255.255.255.255"			//Broadcast IP address
+#DEFINE_CONSTANT	UDP_Port					50913						// The default cynap communication port for UDP 
+
+#DEFINE_CONSTANT	CYNAP_PORT					50917						// The default cynap communication port use 50915 for unsecure only
+#DEFINE_CONSTANT	SOCKET_SIZE					65534						// Size of Ethernet input socket.
+#DEFINE_CONSTANT	MAX_PACKET_SIZE 			1024						// The size of the biggest packet
+#DEFINE_CONSTANT	MAX_DATA_SIZE				128							//
+
+#DEFINE_CONSTANT	MAX_WINDOW_DATA_SIZE		128							// The total length of the data for a window
+
+#DEFINE_CONSTANT	MAX_WINDOWS					4							//Max number of windows, set at 4
+#DEFINE_CONSTANT	MAX_SOURCES					10
+
+#DEFINE_CONSTANT	ERROR_CODE_LOGIN_INVALID	0x01						
+                                                    
+//Color Code
+#DEFINE_CONSTANT	CLEAR						0							//No Color, or black default
+#DEFINE_CONSTANT	RED							1							//Red,		window 1
+#DEFINE_CONSTANT	GREEN						2							//Green,	window 2
+#DEFINE_CONSTANT	YELLOW						3							//Yellow,	window 3
+#DEFINE_CONSTANT	BLUE						4							//Blue, 	window 4
+  
+//Window Screen Type
+#DEFINE_CONSTANT	NORMAL						0							//Normal
+#DEFINE_CONSTANT	FULL						1							//Fulscreen
+
+
+                                                                          
+#DEFINE_CONSTANT	LOGIN_REPLY 				"\x09\xCB\x42\x00"			//We have a reply from login attempt
+
+//RECEIVE_DATA BASIC commands
+#DEFINE_CONSTANT	GET_WINDOW_STATUS			"\x08\xCB\xBA\x00"			//Get the statuses from all the windows
+#DEFINE_CONSTANT	GET_MIRRORING_STATUS		"\x08\xCB\x3B\x00"			//Get the statuses for mirroring
+#DEFINE_CONSTANT	GET_POWER_STATUS			"\x08\xCB\x0C\x00"			//Get the power status
+#DEFINE_CONSTANT	GET_PRESENTATION_MODE		"\x08\xCB\x38\x00"			//Get the presentation mode state
+#DEFINE_CONSTANT	GET_PIN						"\x08\xCB\xE4\x00"			//Get the pin code for airplay 
+
+#DEFINE_CONSTANT	GET_MASTER_VOLUME			"\x08\xCB\x56\x00"			//Get master volume 
+#DEFINE_CONSTANT	GET_MASTER_MUTE_STATUS		"\x08\xCB\x58\x00"			//Get the master mute status 
+
+#DEFINE_CONSTANT	GET_WINDOW_FREE				"\x08\xCB\x8D\x00"			//Get status if there is a free window or not
+#DEFINE_CONSTANT	GET_SPLASHSCREEN_MODE		"\x08\xCC\xEF\x00"			//Get splashscrren mode
+#DEFINE_CONSTANT	GET_STANDBY_MODE			"\x08\xCC\xC7\x00"			//Get the power down mode
+
+
+//RECEIVE_DATA ADVANCED commands                                            	
+#DEFINE_CONSTANT	GET_SOURCE_LIST				"\x08\xCB\x90\x00"			//Get the List of available sources
+#DEFINE_CONSTANT	GET_SOURCE_STATUS			"\x0C\xCB\x90"				//Get source list status header
+
+#DEFINE_CONSTANT	GET_BOXNAME 				"\x08\xCB\x03\x00"			//Get the name of the Cynap unit
+                                                                       
+#DEFINE_CONSTANT	EXTENDED_LENGTH_COMMAND		"\x0A\x01\xCB"				//Header status for an extended length command
+
+
+
+
+//SEND_DATA BASIC commands
+#DEFINE_CONSTANT	SET_POWER_ON 				"\x09\xCB\x0C\x01\x01"		//Turn Power On
+#DEFINE_CONSTANT	SET_POWER_OFF				"\x09\xCB\x0C\x01\x00"		//Turn Power off
+                                            	
+#DEFINE_CONSTANT	SET_PRES_OPEN				"\x09\xCB\x38\x01\x00"		//Start presentation mode meeting
+#DEFINE_CONSTANT	SET_PRES_PROTECTED			"\x09\xCB\x38\x01\x01"		//Start presentation mode lecture
+
+#DEFINE_CONSTANT	SET_MIRRORING_ON 			"\x09\xCB\x3B\x01\x01"		//Turn the Mirroring feature On
+#DEFINE_CONSTANT	SET_MIRRORING_OFF			"\x09\xCB\x3B\x01\x00"		//Turn the Mirroring feature off
+
+#DEFINE_CONSTANT	SET_MASTER_VOLUME			"\x09\xCB\x56\x01"			//Set master volume header 
+#DEFINE_CONSTANT	SET_MASTER_MUTE_ON			"\x09\xCB\x58\x01\x01"		//Set master mute on
+#DEFINE_CONSTANT	SET_MASTER_MUTE_OFF			"\x09\xCB\x58\x01\x00"		//Set master mute off
+#DEFINE_CONSTANT	SET_MASTER_MUTE_TOGGLE		"\x09\xCB\x58\x01\x02"		//Toggle master mute
+
+
+
+//SEND_DATA ADVANCED commands (Just the first few bytes to make the "Header")
+
+#DEFINE_CONSTANT	SET_WINDOW_START 			"\x0D\xCB\x2C"				//Header for adding a new window
+
+#DEFINE_CONSTANT	SET_WINDOW_CONTROL			"\x09\xCB\x28\x02"			//Header for window controls, (close/fullscree/normal, mute, freeze)
+#DEFINE_CONSTANT	SET_WINDOW_VOLUME			"\x09\xCB\x28\x03"			//Header for window volume controls
+
+#DEFINE_CONSTANT	SET_SPLASH_SCREEN_SHOW		"\x09\xCC\xEE\x01\x00"		//Command to show the splash screen
+
+//Device Controls
+#DEFINE_CONSTANT	SET_PRES_END				"\x09\xCB\x49\x03"			//Header for end presentation mode
+
+
+//Polling Controls
+#DEFINE_CONSTANT	POLL_DELAY				50	// Defines the delay between poll commands.
+#DEFINE_CONSTANT	POLL_PRIORITY_LOW		1	// Identifies the low priority que for the Poll Manager
+#DEFINE_CONSTANT	POLL_PRIORITY_MEDIUM	2	// Identifies the medium priority que for the Poll Manager
+#DEFINE_CONSTANT	POLL_PRIORITY_HIGH		3	// Identifies the high priority que for the Poll Manager
+
+#HELP_BEGIN
+	WolfVision GmbH
+	Oberes Ried 14, 6833 Klaus
+	Phone: +43-(0)5523-52250
+	Email: wolfvision@wolfvision.com
+	http://www.wolfvision.com
+
+	Please use Cynap firmware Version 1.10i or later.
+
+#HELP_END
+
+
+/*******************************************************************************************
+  Include Libraries
+*******************************************************************************************/
+// #USER_LIBRARY ""
+// #CRESTRON_LIBRARY ""
+
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+*******************************************************************************************/
+//Inputs
+DIGITAL_INPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+DIGITAL_INPUT _SKIP_, Power_On, Power_Off, Power_Toggle;
+
+DIGITAL_INPUT _SKIP_, _SKIP_;
+
+DIGITAL_INPUT _SKIP_, Presentation_Mode_Open, Presentation_Mode_Protected, Presentation_Mode_Toggle, Presentation_New, Presentation_End;
+
+DIGITAL_INPUT _SKIP_, Source_Mirror, Close_Mirroring;
+DIGITAL_INPUT _SKIP_, Close_All_Windows;
+DIGITAL_INPUT _SKIP_, Master_Mute_On, Master_Mute_Off, Master_Mute_Toggle;
+DIGITAL_INPUT _SKIP_, Show_Splash_Screen;
+
+                                                       
+DIGITAL_INPUT _SKIP_, _SKIP_;
+DIGITAL_INPUT _SKIP_, Active_Window_Close, Active_Window_Mode_FullScreen, Active_Window_Mode_Normal, Active_Window_Mode_Toggle;
+DIGITAL_INPUT _SKIP_, Active_Window_Volume_Button, _SKIP_;
+DIGITAL_INPUT _SKIP_, Active_Window_Mute_On, Active_Window_Mute_Off, Active_Window_Mute_Toggle;
+       
+DIGITAL_INPUT _SKIP_, Window_Select[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Close[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Mode_Fullscreen[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Mode_Normal[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Mode_Toggle[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Mute_On[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Mute_Off[MAX_WINDOWS];
+DIGITAL_INPUT _SKIP_, Window_Mute_Toggle[MAX_WINDOWS];
+
+ANALOG_INPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+ANALOG_INPUT _SKIP_,  Active_Window_Volume_In;
+ANALOG_INPUT _SKIP_,  Master_Volume_In;
+
+STRING_INPUT _SKIP_, SendCommand[ MAX_PACKET_SIZE ];                                
+
+ANALOG_INPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+ANALOG_INPUT _SKIP_, Window_Volume_In[MAX_WINDOWS];
+
+
+                               
+
+
+//Outputs
+DIGITAL_OUTPUT _SKIP_, _SKIP_, _SKIP_, Link_Established_Fb, Valid_Login, _SKIP_;
+
+DIGITAL_OUTPUT _SKIP_, Power_On_Fb, Power_Off_Fb, _SKIP_;
+
+DIGITAL_OUTPUT _SKIP_, _SKIP_;
+
+DIGITAL_OUTPUT _SKIP_, Presentation_Mode_Open_Fb, Presentation_Mode_Protected_Fb, _SKIP_, _SKIP_;
+                                                                                                      			
+DIGITAL_OUTPUT _SKIP_, Show_PIN, Source_Mirror_Waiting, _SKIP_;
+                                
+DIGITAL_OUTPUT _SKIP_, EditBar_Active;
+
+DIGITAL_OUTPUT _SKIP_, Master_Mute_On_Fb, Master_Mute_Off_Fb, _SKIP_;
+DIGITAL_OUTPUT _SKIP_, Splash_Screen_Enabled;
+
+
+DIGITAL_OUTPUT _SKIP_, New_Window_Is_Available, _SKIP_;
+DIGITAL_OUTPUT _SKIP_, Active_Window_Mode_FullScreen_Fb, Active_Window_Mode_Normal_Fb;
+DIGITAL_OUTPUT _SKIP_, Active_Window_Volume_Subpage, _SKIP_, _SKIP_;
+DIGITAL_OUTPUT _SKIP_, Active_Window_Mute_On_Fb, Active_Window_Mute_Off_Fb, _SKIP_;
+
+DIGITAL_OUTPUT _SKIP_, Window_Selected_fb[MAX_WINDOWS];
+DIGITAL_OUTPUT _SKIP_, Window_Visible_Fb[MAX_WINDOWS];
+DIGITAL_OUTPUT _SKIP_, Window_Mode_Fullscreen_Fb[MAX_WINDOWS];
+DIGITAL_OUTPUT _SKIP_, Window_Mode_Normal_Fb[MAX_WINDOWS];
+DIGITAL_OUTPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+DIGITAL_OUTPUT _SKIP_, Window_Mute_On_Fb[MAX_WINDOWS];
+DIGITAL_OUTPUT _SKIP_, Window_Mute_Off_Fb[MAX_WINDOWS];
+DIGITAL_OUTPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_;
+
+ANALOG_OUTPUT  _SKIP_, Link_Status;
+STRING_OUTPUT  		   Box_Name, StandbyButtonText, BYOD_PIN, Error, Debug_out;   
+
+
+ANALOG_OUTPUT  _SKIP_, Number_of_Active_Windows;                                     
+ANALOG_OUTPUT  _SKIP_, Active_Window, Active_Window_Volume_Out;
+ANALOG_OUTPUT  _SKIP_, Master_Volume_Out, _SKIP_;
+
+STRING_OUTPUT  _SKIP_, Window_Source_Text[MAX_WINDOWS];
+ANALOG_OUTPUT  _SKIP_, Window_Source_Type[MAX_WINDOWS];
+ANALOG_OUTPUT  _SKIP_, Window_Volume_Out[MAX_WINDOWS];
+
+/*******************************************************************************************
+  SOCKETS
+*******************************************************************************************/
+UDP_SOCKET	UDP_Broadcast[256];  
+
+/*******************************************************************************************
+  Parameters
+*******************************************************************************************/
+STRING_PARAMETER Server_IP[256], Cynap_RMS_Password[64], MAC_Address[64];
+
+/*******************************************************************************************
+  Parameter Properties
+*******************************************************************************************/
+#BEGIN_PARAMETER_PROPERTIES Server_IP
+   propValidUnits = unitString;// or unitDecimal|unitHex|unitPercent|unitCharacter|unitTime|unitTicks;
+   propDefaultUnit = unitString;//, unitDecimal, unitHex, unitPercent, unitCharacter, unitTime or unitTicks;
+   propShortDescription = "IP or DNS-name of the Cynap";
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES Cynap_RMS_Password
+   propValidUnits = unitString;// or unitDecimal|unitHex|unitPercent|unitCharacter|unitTime|unitTicks;
+   propDefaultUnit = unitString;//, unitDecimal, unitHex, unitPercent, unitCharacter, unitTime or unitTicks;
+   propDefaultValue = "Password";  // or, propDefaultValue = "";
+   propShortDescription = "RMS Password for Cynap Unit.";
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES MAC_Address
+   propValidUnits = unitString;// or unitDecimal|unitHex|unitPercent|unitCharacter|unitTime|unitTicks;
+   propDefaultUnit = unitString;//, unitDecimal, unitHex, unitPercent, unitCharacter, unitTime or unitTicks;
+   propDefaultValue = "\x00\x00\x00\x00\x00\x00";  // or, propDefaultValue = "";
+   propShortDescription = "MAC Address for Cynap Unit in Crestrons hex format, no spaces, no dashes, no colons.";
+#END_PARAMETER_PROPERTIES
+
+
+/*******************************************************************************************
+  Structure Definitions
+*******************************************************************************************/
+STRUCTURE Windows							//Window Data: This holds all the basic info of a window
+{
+	INTEGER Type;
+	STRING  SourceName[MAX_DATA_SIZE];
+	INTEGER Screen;
+	INTEGER xPos;
+	INTEGER yPos;
+	INTEGER Width;
+	INTEGER Height;
+	INTEGER Mute;
+	INTEGER Volume;
+	INTEGER Aux;
+	INTEGER RecordStream;
+	INTEGER LengthType;
+	INTEGER EditBar;
+	INTEGER BrowserPDFActive;
+	INTEGER PlayPause;
+	INTEGER LoopState;
+	STRING sBrowserURL[MAX_DATA_SIZE];
+	STRING sBrowserTitle[MAX_DATA_SIZE];
+};
+
+STRUCTURE sList
+{
+	INTEGER sourceAvailable;
+	INTEGER sourceType;
+	STRING  sourceName[MAX_DATA_SIZE];
+	INTEGER sourceIndex;
+	INTEGER sourceTypeIcon;
+};
+
+Windows Win[MAX_WINDOWS];  
+sList Sources[MAX_SOURCES];
+
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+INTEGER	gnProcessingBuffer;													//Variable to keep track of if the buffer is currently being processed				
+INTEGER gnSending;															//Semiphore for sending data to simpl#
+       
+INTEGER gnHeartbeatCounter;													//Value to count the heartbeat requests
+
+INTEGER gnEthernetStatus;													//Variable to keep track of the current ethernet status
+
+INTEGER gnLoginValid;														//Variable to keep track of if we have a valid login or not
+INTEGER gnLoginCounter;														//Variable to track how many login attempts have been requested
+
+INTEGER gnCycle;															//Variable to track the process buffer cycle number
+                        
+INTEGER gnPowerStatus;														//Variable to keep track of the current power state
+ 
+INTEGER gnWindowFreeStatus;													//Variable to check if there are windows available
+
+INTEGER gnPresentationMode;													//Variable to keep track of the current Presentation Mode 
+INTEGER gnPresentationCountdown;
+
+INTEGER gnMirroringStatus;													//Variable to keep track of the mirroring state								
+INTEGER gnMirroringDuration;												//Variable to track how much time is left for the mirroring to connect
+        
+INTEGER gnMasterVolume;														//Variable to keep track of the master volume level	
+INTEGER gnMasterMuteStatus;													//Variable to keep track of the master mute state	
+
+INTEGER gnSplashScreenStatus;												//Variable to keep track of the splash screen modde	
+INTEGER gnStandbyMode;
+                                 	
+INTEGER gnActiveWindow;														//Variable to track which window is the active window (1-4)
+INTEGER gnNumberOfWindows;													//Variable to track how many current windows are in use
+INTEGER gnFullscreenWindow;													//Variable tracking if we are in a fullscreen mode or not 
+STRING gsExtraWindowData[ MAX_WINDOWS ][ MAX_WINDOW_DATA_SIZE ];			//Array holding any extra data for each window (Like a web address or number of images found)
+STRING gsWindowText[ MAX_WINDOWS ][ MAX_WINDOW_DATA_SIZE ];					//Array holding the text for each window
+INTEGER gnWindowType[ MAX_WINDOWS];											//Variable array holding the type of each window
+INTEGER gnWindowVolume[ MAX_WINDOWS];										//Variable array holding the volume level of each
+  
+STRING gsBuffer[SOCKET_SIZE];												// Used for Cynap Receive data
+       
+STRING gsSendBuffer[SOCKET_SIZE];											// Used for Cynap Receive data
+// Inter-function communication variables
+// --------------------------------------------------------------------------------
+// The following variables are used for communication between specific functions.
+
+INTEGER gnPoll_Enable;														// Valid values: 0,1. 0=Disable poll cycle, 1=Allow poll cycle
+
+SSLClass Cynap;																// Cynap SSL connection
+
+//SSLClass JSON;																// Simpl# JSON processing
+
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+   
+
+
+/********************************************************************************
+ Function : ReConnectUDP
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to re-enable the UDP socket
+ Notes    : 
+ ********************************************************************************/
+Function ReConnectUDP()																		//re-establish a connection if it doesnt work
+{
+	#IF_DEFINED DEBUG
+    	Print( "[ReConnectUDP]\n" );
+	#ENDIF
+
+	SocketUDP_disable(UDP_Broadcast);
+	SocketUDP_Enable(UDP_Broadcast, Brodcast_IP, UDP_Port);	
+}
+
+/********************************************************************************
+ Function : Send_WOL
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to wake the cynap using the WOL Magic Packet
+ Notes    : 
+ ********************************************************************************/
+Function Send_WOL()																				//setup WOL packet and send it
+{
+    SIGNED_INTEGER siSendStatus;
+	STRING MagicPacket[256];   
+
+	#IF_DEFINED DEBUG
+    	Print( "[Send_WOL]\n" );
+	#ENDIF
+	#IF_DEFINED DEBUG_TRANSMISSION
+    	Print( "[Send_WOL] Sending WOL.\n" );
+	#ENDIF
+
+	//Make a magic packet by using \xFF 6times, then the MAC address 16 times
+	makestring(MagicPacket, "\xFF\xFF\xFF\xFF\xFF\xFF%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address, MAC_Address);
+
+	siSendStatus = SocketSend(UDP_Broadcast, MagicPacket);
+
+	if(siSendStatus >= 0)
+  	{
+		#IF_DEFINED DEBUG_TRANSMISSION
+	    	Print( "[Send_WOL] Successful transmission\n" );
+		#ENDIF
+	}
+	Else																				//If there is any error, report it
+	{
+		ReConnectUDP();
+   		#IF_DEFINED DEBUG_ERROR
+			cswitch(siSendStatus)
+			{
+  	           	Case (-1): {Print("[Send_WOL]%s on port %u is not a valid socket", Brodcast_IP, UDP_Port);break;}
+      	       	Case (-5): {Print("[Send_WOL]Could not establish a connection to %s on port %u", Brodcast_IP, UDP_Port);break;}
+          	   	default:   {Print("[Send_WOL]Unknown Error");break;}
+			}
+		#ENDIF
+	}     
+}
+
+/********************************************************************************
+ Function : ReportError
+ --------------------------------------------------------------------------------
+ Arguments: INTEGER nError - Holds the error code.
+ Output   : ANALOG Error - Formatted error message.
+ Globals  : N/A
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to consolidate error messages in order
+            to present the messages to the user in a common way.
+            Depending on the received nError, an error message is formatted
+            and outputed.
+            If no error type can be matched a standard error message is used.
+ Notes    : The constant ERRORLOG can be commented in, to allow the messages
+            to be stored in the processor error log.
+			Check ERROR_CODE_XXXXX for supported values.
+ ********************************************************************************/
+Function ReportError( INTEGER nError)
+{
+	STRING sMsg[254];															// Used to store the formatted error message.
+
+	#IF_DEFINED DEBUG
+    	Print( "[ReportError]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_ERROR
+    	Print( "[ReportError]nError (%u)\n", nError );
+	#ENDIF
+
+	CSWITCH( nError )
+	{	
+		CASE( ERROR_CODE_LOGIN_INVALID ): 	{ Makestring( sMsg, "[%.4X] Login is invalid.\n", nError ); break; }	
+		default:							{ Makestring( sMsg, "[%.4X] Undefined error number.\n", nError ); break; }
+	}
+
+	Error = sMsg; 																// Pass the formatted error message out
+
+	#IF_DEFINED ERRORLOG  														// Uncomment the constant to allow storing of message in the processor error-log.
+		GenerateUserError( "%s", sMsg );
+	#ENDIF
+}
+
+/********************************************************************************
+ Function : DisConnect
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnProcessingBuffer
+			gnEthernetStatus
+			gnPoll_Enable
+			gnLoginValid
+			gnSending
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to disconnect the Socket Connection 
+			to the Cynap.
+ Notes    : When disconnecting the socket, we will also 
+			-clear the input buffer for the Cynap 
+			-clear the flag that allows the buffer to be processed 
+			-clear the EthernetStatus flags which monitors the ethernet 
+			-clear the flag for the password connection status.
+			-clear the flag for the SendData loop
+ ********************************************************************************/
+FUNCTION DisConnect()
+{
+	#if_defined DEBUG
+		print("[DisConnect]\n");
+	#ENDIF
+	#if_defined DEBUG_CRITICAL
+		print("[DisConnect] Disconnecting...\n");
+	#ENDIF
+
+	Cynap.Disconnect();
+	gsBuffer = ""; 										//Clear out the buffer and set all statuses to off
+	gnProcessingBuffer  = FALSE;								//
+	gnEthernetStatus 	= FALSE;								//	
+	gnPoll_Enable 		= FALSE;								// Disable the poll cycle.
+	gnLoginValid		= FALSE;
+	gnSending 			= FALSE;
+
+	#if_defined DEBUG_CRITICAL
+		print("[DisConnect] Disconnect done\n");
+	#ENDIF
+}
+/********************************************************************************
+ Function : SendDataHotFix
+ --------------------------------------------------------------------------------
+ Arguments: STRING sPacket - contains the processed package to be sent.
+ Output   : N/A
+ Globals  : gnSending
+ Calls    : N/A
+ Return   : SIGNED_INTEGER nStatus - transmission status.
+                              1     = Transmission was a success.
+                              0     = Package parameter had zero length.
+                              -5    = Unable to transmit. No link.
+                              Other = Please see response codes from 
+                                      "Direct Socket Error Codes".
+ Purpose  : This purpose of this function is to initiate the transfer of the
+            received package, process the feedback and return values depending
+            on the status of the feedback.
+ Notes    : N/A 
+ ********************************************************************************/
+SIGNED_INTEGER_FUNCTION SendDataHotfix( STRING sPacket )
+{
+	signed_integer nStatus;														// Used to store the status fo the socketsend command
+	integer nSessionID, nCounter, nLoop;
+
+   	#IF_DEFINED DEBUG
+		print("[SendDataHotfix]\n");
+	#ENDIF
+                                                             
+  	#IF_DEFINED DEBUG_TRANSMISSION
+	for(nLoop = 1 to len(sPacket))
+	{
+		print("[SendDataHotfix]  %X\n", byte(sPacket, nLoop));    	
+	}
+	#ENDIF
+
+	if( gnEthernetStatus = ETH_STATUS_CONNECTED )
+	{
+        nCounter = 0;
+		nSessionID = rnd();
+		While(gnSending = TRUE)													//Loop check if we are already sending data, and waits for it to be clear to send
+		{
+			If(nCounter >= 500){DisConnect(); BREAK;}
+	    	#IF_DEFINED DEBUG_TRANSMISSION
+				print("[SendDataHotfix:%X] waiting...nCounter = (%u)\n", nSessionID, nCounter );
+			#ENDIF
+			nCounter = nCounter + 1;
+        	delay(1);
+		}
+
+		If(nCounter < 500)
+		{
+			gnSending = TRUE;        
+	
+			if( len( sPacket ) > 0  )
+			{
+	 
+	    		#IF_DEFINED DEBUG_TRANSMISSION
+					print("[SendDataHotfix] Ethernet Link ok! Transmitting data: [%s] length=%u\n", sPacket, len(sPacket));
+	
+					if( len( sPacket ) > 255 )
+						Debug_out = left( sPacket, 255 );
+					else
+						Debug_out = sPacket;
+				#ENDIF
+	
+				wait(1000, Heartbeat){DisConnect();}
+					nStatus = Cynap.CustomSocketSend( sPacket );	
+	
+				if( nStatus >= 0 )
+				{
+	
+			    	#IF_DEFINED DEBUG_TRANSMISSION
+						print("[SendDataHotfix] Transmission success!\n");
+					#ENDIF
+	
+		            cancelwait(Heartbeat);
+					gnSending = FALSE;        
+					return( TRUE );
+				}
+				else
+				{
+			    	#IF_DEFINED DEBUG_TRANSMISSION
+						print("[SendDataHotfix] Transmission error: %d\n", nStatus);
+					#ENDIF
+	
+					gnSending = FALSE;        
+					return( nStatus );
+				}
+			}
+			else
+			{
+		    	#IF_DEFINED DEBUG_TRANSMISSION
+					print("[SendDataHotfix] Buffer empty, nothing to send!\n");
+				#ENDIF
+	
+				gnSending = FALSE;        
+				return( FALSE );
+			}
+			gnSending = FALSE;        
+		}
+		else
+		{
+	    	#IF_DEFINED DEBUG_TRANSMISSION
+				print("[SendDataHotfix]Canceled due to timeout.\n");
+			#ENDIF
+		}
+	}
+	else
+	{
+    	#IF_DEFINED DEBUG_TRANSMISSION
+			print("[SendDataHotfix]Unable to transmit data. No link.\n");
+		#ENDIF
+
+		nStatus = -5;
+
+		return( nStatus );
+	}
+}
+/********************************************************************************
+ Function : SendData
+ --------------------------------------------------------------------------------
+ Arguments: STRING sPacket - contains the processed package to be sent.
+ Output   : N/A
+ Globals  : gsSendBuffer
+ Calls    : SendDataHotfix
+ Return   : 
+ Purpose  : This purpose of this function is to create a new thread for the transmission
+			to the send data functions
+ Notes    : N/A 
+ ********************************************************************************/
+SIGNED_INTEGER_FUNCTION SendData( STRING sPacket )
+{
+	INTEGER nStatus;
+	STRING sURL[255], sOrigin[255];
+
+   	#IF_DEFINED DEBUG
+		print("[SendData]\n");
+	#ENDIF
+
+	gsSendBuffer = sPacket;
+	gnHeartbeatCounter = gnHeartbeatCounter + 1;
+
+	If(gnHeartbeatCounter >10)
+	{
+		gnHeartbeatCounter = 0;
+
+		#IF_DEFINED DEBUG_CRITICAL
+			print("[InitServerConnection] Connecting with TRY-CATCH.\n");
+		#ENDIF
+	     
+		TRY
+		{
+	//		use for secure WebSocket
+			sURL="wss://"+Server_IP+"/xxx";
+			sOrigin = "https://"+Server_IP;
+			nStatus = Cynap.SocketConnectClient(Server_IP, sURL, sOrigin, 443, TRUE );
+	
+	//		use for unsecured
+	/*		sURL="ws://"+Server_IP+"/xxx";
+			sOrigin = "http://"+Server_IP;
+			nStatus = Cynap.SocketConnectClient(Server_IP, sURL, sOrigin, 80, FALSE );
+	*/	}
+		CATCH
+		{
+		    #IF_DEFINED DEBUG_CRITICAL
+				print("[InitServerConnection]Exception thrown: %s\n", GetExceptionMessage());
+			#ENDIF
+		}
+	}
+	else wait(0)SendDataHotfix(gsSendBuffer);
+}
+
+/********************************************************************************
+ Function : SendLogin
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : VALID_LOGIN
+ Globals  : gnLoginCounter
+			Password
+			gnLoginValid
+ Calls    : SendData
+			ReportError
+ Return   : TRUE/FALSE if the login succeded or failed 5 times
+ Purpose  : This purpose of this function is to send the Login command
+			and also track the number of login attempts 
+ Notes    : If 5 login attemps fail, then it will report an error
+ ********************************************************************************/
+INTEGER_FUNCTION SendLogin()
+{
+	STRING sPacket[ MAX_PACKET_SIZE ];											// Used to store the formatted text string to be sent.
+
+	#IF_DEFINED DEBUG
+		print("[SendLogin]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_CRITICAL
+		print("[SendLogin] Attempting to resend password...\n");
+	#ENDIF
+    
+	If(gnLoginCounter < 5)									//Check how many times we have attempted to login
+	{
+		makestring(sPacket, "\x09\xCB\x42%s\x01%s%s", chr(len(Cynap_RMS_Password)+2), chr(len(Cynap_RMS_Password)), Cynap_RMS_Password);
+		#IF_DEFINED DEBUG_CRITICAL
+			print("[SendLogin] sPacket=%s\n", sPacket);
+		#ENDIF
+	
+		gnLoginCounter = gnLoginCounter + 1;			
+
+		if( SendData( sPacket ) = TRUE )
+		{
+			#IF_DEFINED DEBUG_CRITICAL
+				print("[SendLogin] Login package sent");
+			#ENDIF
+			return( TRUE );
+		}
+		else
+		{
+			#IF_DEFINED DEBUG_CRITICAL
+				print("[Login] Unable to send login package");
+			#ENDIF
+			return( FALSE );
+		}
+	}
+	else 												//Too many login attempts
+	{
+		#IF_DEFINED DEBUG_CRITICAL
+			print("[SendLogin] Too many retries. Login password is invalid");
+		#ENDIF
+
+		ReportError(ERROR_CODE_LOGIN_INVALID);
+			gnLoginCounter = 0;			
+        	gnLoginValid 	= FALSE;
+			VALID_LOGIN = gnLoginValid;
+			Delay(LOGIN_DELAY);
+	}
+}
+/********************************************************************************
+ Function : InitCynapConnection
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnEthernetStatus
+ Calls    : DisConnect
+			SendLogin
+ Return   : TRUE/FALSE
+ Purpose  : The purpose of this function is to re-establish the connection to 
+			the Cynap unit.
+ Notes    : N/A
+ ********************************************************************************/
+INTEGER_FUNCTION InitCynapConnection()							//Start the connection process
+{
+	INTEGER nLoop;
+    SIGNED_INTEGER nStatus, nVizStatus;
+	STRING sURL[255], sOrigin[255];
+
+	#IF_DEFINED DEBUG
+		print("[InitCynapConnection]\n");
+	#ENDIF
+
+	Disconnect();				//Disconnect first to get to a known state
+
+    #IF_DEFINED DEBUG_CRITICAL
+		print("[InitServerConnection]Initating...(%u)\n", gnEthernetStatus);
+	#ENDIF
+    
+	
+
+	#IF_DEFINED DEBUG_CRITICAL
+		print("[InitServerConnection] Connecting with TRY-CATCH.\n");
+	#ENDIF
+     
+	TRY
+	{
+//		use for secure WebSocket
+		sURL="wss://"+Server_IP+"/xxx";
+		sOrigin = "https://"+Server_IP;
+		nStatus = Cynap.SocketConnectClient(Server_IP, sURL, sOrigin, 443, TRUE );
+
+//		use for unsecured
+/*		sURL="ws://"+Server_IP+"/xxx";
+		sOrigin = "http://"+Server_IP;
+		nStatus = Cynap.SocketConnectClient(Server_IP, sURL, sOrigin, 80, FALSE );
+*/	}
+	CATCH
+	{
+	    #IF_DEFINED DEBUG_CRITICAL
+			print("[InitServerConnection]Exception thrown: %s\n", GetExceptionMessage());
+		#ENDIF
+	}
+
+
+    if (nStatus < 0)
+    {
+		#IF_DEFINED DEBUG_CRITICAL
+			Print("[InitServerConnection]Error connecting socket to address %s on port  %u\n", Server_IP, CYNAP_PORT);
+			Print("[InitServerConnection]Error: %d\n", nStatus );
+		#ENDIF
+
+		RETURN( FALSE );
+	}
+	ELSE
+	{
+		#IF_DEFINED DEBUG_CRITICAL			
+			print("[InitServerConnection]Initating...Checking connection!\n");
+		#ENDIF
+
+		for( nLoop = 1 to WAIT_FOR_CONNECTION_DELAY )
+		{
+			delay( 1 );
+			
+			CSWITCH( gnEthernetStatus )
+			{
+				CASE( ETH_STATUS_CONNECTION_FAILED ): { nLoop=WAIT_FOR_CONNECTION_DELAY; break;}
+				CASE( ETH_STATUS_CONNECTED ): { nLoop=WAIT_FOR_CONNECTION_DELAY; break;} 		
+				DEFAULT: { break;}
+			}			
+		}
+			
+		if( gnEthernetStatus = ETH_STATUS_CONNECTED )
+		{
+			#IF_DEFINED DEBUG_CRITICAL
+				print("[InitServerConnection]Connection good.\n");
+			#ENDIF
+			SendLogin();
+			ProcessLogic();
+			RETURN( TRUE );
+		}
+		else 
+		{
+			// A connection error has occured. Flush the system
+			#IF_DEFINED DEBUG_CRITICAL
+				print("[InitServerConnection]Unable to connect.\n");
+			#ENDIF
+			RETURN( FALSE );
+		}
+	}
+
+    #IF_DEFINED DEBUG_CRITICAL
+		print("[InitServerConnection]Done.(%d)\n", gnEthernetStatus);
+	#ENDIF
+} 
+
+/********************************************************************************
+ Function : Init
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gsSourceText - Used to store the names of the sources in an array
+ Calls    : BuildTimeZoneIndex
+ Return   : N/A
+ Purpose  : The purpose of this is to initialize the sourceText Signal names
+			and report the version number of the module
+ Notes    : Text[1] and Text[2] are dynamic and get thier names from the Cynap
+ ********************************************************************************/
+
+function Init()																	//Initialize Source Text names
+{
+   	#IF_DEFINED DEBUG
+		print("[Init]\n");
+	#ENDIF
+	
+	// Registering Simpl# events
+	RegisterEvent (Cynap, CustomSocketStatus, CYNAP_SSL_SOCKETSTATUS );
+	RegisterEvent (Cynap, CustomSocketReceive, CYNAP_SSL_SOCKETRECEIVE );
+
+	print("Cynap Client ver. %.2u.%.2u.%.2u. Wolfvision GmbH.\n", VERSION_MAJOR, VERSION_MINOR, VERSION_BUG );
+}
+     
+/********************************************************************************
+ Function : CheckForURLEncoding
+ --------------------------------------------------------------------------------
+ Arguments: STRING sURLCheck:  Incommming string to be checked for %20 and converted if needed
+ Output   : N/A
+ Globals  : N/A
+ Calls    : N/A
+ Return   : Converted String
+ Purpose  : The purpose of this function is to check the string for character sequense %20 (\x25\x32\x30), and replace with a " " if found
+ Notes    : N/A
+ ********************************************************************************/ 
+STRING_FUNCTION CheckForURLEncoding( STRING sURLCheck )
+{
+	INTEGER nLen, nLoop, nbyte;
+	STRING sString[ 255 ];
+    STRING hexCode[2];
+
+	#if_defined DEBUG
+		print("[CheckForURLEncoding]");
+	#ENDIF
+
+	nLen = len( sURLCheck );
+    for( nLoop = 1 to nLen )
+	{
+		nByte = Byte(sURLCheck , nLoop);
+
+        if (nByte = 0x25) // Looking for 0x25: Precent encoded character starts with % (0x25)
+        {
+			hexCode = chr(Byte(sURLCheck, (nLoop + 1)));
+			hexCode = hexCode + chr(Byte(sURLCheck, (nLoop + 2)));
+			#if_defined DEBUG
+        	    print ("hexCode: %s, 0x%02X", hexCode, HexToI(hexCode)); 
+			#ENDIF
+        	sString = sString + chr(HexToI(hexCode));
+            nLoop = nLoop + 2;
+        }
+		else
+		{
+         	sString = sString + chr( nByte);
+		}
+	}
+
+	RETURN( sString );
+}
+/********************************************************************************
+ Function : WindowControl
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : Window_Visible_Fb
+			Window_Source_Type
+			Window_Source_Text
+			Window_Mode_Fullscreen_Fb
+			WindowVolume_Out
+			EditBar_Active
+			Active_Window_Volume_Subpage
+			Active_Window_Mute_On_Fb
+			Active_Window_Mute_Off_Fb
+			Active_Window_Mode_Normal_Fb
+			Active_Window_Mode_Fullscreen_Fb
+ Globals  : gnNumberOfWindows
+			gnFullscreenWindow
+ Calls    : 
+ Return   : N/A
+ Purpose  : The purpose of this function is to configure the 4 windows, 
+			and what is displayed		
+ Notes    : Show/Hide active/inactive windows
+				Including Source text
+			Show/Hide Edit Bar
+			Show if a window is in FullScreen mode
+			Display the volume level for a selected window
+ ********************************************************************************/
+function WindowControl()													//Window data and when to use it
+{
+	Integer nWindowLoop, nBookmarkMatch, nLoop;
+
+	#IF_DEFINED DEBUG
+		print("[WindowControl]\n ");	
+	#ENDIF
+                        
+	gnNumberOfWindows = 0;
+
+	For(nWindowLoop = 1 to MAX_WINDOWS)										// Cycle through all the windows
+	{
+    	If(Win[nWindowLoop].Type = FALSE)									//Check to see if a window has a source or not
+		{	
+			Window_Visible_Fb[nWindowLoop] = FALSE;							//No Source, Visible_Fb = 0
+			If(Win[nWindowLoop].EditBar = 1)
+			{
+            	Win[nWindowLoop].EditBar = 0;
+				EditBar_Active = FALSE;
+				Active_Window_Volume_Subpage = FALSE;
+			}
+		}
+		Else																//We do have a source, 
+        {
+			Window_Visible_Fb[nWindowLoop] = TRUE;							//Set window to be visible
+			gnNumberOfWindows = (gnNumberOfWindows + 1);					//Count the number of used windows
+		}
+
+		If(gnWindowType[nWindowLoop] != Win[nWindowLoop].Type) 		
+		{
+			Window_Source_Type[nWindowLoop] = Win[nWindowLoop].Type;			//Set source to output
+			gnWindowType[nWindowLoop] = Win[nWindowLoop].Type;
+        }
+
+		If(gsWindowText[nWindowLoop] != Win[nWindowLoop].SourceName) 		
+		{
+			Window_Source_Text[nWindowLoop] = Win[nWindowLoop].SourceName;		//Set source name to output
+			gsWindowText[nWindowLoop] = Win[nWindowLoop].SourceName;
+        }
+
+		If(gnWindowVolume[nWindowLoop] != Win[nWindowLoop].Volume) 		
+		{
+			Window_Volume_Out[nWindowLoop]  = Win[nWindowLoop].Volume;
+			gnWindowVolume[nWindowLoop] = Win[nWindowLoop].Volume;
+        }
+
+		If(Win[nWindowLoop].Mute = TRUE)									//check to see if window is full screen or normal
+		{
+			Window_Mute_On_Fb[nWindowLoop] = TRUE;
+			Window_Mute_Off_Fb[nWindowLoop] = FALSE;
+		}
+		Else
+		{
+			Window_Mute_On_Fb[nWindowLoop] = FALSE;
+			Window_Mute_Off_Fb[nWindowLoop] = TRUE;
+		}
+
+		If(Win[nWindowLoop].Screen = FULL)									//check to see if window is full screen or normal
+		{
+			Window_Mode_Normal_Fb[nWindowLoop] = FALSE;
+			Window_Mode_Fullscreen_Fb[nWindowLoop] = TRUE;
+		}
+		Else																//normal
+		{
+			Window_Mode_Normal_Fb[nWindowLoop] = TRUE;
+			Window_Mode_Fullscreen_Fb[nWindowLoop] = FALSE;
+		}
+
+		If(nWindowLoop = gnActiveWindow)								
+		{
+			Active_Window_Mute_On_Fb = Window_Mute_On_Fb[nWindowLoop];
+			Active_Window_Mute_Off_Fb = Window_Mute_Off_Fb[nWindowLoop];
+			Active_Window_Mode_Normal_Fb = Window_Mode_Normal_Fb[nWindowLoop];
+			Active_Window_Mode_FullScreen_Fb = Window_Mode_Fullscreen_Fb[nWindowLoop];
+			Active_Window_Volume_Out = Window_Volume_Out[nWindowLoop];
+		}
+	}
+}
+/********************************************************************************
+ Function : ProcessWindowBasic
+ --------------------------------------------------------------------------------
+ Arguments: STRING sPacket - The incomming data for each window 1-4
+			INTEGER nWindow - The window number the data belongs to (valid 1-4)
+ Output   : N/A
+ Globals  : Win[x].Type
+            Win[x].Screen
+            Win[x].xPos
+            Win[x].yPos
+            Win[x].Width
+            Win[x].Height
+            Win[x].Mute
+            Win[x].Volume
+            Win[x].Aux
+            Win[x].SourceName
+			gsSourceText
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to parse out the elements of the 
+			"Basic Window"
+ Notes    : This data set contains all the information for each window
+ ********************************************************************************/
+function ProcessWindowBasic(STRING sPacket, INTEGER nWindow)			//Get all the basic details of a window
+{
+	#IF_DEFINED DEBUG
+		print("[ProcessWindowBasic]\n ");	
+	#ENDIF
+	#IF_DEFINED DEBUG_PROGRAM
+		print("[ProcessWindowBasic] Window# %u\n Packet Len(%u)\n Packet= %s", nWindow, len(sPacket), sPacket);
+	#ENDIF                                     
+
+	Win[nWindow].Type 	= (byte(sPacket,1));
+	Win[nWindow].Screen = (byte(sPacket,2));
+	Win[nWindow].xPos 	= (byte(sPacket,4) + (byte(sPacket,3)<<8));
+	Win[nWindow].yPos 	= (byte(sPacket,6) + (byte(sPacket,5)<<8));
+	Win[nWindow].Width 	= (byte(sPacket,8) + (byte(sPacket,7)<<8));
+	Win[nWindow].Height = (byte(sPacket,10) + (byte(sPacket,9)<<8));
+	Win[nWindow].Mute 	= (byte(sPacket,11));
+	Win[nWindow].Volume = (byte(sPacket,12));
+	Win[nWindow].Aux	= (byte(sPacket,13));
+	Win[nWindow].RecordStream	= (byte(sPacket,14));
+
+	Win[nWindow].SourceName 	= "Mirror";
+}
+/********************************************************************************
+ Function : ProcessWindows
+ --------------------------------------------------------------------------------
+ Arguments: STRING sPacket - Contains all the data on the 4 windows
+ Output   : N/A
+ Globals  : N/A
+ Calls    : ProcessWindowMirroring
+            WindowControl
+ Return   : N/A
+ Purpose  : The purpose of this function is to get all the window data and 
+			parse it out to process each window type
+ Notes    : N/A
+ ********************************************************************************/
+function ProcessWindows(STRING sPacket)						//Get all the window data adn split it out to process
+{
+	Integer nWindowCounter;	
+	Integer refWidth, refHeight, nType, nTypeLength, nTypeBlockLength;								
+	String sBasicPacket[ MAX_PACKET_SIZE ], sTypePacket[ MAX_PACKET_SIZE ], sTrash[ MAX_PACKET_SIZE ]; 	
+	
+	#IF_DEFINED DEBUG
+		print("[ProcessWindows]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_PROGRAM
+		print("[ProcessWindows] Packet Len(%u)\n", len(sPacket));
+	#ENDIF
+
+	refWidth = (byte(sPacket,2) + (byte(sPacket,1)<<8));				//unused data
+	refHeight = (byte(sPacket,4) + (byte(sPacket,3)<<8));				//unused data
+    	sTrash = removebylength(4, sPacket);              
+	           
+	nWindowCounter = 1;													//start counting used windows
+
+	While(len(sPacket)>0)												//Keep processing as long as there is data in the buffer
+	{
+		#IF_DEFINED DEBUG_PROGRAM
+			print("[ProcessWindows] Packet Len(%u)\n", len(sPacket));
+		#ENDIF
+
+		nTypeLength = byte(sPacket,1);
+		    sTrash = removebylength(1, sPacket);
+		nType = byte(sPacket, 1);
+		sBasicPacket = RemoveByLength( nTypeLength, sPacket ); 			//First 13 bytes are the basic window packets
+		ProcessWindowBasic(sBasicPacket, nWindowCounter);
+
+		nTypeBlockLength = (byte(sPacket,2) + (byte(sPacket,1)<<8));
+	    	sTrash = removebylength(2, sPacket);
+		sTypePacket = RemoveByLength( nTypeBlockLength, sPacket );
+		
+		nWindowCounter = nWindowCounter + 1;
+	}
+	WindowControl();														//display windows with correct info
+
+	#IF_DEFINED DEBUG_PROGRAM
+		print("[ProcessWindows] Done...\n" );
+	#ENDIF
+} 
+      
+/********************************************************************************
+ Function : ProcessSourceListPacket
+ --------------------------------------------------------------------------------
+ Arguments: STRING sData - Contains the data of number of sources, and names if any
+ Output   : N/A
+ Globals  : Sources[x].sourceName
+			Sources[x].sourceAvailable 
+			Sources[x].sourceType 
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to see which sources are available for use.
+ Notes    : 
+ ********************************************************************************/          
+function ProcessSourceListPacket(STRING sPacket, INTEGER nSourceNum)						//Process the details of a single source packet
+{  
+	INTEGER nNameLength;
+	String sTrash[ MAX_PACKET_SIZE ], sData[ MAX_PACKET_SIZE ]; 	
+
+	#IF_DEFINED DEBUG
+		print("[ProcessSourceListPacket]\n" );
+	#ENDIF
+
+	Sources[nSourceNum].sourceAvailable = (byte(sPacket,2));
+	Sources[nSourceNum].sourceType = (byte(sPacket,3));
+
+	nNameLength = (byte(sPacket,4));
+	If(nNameLength > 0)
+	{
+    	Sources[nSourceNum].sourceName = CheckForURLEncoding(mid(sPacket, 5, nNameLength ));
+			sData = Sources[nSourceNum].sourceName;
+			sTrash = remove(sData, sPacket);
+	}
+	Else 
+	{
+		Sources[nSourceNum].sourceName = "";
+			sTrash = removebylength(1, sPacket);
+	}
+
+	If(len(sPacket) > 0)
+	{
+		Sources[nSourceNum].sourceIndex = GetC(sPacket);
+    }
+
+	If(len(sPacket) > 0)
+	{
+		Sources[nSourceNum].sourceTypeIcon = GetC(sPacket);
+    }
+
+	#IF_DEFINED DEBUG_PROGRAM
+		print("[ProcessSourceListPacket] nSourceNum(%u)\n", nSourceNum);
+		print("[ProcessSourceListPacket] sourceAvailable(%u)\n", Sources[nSourceNum].sourceAvailable);
+		print("[ProcessSourceListPacket] sourceType(%u)\n", Sources[nSourceNum].sourceType);
+		print("[ProcessSourceListPacket] sourceName(%s)\n", Sources[nSourceNum].sourceName);
+		print("[ProcessSourceListPacket] sourceIndex(%u)\n", Sources[nSourceNum].sourceIndex);
+		print("[ProcessSourceListPacket] sourceTypeIcon(%u)\n", Sources[nSourceNum].sourceTypeIcon);
+	#ENDIF
+}
+        
+/********************************************************************************
+ Function : ProcessSourceListData
+ --------------------------------------------------------------------------------
+ Arguments: STRING sData - Contains the data of number of sources, and names if any
+ Output   : 
+ Globals  : gsSourceText
+ Calls    : ProcessSourceListPacket
+			SendData
+ Return   : N/A
+ Purpose  : The purpose of this function is to see which sources are available for use.
+ Notes    : N/A
+ ********************************************************************************/          
+function ProcessSourceListData(STRING sPacket)							//Process the details of all available sources
+{
+	Integer nSourceCounter, nTotalSources, nBlockLength;
+	Integer nSourceLoop;								
+	String sBasicPacket[ MAX_PACKET_SIZE ], sTrash[ MAX_PACKET_SIZE ]; 	
+	
+	#IF_DEFINED DEBUG
+		print("[ProcessSourceListData]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_PROGRAM
+		print("[ProcessSourceListData] Starting...\n");
+		print("[ProcessSourceListData] Packet Len(%u)\n", len(sPacket));
+	#ENDIF
+        
+	nTotalSources = (byte(sPacket,6));
+   		sTrash = removebylength(6, sPacket);              
+		nSourceCounter = 1;
+          
+	While(len(sPacket)>0)												//Keep processing as long as there is data in the buffer
+	{
+		#IF_DEFINED DEBUG_PROGRAM
+			print("[ProcessSourceListData] Packet Len(%u)\n", len(sPacket));
+		#ENDIF
+
+		nBlockLength = byte(sPacket, 1) + 1;
+		sBasicPacket = RemoveByLength( nBlockLength, sPacket ); 		//
+		ProcessSourceListPacket(sBasicPacket, nSourceCounter);
+		nSourceCounter = nSourceCounter + 1;
+		Processlogic();
+	}  
+        
+	For(nSourceLoop = 1 to nTotalSources)
+	{
+		#IF_DEFINED DEBUG_PROGRAM
+			print("[ProcessSourceListData] nSourceLoop(%u)\n", nSourceLoop);
+			print("[ProcessSourceListData] nTotalSources(%u)\n", nTotalSources);
+			print("[ProcessSourceListData] Sources[nSourceLoop].sourceType(%u)\n", Sources[nSourceLoop].sourceType);
+			print("[ProcessSourceListData] Sources[nSourceLoop].sourceAvailable(%u)\n", Sources[nSourceLoop].sourceAvailable);
+			print("[ProcessSourceListData] Sources[nSourceLoop].sourceName(%s)\n", Sources[nSourceLoop].sourceName);
+		#EndIF
+	}
+   	#IF_DEFINED DEBUG_PROGRAM
+		print("[ProcessSourceListData] Ending...\n");
+	#ENDIF
+}
+
+/********************************************************************************
+ Function : ProcessError
+ --------------------------------------------------------------------------------
+ Arguments: STRING sPacket - Contains the data of what error has occured
+ Output   : VALID_LOGIN
+ Globals  : gnLoginValid
+			gnSending
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : The purpose of this function is to process the error received
+ Notes    : N/A
+ ********************************************************************************/
+function ProcessError(STRING sPacket)
+{
+	INTEGER nLength, nIndex;
+
+	#IF_DEFINED DEBUG
+		print("[ProcessError]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_ERROR
+		print("[ProcessError] sPacket= %s\n", sPacket);
+
+		nLength = len(sPacket);
+        
+		print("[ProcessError]Received Data: ");
+		for( nIndex = 1 to nLength )
+		{
+        	print("      0x%02X", Byte( sPacket, nIndex ));
+		}
+
+		print("[ProcessError] Error= %u\n", byte(sPacket, 4));
+	#ENDIF
+
+	if( (byte(sPacket, 1) = 0x80 ) || (byte(sPacket,1)=0x81))
+	{
+		if((byte(sPacket, 2) = 0xCB ) || (byte(sPacket,3)=0x42))
+		{
+			CSWITCH(byte(sPacket, 4))
+			{
+		       	CASE(1):{break;}											//Error 1	Timeout
+		       	CASE(2):{break;}											//Error 2	Invalid Command
+		       	CASE(3):{break;}											//Error 3	Invalid Parameter
+		       	CASE(4):{break;}											//Error 4	Invalid Length
+		       	CASE(5):{break;}											//Error 5	Fifo Full
+		       	CASE(6):{break;}											//Error 6	Firmware Update error
+		       	CASE(7):													//Error 7	Access Denied  
+				{ 
+					gnLoginValid = FALSE; 
+					VALID_LOGIN = gnLoginValid; 
+					gnSending = FALSE;
+					#IF_DEFINED DEBUG_ERROR
+						print("[ProcessError] ERROR: Access Denied\n");
+					#ENDIF
+					break;
+				}
+		       	CASE(8):												//Error 8	Auth Required
+				{ 
+					gnLoginValid = FALSE; 
+					VALID_LOGIN = gnLoginValid; 
+					gnSending = FALSE;
+					#IF_DEFINED DEBUG_ERROR
+						print("[ProcessError] ERROR: Auth Required\n");
+					#ENDIF
+		
+					break;
+				}
+		       	CASE(9):  												//Error 9	Busy
+				{
+					#IF_DEFINED DEBUG_ERROR
+						print("[ProcessError] ERROR: BUSY\n");
+					#ENDIF
+					break;
+				}														
+		       	CASE(10): {break;}										//Error 10	Sip Required
+				DEFAULT:  {break;}										//
+			}
+		}
+	}
+	else if( (byte(sPacket, 1) = 0x88 ) || (byte(sPacket,1)=0x89))
+	{
+		if((byte(sPacket, 2) = 0xCB ) || (byte(sPacket,2)=0xCC))
+		{
+			CSWITCH(byte(sPacket, 3))
+			{	
+		       	CASE(0xEF):													//Error in EF command, splash screen not available  
+				{ 
+					#IF_DEFINED DEBUG_ERROR
+						print("[ProcessError] ERROR: Splash Screen not available\n");
+					#ENDIF
+					Splash_Screen_Enabled = FALSE; 
+					break;
+				}
+				DEFAULT:  {break;}										
+			}
+		}
+	}
+	else
+	{
+     	// Unknown error 0x88 or 0x89!
+		#IF_DEFINED DEBUG_ERROR
+			print("[ProcessError] ERROR: Unknown:0x%X\n", byte(sPacket, 1) );
+		#ENDIF
+	}
+} 
+
+/********************************************************************************
+ Function : ProcessCBCommand
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : Valid_Login
+			Box_Name
+			Show_PIN
+			BYOD_PIN
+			Presentation_Mode_Open_Fb
+			Presentation_Mode_Protected_Fb
+			Main_Freeze_On_Fb
+			Main_Freeze_Off_Fb
+			Power_On_Fb
+			Power_Off_Fb
+
+ Globals  : gsBuffer
+			gnLoginValid
+			gnPresentationMode
+			gnMainFreezeStatus
+			gnMirroringStatus
+			gnMirroringDuration
+			gnPowerStatus
+ Calls    : 
+			ProcessWindows
+
+ Return   : N/A
+ Purpose  : The purpose of this function is to process the error received
+ Notes    : N/A
+ ********************************************************************************/
+function ProcessCBCommand()
+{
+	integer nPacketLength, nShowPin, nSearch, nDownloads, nUploads;
+	string sPacket[ SOCKET_SIZE ], sTrash[ SOCKET_SIZE ];
+
+	integer nLength, nIndex;	// For debug only!
+
+	#IF_DEFINED DEBUG
+		print("[ProcessCBCommand]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_RESPONSE
+		print("[ProcessCBCommand] Starting...\n");
+	#ENDIF
+
+	while( len(gsBuffer) )										// Continue as long as we have something in the buffer
+	{
+		If(len(gsBuffer) >= 3){nSearch = byte(gsBuffer,3);}
+		else{processlogic();}
+
+		#IF_DEFINED DEBUG_RESPONSE
+			print("[ProcessCBCommand] Buffer Data, len(%u)\n", len(gsBuffer));
+			print("[ProcessCBCommand] sSearch(0x%X)\n", nSearch);
+		#ENDIF
+	
+		CSWITCH(nSearch)
+		{
+        	CASE(0x42):																//***Login Reply data
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] Login Reply\n");
+				#ENDIF
+
+    	    	gnLoginValid = TRUE;
+				VALID_LOGIN = gnLoginValid;
+
+				sTrash = RemoveByLength( 4, gsBuffer );
+				BREAK;
+			} 
+        	CASE(0x0C):																//***Get Power Data
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET power data \n");
+				#ENDIF
+	            
+				if( len( gsBuffer )>=5 )
+				{			
+					gnPowerStatus = (byte(gsBuffer,5)); 	
+						sTrash = removebylength(5, gsBuffer);
+	
+					Power_On_Fb = gnPowerStatus;
+					Power_Off_Fb =! gnPowerStatus;
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+            	BREAK;
+			}
+        	CASE(0x8D):																//***Get window free data			
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET window free state \n");
+				#ENDIF
+	            
+				if( len( gsBuffer )>=5 )
+				{			
+					gnWindowFreeStatus = (byte(gsBuffer,5)); 	
+						sTrash = removebylength(5, gsBuffer);
+	
+					New_Window_Is_Available = gnWindowFreeStatus;
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+            	BREAK;
+			}
+        	CASE(0xE4):																//***PIN display data
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] Pin code\n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					nPacketLength = (byte(gsBuffer,4));
+					nShowPin = (byte(gsBuffer,5));
+		
+					If(	nShowPin = 1 || nShowPin = 2)
+					{
+						sPacket = mid(gsBuffer, 6, (nPacketLength - 1));
+						Show_PIN = TRUE;
+						BYOD_PIN = sPacket;
+							sTrash = remove(sPacket, gsBuffer);
+					}
+					Else
+					{
+						Show_PIN = FALSE;
+						BYOD_PIN = "";		
+							sTrash = removebylength(5, gsBuffer);
+					}	        
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+						clearbuffer(gsBuffer);
+					#ENDIF
+				}
+		    	BREAK;
+			} 
+        	CASE(0xBA):																//***Window Status Data
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] Window Data\n");
+					Debug_out = left(gsBuffer,256); 
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					nPacketLength = (byte(gsBuffer,5) + (byte(gsBuffer,4)<<8));			
+					sPacket = mid(gsBuffer, 6, nPacketLength);
+					sTrash = RemoveByLength( nPacketLength + 5, gsBuffer );
+					ProcessWindows( sPacket );
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+            	BREAK;
+			}  
+        	CASE(0x3B):																//***Get the Mirroring data
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET mirroring data \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					gnMirroringStatus = (byte(gsBuffer,5)); 
+					gnMirroringDuration = (byte(gsBuffer,7) + (byte(gsBuffer,6)<<8));
+						sTrash = removebylength(7, gsBuffer);
+		
+					Source_Mirror_Waiting = gnMirroringStatus;
+	            	
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+	        	BREAK;
+			}
+			CASE(0x90):																//***Get the data for the source list
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET SOURCE LIST data \n");
+				#ENDIF
+				nPacketLength = ((byte(gsBuffer,5)) + (byte(gsBuffer,4)<<8)) + 5;	
+				sPacket = RemoveByLength( nPacketLength, gsBuffer );
+				ProcessSourceListData(sPacket);
+            	BREAK;
+			} 	
+	       	CASE(0x56):																//***Get the status of the master volume
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET Master volume level \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					gnMasterVolume = (byte(gsBuffer,5)); 
+						sTrash = removebylength(5, gsBuffer);
+	
+		            Master_Volume_Out = gnMasterVolume;	
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+            	BREAK;
+			}
+        	CASE(0x58):																//***Get the status of the master mute
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET Master Mute status \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					gnMasterMuteStatus = (byte(gsBuffer,5)); 
+						sTrash = removebylength(5, gsBuffer);
+		
+		            Master_Mute_On_Fb = gnMasterMuteStatus;
+		            Master_Mute_Off_Fb =! gnMasterMuteStatus;
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+	            BREAK;
+			} 	
+	       	CASE(0x38):																//***Get the presentation mode
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] GET presentation mode \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					gnPresentationMode = (byte(gsBuffer,5)); 
+						sTrash = removebylength(5, gsBuffer);
+		
+					Presentation_Mode_Open_Fb =! gnPresentationMode;
+					Presentation_Mode_Protected_Fb = gnPresentationMode;
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}	            
+            	BREAK;
+			}
+        	CASE(0x03):																//***Boxname data
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] Box Name(%u)\n", len(gsBuffer));
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					nPacketLength = byte(gsBuffer,4);					// get length of Box name			
+					sPacket = mid(gsBuffer, 5, nPacketLength);
+					Box_Name = sPacket;
+					sTrash = RemoveByLength( nPacketLength+4 , gsBuffer );
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}
+				BREAK;
+			}	
+			CASE(0x49):																//***SET Presentation end action
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand] SET Presentation END \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=4 )
+				{				
+	             	gnPresentationCountdown = 5;
+				}
+			}
+        	DEFAULT:																//***default action
+			{
+	         	// Purge buffer				
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCBCommand]Non-important data found. Buffer purged(%u)\n", len(gsBuffer));
+	
+						nLength = len(gsBuffer);
+				        if( nLength < 16 )
+						{
+							print("[ProcessCBCommand]Received Data: ");
+							for( nIndex = 1 to nLength )
+							{
+					        	print("      0x%02X", Byte( gsBuffer, nIndex ));
+							}
+						}
+						else
+						{
+							print("[ProcessCBCommand]Received Data(First 32 bytes): ");
+							for( nIndex = 1 to 16 )
+							{
+					        	print("      0x%02X", Byte( gsBuffer, nIndex ));
+							}
+						}						
+				#ENDIF
+				
+				clearbuffer( gsBuffer );
+				BREAK;
+			}	  	
+		}
+		Processlogic();
+	}
+	#IF_DEFINED DEBUG_RESPONSE
+		print("[ProcessCBCommand] Ending...\n");
+	#ENDIF
+}    
+/********************************************************************************
+ Function : ProcessCCCommand
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : 
+ Globals  : 
+ Calls    : 
+ Return   : N/A
+ Purpose  : The purpose of this function is to process the CC commands received
+ Notes    : N/A
+ ********************************************************************************/
+function ProcessCCCommand()
+{
+	integer nPacketLength, nSearch, nTemp;
+	string sPacket[ SOCKET_SIZE ], sTrash[ SOCKET_SIZE ];
+
+	integer nLength, nIndex;	// For debug only!
+
+	#IF_DEFINED DEBUG
+		print("[ProcessCCCommand]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_RESPONSE
+		print("[ProcessCCCommand] Starting...\n");
+	#ENDIF
+
+	while( len(gsBuffer) )										// Continue as long as we have something in the buffer
+	{
+		If(len(gsBuffer) >= 3){nSearch = byte(gsBuffer,3);}
+		else{processlogic();}
+
+		#IF_DEFINED DEBUG_RESPONSE
+			print("[ProcessCCCommand] Buffer Data, len(%u)\n", len(gsBuffer));
+			print("[ProcessCCCommand] sSearch(0x%X)\n", nSearch);
+		#ENDIF
+	
+		CSWITCH(nSearch)
+		{
+	       	CASE(0xEF):																//***Get the presentation mode
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCCCommand] GET presentation mode \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					gnSplashScreenStatus = (byte(gsBuffer,5)); 
+						sTrash = removebylength(5, gsBuffer);
+		
+					Splash_Screen_Enabled = gnSplashScreenStatus;
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}	            
+            	BREAK;
+			}
+	       	CASE(0xC7):																//***Get the standby mode
+			{
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCCCommand] GET standby mode \n");
+				#ENDIF
+
+				if( len( gsBuffer )>=5 )
+				{			
+					gnStandbyMode = (byte(gsBuffer,5)); 
+						sTrash = removebylength(5, gsBuffer);
+					CSWITCH(gnStandbyMode)
+					{
+				       	CASE(0):{StandbyButtonText = "Standby"; break;}											//standby
+				       	CASE(1):{StandbyButtonText = "Shutdown"; break;}											//shutdown
+				       	CASE(2):{StandbyButtonText = "Power Save"; break;}											//powersave					}		
+						DEFAULT: {StandbyButtonText = ""; Break;}
+					}
+				}
+				else
+				{
+					#IF_DEFINED DEBUG_RESPONSE
+						print("[ProcessCBCommand] Not enough data! Clearing buffer\n");
+					#ENDIF
+					clearbuffer(gsBuffer);
+				}	            
+            	BREAK;
+			}
+        	DEFAULT:																//***default action
+			{
+	         	// Purge buffer				
+				#IF_DEFINED DEBUG_RESPONSE
+					print("[ProcessCCCommand]Non-important data found. Buffer purged(%u)\n", len(gsBuffer));
+	
+						nLength = len(gsBuffer);
+				        if( nLength < 16 )
+						{
+							print("[ProcessCCCommand]Received Data: ");
+							for( nIndex = 1 to nLength )
+							{
+					        	print("      0x%02X", Byte( gsBuffer, nIndex ));
+							}
+						}
+						else
+						{
+							print("[ProcessCCCommand]Received Data(First 32 bytes): ");
+							for( nIndex = 1 to 16 )
+							{
+					        	print("      0x%02X", Byte( gsBuffer, nIndex ));
+							}
+						}						
+				#ENDIF
+				
+				clearbuffer( gsBuffer );
+				BREAK;
+			}	  	
+		}
+		Processlogic();
+	}
+	#IF_DEFINED DEBUG_RESPONSE
+		print("[ProcessCCCommand] Ending...\n");
+	#ENDIF
+}    
+
+/********************************************************************************
+ Function : ProcessBuffer
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gsBuffer
+ Calls    : ProcessError
+			ProcessCBCommand
+			ProcessCCCommand
+			ProcessPaths
+ Return   : N/A
+ Purpose  : The purpose of this function is to parse the incomming data from 
+			the Cynap and distribute it to the other functions for furter parsing.
+ Notes    : N/A
+ ********************************************************************************/
+function ProcessBuffer()							//Catch all buffer process for data coming in 
+{
+	integer nPacketLength, nSearch;
+	string sPacket[ SOCKET_SIZE ], sTrash[12];
+
+ 	integer nLength, nIndex;	// For debug only!
+
+	#IF_DEFINED DEBUG
+		print("[ProcessBuffer]\n");
+	#ENDIF
+	#IF_DEFINED DEBUG_RESPONSE
+		print("[ProcessBuffer] Starting...\n");
+		print("[ProcessBuffer] Processing incoming data. Buffer length(%u)\n Buffer [%s]\n", len(gsBuffer), gsBuffer );
+
+		if( len( gsBuffer ) > 255 )
+			Debug_out = left( gsBuffer, 255 );
+		else
+			Debug_out = gsBuffer;
+			print("[ProcessBuffer] %s\n", gsBuffer);
+	#ENDIF
+
+
+	while( len(gsBuffer) )										// Continue as long as we have something in the buffer
+	{
+		#IF_DEFINED DEBUG_RESPONSE
+			print("[ProcessBuffer] Buffer Data, len(%u)\n", len(gsBuffer));
+		#ENDIF
+	
+		if( ((byte( gsBuffer, 1 )= 0x80) || (byte( gsBuffer, 1 )= 0x81) || (byte( gsBuffer, 1 )= 0x88) || (byte( gsBuffer, 1 )= 0x89)) && ((byte( gsBuffer, 2 ) = 0xCB) || (byte( gsBuffer, 2 ) = 0xCC)))			// Error
+		{
+			sPacket = RemoveByLength( 4 , gsBuffer ); 
+			ProcessError(sPacket);		
+		}
+		else if( ((byte( gsBuffer, 1 )= 0x08) || (byte( gsBuffer, 1 )= 0x09) || (byte( gsBuffer, 1 )= 0x0C) || (byte( gsBuffer, 1 )= 0x0D)) && (byte( gsBuffer, 2 ) = 0xCB)) 			// Valid CB Command
+		{
+			#IF_DEFINED DEBUG_RESPONSE
+				print("[ProcessBuffer] ProcessCBCommand \n");
+			#ENDIF
+			ProcessCBCommand();		
+		}
+		else if( ((byte( gsBuffer, 1 )= 0x08) || (byte( gsBuffer, 1 )= 0x09) || (byte( gsBuffer, 1 )= 0x0C) || (byte( gsBuffer, 1 )= 0x0D)) && (byte( gsBuffer, 2 ) = 0xCC)) 			// Valid CC Command
+		{
+			#IF_DEFINED DEBUG_RESPONSE
+				print("[ProcessBuffer] ProcessCCCommand \n");
+			#ENDIF
+			ProcessCCCommand();		
+		}
+/*   		else if( (byte( gsBuffer, 1 ) = 0x0A) && (byte( gsBuffer, 2 ) = 0x01) && ((byte( gsBuffer, 3 ) = 0xCB) || (byte( gsBuffer, 3 ) = 0xCC)))		//***extended length command
+		{
+			#IF_DEFINED DEBUG_RESPONSE
+				print("[ProcessBuffer] ProcessExtendedCommand \n");
+			#ENDIF
+			ProcessExtendedCommand();					             
+		}
+*/		else
+		{
+         	// Purge buffer
+			
+			#IF_DEFINED DEBUG_RESPONSE
+				print("[ProcessBuffer]Non-important data found. Buffer purged(%u)\n", len(gsBuffer));
+
+					nLength = len(gsBuffer);
+			        if( nLength < 16 )
+					{
+						print("[ProcessBuffer]Received Data: ");
+						for( nIndex = 1 to nLength )
+						{
+				        	print("      0x%02X", Byte( gsBuffer, nIndex ));
+						}
+					}
+					else
+					{
+						print("[ProcessBuffer]Received Data(First 32 bytes): ");
+						for( nIndex = 1 to 16 )
+						{
+				        	print("      0x%02X", Byte( gsBuffer, nIndex ));
+						}
+					}
+
+						
+			#ENDIF
+			
+			clearbuffer( gsBuffer );
+		}
+  	
+		Processlogic();
+	}
+
+	#IF_DEFINED DEBUG_RESPONSE
+		print("[ProcessBuffer] Ending... Buffer length(%u)\n", len(gsBuffer));
+	#ENDIF
+} 
+
+
+/********************************************************************************
+ Function : ReturnPollCommand
+ --------------------------------------------------------------------------------
+ Arguments: INTEGER nPriority - Defines which que to which a commands is returned.  
+			INTEGER nCommand - Defines the index in the list.
+			ByRef STRING sCommand - Used to return the command.
+ Output   : N/A
+ Globals  : N/A
+ Calls    : N/A
+ Return   : TRUE - Success. Command was found in the que.
+			FALSE - Failure. Reached end of the que.
+ Purpose  : The purpose of this function is return the requested command from the
+			priority list.
+ Notes    : New command can be added by adding them to the desired list.
+			When adding, please remember to increase the index number and
+			return a TRUE value.
+ ********************************************************************************/ 
+INTEGER_Function ReturnPollCommand( INTEGER nPriority, INTEGER nCommand , ByRef STRING sCommand)
+{
+    #IF_DEFINED DEBUG
+		print("[ReturnPollCommand]\n");
+	#ENDIF
+    #IF_DEFINED DEBUG_POLL
+		print("[ReturnPollCommand] nPriority (%u)\n nCommand (%u)\n", nPriority, nCommand);
+	#ENDIF
+
+	if( nPriority = POLL_PRIORITY_LOW )
+	{
+		CSWITCH( nCommand )
+		{
+			CASE( 01 ): {sCommand=GET_PRESENTATION_MODE;return(TRUE);break;}
+			CASE( 02 ): {sCommand=GET_BOXNAME;return(TRUE);break;}
+			CASE( 03 ): {sCommand=GET_SPLASHSCREEN_MODE;return(TRUE);break;}
+			CASE( 04 ): {sCommand=GET_STANDBY_MODE;return(TRUE);break;}
+
+
+			// Add new command line here!
+			DEFAULT: { sCommand=""; RETURN(FALSE);}
+		}
+	}
+	else if( nPriority = POLL_PRIORITY_MEDIUM )
+	{
+		CSWITCH( nCommand )
+		{
+			CASE( 01 ): {sCommand=GET_POWER_STATUS;return(TRUE);break;}
+			CASE( 02 ): {sCommand=GET_MIRRORING_STATUS;return(TRUE);break;}	
+			CASE( 03 ): {sCommand=GET_MASTER_MUTE_STATUS;return(TRUE);break;}			
+			CASE( 04 ): {sCommand=GET_MASTER_VOLUME;return(TRUE);break;	}		
+
+			// Add new command line here!
+			DEFAULT: { sCommand=""; RETURN(FALSE);}		
+		} 	
+	}
+	else if( nPriority = POLL_PRIORITY_HIGH )
+	{
+		CSWITCH( nCommand )
+		{
+			CASE( 01 ): {sCommand=GET_WINDOW_STATUS;return(TRUE);break;}
+			CASE( 02 ): {sCommand=GET_PIN;return(TRUE);break;}
+			CASE( 03 ): {sCommand=GET_SOURCE_LIST;return(TRUE);break;}
+			CASE( 04 ): {sCommand=GET_WINDOW_FREE;return(TRUE);break;}
+
+			// Add new command line here!
+			DEFAULT: { sCommand=""; RETURN(FALSE);}		
+		} 	
+	}
+	else
+	{
+		#if_defined DEBUG_POLL
+			print("[ReturnPollCommand] Unknown priority: %u\n", nPriority);
+		#ENDIF
+		sCommand=""; RETURN(FALSE);
+	}
+	#if_defined DEBUG_POLL
+		print("[ReturnPollCommand] Ending...\n");
+	#ENDIF
+} 
+/********************************************************************************
+ Function : Poll
+ --------------------------------------------------------------------------------
+ Arguments: N/A 
+ Output   : N/A
+ Globals  : gnPoll_Enable
+			gnLoginValid
+			gnPowerStatus	
+ 			gnStreamingStatus
+ Calls    : SendData
+			SendLogin
+ Return   : N/A
+ Purpose  : The purpose of this function is to poll the various aspects of the 
+			Cynap that we need information for. 
+ Notes    : Polling is broken up into 3 tiers;
+			-High polled more often(allowed more transmission time)
+			-Med
+			-Low polled less often(allowed less transmission time)
+			Each of the 3 tiers reference 3 ques.
+			Transmission is prioritized so 2 packages from the low que is sent,
+			4 from the medium is sent and 6 from the high is sent.
+			If there are less than the number of allowed transmission in a que, 
+			it is wrapped around starting from the beginning again.
+
+			Transmission is as such: L,L,M,M,M,M,H,H,H,H,H,H,L,L,M,M,M,M....
+ ********************************************************************************/  
+Function Poll()								//Since we dont have unsolicited feedback, create a poll cycle
+{
+	INTEGER nPriority, nStep; 						// Variables used for FOR-loops.   
+    STRING sPackage[32];						 	// Command being sent to the Cynap.
+	INTEGER nPriorityIndex[3]; 					// Pointers to index of each que.
+	INTEGER nContinue;							 	// Used to cancel transmission if problems are detected.
+
+	#if_defined DEBUG
+		print("[Poll]\n");
+	#ENDIF
+
+	gnPoll_Enable = TRUE;
+
+	#if_defined DEBUG_POLL
+		print("[Poll] Poll has been activated\n");
+	#ENDIF
+                                                                 
+
+	while( gnPoll_Enable )
+	{
+		If( gnLoginValid = TRUE)
+		{
+			if( gnPowerStatus = TRUE )
+			{	
+
+				nContinue = TRUE;
+                nPriorityIndex[1] = 1;	// Setup starting command
+                nPriorityIndex[2] = 1;	// Setup starting command
+                nPriorityIndex[3] = 1;	// Setup starting command
+
+				while( nContinue ) // Continue as long as no errors are detected.
+				{
+              		for( nPriority = POLL_PRIORITY_LOW to POLL_PRIORITY_HIGH ) // Loop through each priority que.
+					{
+                 		for( nStep = 1 to (nPriority*2)) // Low = 2 rounds, Medium = 4 rounds, High = 6 rounds
+						{ 
+							// First we need to ask (and get) the next command in the que list.
+							// If it fails, it means that we have reached the end and must start from
+							// the begining again.
+                       		if( ReturnPollCommand( nPriority, nPriorityIndex[nPriority] , sPackage) = FALSE )
+							{
+								// We have reached the end of the que and must start from the begining.
+								nPriorityIndex[nPriority]= 1;
+								ReturnPollCommand( nPriority, nPriorityIndex[nPriority] , sPackage);
+							}
+                                                                                        
+							// We got the command from the que, increase the index for the next run.
+							nPriorityIndex[nPriority] = nPriorityIndex[nPriority] + 1;	
+
+							// Send the command that was returned by ReturnPollCommand.
+							if( SendData( sPackage ) >= 0)
+	                        	delay( POLL_DELAY );	// Grace period, before next command can be sent. Increasing this will affect the load on the processor.
+							else
+							{
+								// SendData returned with an error. We need to break out of the poll-cycle
+								// in order to re-establish the connection again.
+								#if_defined DEBUG_CRITICAL
+									print("[Poll] Send Failed. Breaking out\n");
+								#ENDIF
+
+								nContinue = FALSE; break;// Break all loops.
+							}	
+
+							if( nContinue = FALSE ) break;
+						}
+						if( nContinue = FALSE ) break;
+					} 
+                  
+					// Out of sync checks and commands are added here.  
+					if( nContinue = TRUE )
+					{
+						if(gnPoll_Enable = FALSE) break;
+	                    If(gnLoginValid = FALSE)	{SendLogin();delay( POLL_DELAY );}
+					}
+					else
+					{
+                    	gnPoll_Enable = FALSE;
+					}
+				}
+			}
+			else
+			{
+				// The power is assumed to be offline. Wait a while and try again.
+				delay( 500 ); 
+				SendData( GET_POWER_STATUS );
+			}
+        }
+		Else SendLogin();
+       	
+		Processlogic();
+	}
+            
+	#if_defined DEBUG_POLL
+		print("[Poll] Poll cycle has ended.\n");
+	#ENDIF
+}
+    
+
+      
+/*******************************************************************************************
+  Event Handlers
+  Define PUSH, RELEASE, CHANGE, EVENT, SOCKETCONNECT, SOCKETDISCONNECT, SOCKETRECEIVE, SOCKETSTATUS
+*******************************************************************************************/
+
+/********************************************************************************
+ Function : SOCKETRECEIVE Cynap
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnProcessingBuffer
+			gsBuffer 
+ Calls    : ProcessBuffer
+ Return   : N/A
+ Purpose  : The purpose of this section is to recieve data from the Cynap and call the ProcessBuffer if it is not running
+ Notes    : Uses a S# event class as a replacement for the original socket-function.
+ ********************************************************************************/
+eventhandler CYNAP_SSL_SOCKETRECEIVE(SSLClass sender, EventArgs e)
+{
+	#if_defined DEBUG
+		print("[CYNAP_SSL_SOCKETRECEIVE]\n");
+	#ENDIF
+
+	if( sender = Cynap )
+	{
+		gnSending = FALSE; // Allow transmission to continue.
+		gnHeartbeatCounter = 0;
+
+		gsBuffer = gsBuffer + Cynap.ReceiveBuffer; // Move the Simpl# data into Simpl+
+		Cynap.ClearRxBuffer();
+
+		#if_defined DEBUG_RESPONSE
+			print("[CYNAP_SSL_SOCKETRECEIVE](%u)[%s]\n", len(gsBuffer), gsBuffer );
+			Debug_out = gsBuffer;
+		#ENDIF
+	
+		if( gnProcessingBuffer = FALSE )		// If we are already processing the buffer, no need to do anything, other wise start process buffer
+		{
+			gnProcessingBuffer = TRUE;		
+			ProcessBuffer();		
+			gnProcessingBuffer = FALSE;
+		}
+		else
+		{
+			#if_defined DEBUG_RESPONSE
+				print("[CYNAP_SSL_SOCKETRECEIVE] Already processing...Size of sBuffer: %u\n", len(gsBuffer) );
+			#ENDIF
+		}
+	}
+	else
+	{
+		#if_defined DEBUG_RESPONSE
+			print("[SOCKETSTATUS Cynap] Class issue\n" );
+		#ENDIF
+	}
+}
+
+/********************************************************************************
+ Function : SOCKETSTATUS Cynap
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : Link_Status
+			Link_Established_Fb
+ Globals  : gnEthernetStatus
+ Calls    : Disconnect
+ Return   : N/A
+ Purpose  : The purpose of this function is to observe the Connection state to the 
+			cynap and try to re-establish a connection if it is broken
+ Notes    : Uses a S# event class as a replacement for the original socket-function.
+ ********************************************************************************/
+eventhandler CYNAP_SSL_SOCKETSTATUS(SSLClass sender, EventArgs e)
+{
+	#if_defined DEBUG
+		print("[CYNAP_SSL_SOCKETSTATUS]\n");
+	#ENDIF
+
+	if( sender = Cynap )
+	{
+		gnEthernetStatus = Cynap.SocketGetStatus;
+
+		#if_defined DEBUG_CRITICAL
+			print("[SOCKETSTATUS Cynap] gnEthernetStatus = %d\n", gnEthernetStatus );
+		#ENDIF
+	
+		cswitch( gnEthernetStatus )
+		{
+			case( ETH_STATUS_NO_CONNECT ):					{break;}
+			case( ETH_STATUS_WAITING ):						{break;} 
+			case( ETH_STATUS_CONNECTED ):					{break;}
+			case( ETH_STATUS_CONNECTION_FAILED ):			{break;} 
+	    	case( ETH_STATUS_CONNECTION_BROKEN_REMOTELY ): 	{Disconnect();break;} // In case of remote disconnect then cleanup.
+			case( ETH_STATUS_CONNECTION_BROKEN_LOCALLY ): 	{break;} // In case of local disconnect then cleanup.
+			case( ETH_STATUS_DNS_LOOKUP ): 					{break;}
+			case( ETH_STATUS_DNS_LOOKUP_FAILED ): 			{Disconnect();break;}
+			case( ETH_STATUS_DNS_LOOKUP_RESOLVED ): 		{break;}
+			case( ETH_STATUS_CABLE_UNPLUGGED ): 			{Disconnect();break;}
+		}
+		
+	    Link_Status = gnEthernetStatus;
+	
+		if(gnEthernetStatus = ETH_STATUS_CONNECTED ) Link_Established_Fb = TRUE;
+		else
+		{
+        	gnLoginValid 	= FALSE;
+			VALID_LOGIN = gnLoginValid;
+	        Link_Established_Fb = FALSE;
+		}
+	}
+	else
+	{
+		#if_defined DEBUG_CRITICAL
+			print("[SOCKETSTATUS Cynap] Class issue\n" );
+		#ENDIF
+	}
+}
+/*******************************************************************************************
+  Event Handlers
+  Define PUSH, RELEASE, CHANGE, EVENT, SOCKETCONNECT, SOCKETDISCONNECT, SOCKETRECEIVE, SOCKETSTATUS
+*******************************************************************************************/
+
+/********************************************************************************
+ Function : CHANGE SendCommand
+ --------------------------------------------------------------------------------
+ Arguments: N/A 
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This is a direct way to send a command to the Cynap. Any data comming in, goes strait to the cynap
+ Notes    : N/A
+ ********************************************************************************/
+Change SendCommand
+{
+	#if_defined DEBUG
+		print("[SendCommand]\n");
+	#ENDIF
+
+	SendData(SendCommand);
+}
+ 
+/********************************************************************************
+ Function : PUSH Power_On
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData 
+			Send_WOL
+ Return   : N/A
+ Purpose  : Send the Power_On command to the Cynap
+ Notes    : N/A
+ ********************************************************************************/
+Push Power_On
+{
+	Send_WOL();
+	SendData(SET_POWER_ON);
+	wait(5) SendData(GET_POWER_STATUS);
+		
+}
+/********************************************************************************
+ Function : PUSH Power_Off
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : Send the Power_Off command to the Cynap
+ Notes    : N/A
+ ********************************************************************************/
+Push Power_Off 
+{
+	SendData(SET_POWER_OFF);
+	wait(5) SendData(GET_POWER_STATUS);
+}
+/********************************************************************************
+ Function : PUSH Power_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A 
+ Output   : N/A
+ Globals  : gnPowerStatus
+ Calls    : SendData 
+			Send_WOL
+ Return   : N/A
+ Purpose  : Toggle which command to send, Power_On, or Power_Off
+ Notes    : N/A
+ ********************************************************************************/
+Push Power_Toggle 
+{
+	If(gnPowerStatus)
+	{
+		SendData(SET_POWER_OFF);
+	}
+	Else 
+	{
+		Send_WOL();
+		SendData(SET_POWER_ON);
+	}
+
+	wait(100)
+	{ 
+		SendData(GET_POWER_STATUS); 
+	}
+}
+
+/********************************************************************************
+ Function : PUSH Presentation_Mode_Open
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : Send the Presentation_Mode_Open command to the Cynap
+ Notes    : N/A
+ ********************************************************************************/
+Push Presentation_Mode_Open {SendData(SET_PRES_OPEN);}
+/********************************************************************************
+ Function : PUSH Presentation_Mode_Protected
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : Send the Presentation_Mode_Protected command to the Cynap
+ Notes    : N/A
+ ********************************************************************************/
+Push Presentation_Mode_Protected {SendData(SET_PRES_PROTECTED);}
+
+/********************************************************************************
+ Function : PUSH Presentation_Mode_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnPresentationMode
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : Toggle which command to send, Presentation_Mode_Protected, or Presentation_Mode_Open
+ Notes    : N/A
+ ********************************************************************************/
+Push Presentation_Mode_Toggle 
+{
+	If(gnPresentationMode){SendData(SET_PRES_OPEN);}
+	Else{SendData(SET_PRES_PROTECTED);}
+		wait(100)
+		{ 
+			SendData(GET_PRESENTATION_MODE); 
+		}
+}
+/********************************************************************************
+ Function : PUSH Presentation_New
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnPresentationEndRecordings
+			gnPresentationEndSnapshots
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will close all windows and start a new presentation 
+ Notes    : N/A
+ ********************************************************************************/
+Push Presentation_New 
+{
+	String sPacket[MAX_DATA_SIZE];
+            
+	makestring(sPacket, "%s\x00\x00\x00", SET_PRES_END);
+		SendData(sPacket);
+}
+/********************************************************************************
+ Function : PUSH Presentation_End
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnPresentationEndRecordings
+			gnPresentationEndSnapshots
+			Win[x].Type			
+ Calls    : WindowControl
+			SendData
+ Return   : N/A
+ Purpose  : This function will close all windows and put the cynap into standby 
+ Notes    : N/A
+ ********************************************************************************/
+Push Presentation_End 
+{
+	String sPacket[MAX_DATA_SIZE];
+            
+	makestring(sPacket, "%s\x00\x00\x01", SET_PRES_END);
+	Win[1].Type = 0;
+	Win[2].Type = 0;
+	Win[3].Type = 0;
+	Win[4].Type = 0;
+	WindowControl();
+		SendData(sPacket);
+		gnPresentationCountdown = 5;
+}
+ 
+/********************************************************************************
+ Function : PUSH Close_All_Windows
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : BrowseSubpages
+			SendData
+ Return   : N/A
+ Purpose  : This function will close all windows
+ Notes    : N/A
+ ********************************************************************************/
+Push Close_All_Windows
+{
+	SendData("\x09\xCB\x28\x02\x00\x00");
+	wait(50) SendData("\x09\xCB\x28\x02\x01\x00");
+	wait(100) SendData("\x09\xCB\x28\x02\x02\x00");
+	wait(150) SendData("\x09\xCB\x28\x02\x03\x00");
+}
+
+/********************************************************************************
+ Function : PUSH Source_Mirror
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will open a new Mirroring window, on the next available window
+ Notes    : N/A
+ ********************************************************************************/
+Push Source_Mirror{ SendData(SET_MIRRORING_ON); }
+   
+///Master Volume controls
+/********************************************************************************
+ Function : CHANGE Master_Volume_In
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will change the master volume level 
+ Notes    : N/A
+ ********************************************************************************/
+Change Master_Volume_In
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	makestring(sPacket, "%s%s", SET_MASTER_VOLUME, chr(Master_Volume_In));
+	SendData(sPacket);
+		wait(100) SendData(GET_MASTER_VOLUME); 
+}
+/********************************************************************************
+ Function : PUSH Master_Mute_On
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will turn the Master Mute On
+ Notes    : N/A
+ ********************************************************************************/
+Push Master_Mute_On{SendData(SET_MASTER_MUTE_ON);}
+/********************************************************************************
+ Function : PUSH Master_Mute_Off
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will turn the Master Mute Off
+ Notes    : N/A
+ ********************************************************************************/
+Push Master_Mute_Off{SendData(SET_MASTER_MUTE_OFF);}
+/********************************************************************************
+ Function : PUSH Master_Mute_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnMasterMuteStatus
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will toggle the Master Mute On or Off
+ Notes    : N/A
+ ********************************************************************************/
+Push Master_Mute_Toggle
+{
+	If(gnMasterMuteStatus = 0){SendData(SET_MASTER_MUTE_ON);}
+	Else {SendData(SET_MASTER_MUTE_OFF);}	
+		wait(100)SendData(GET_MASTER_MUTE_STATUS);
+}
+
+/********************************************************************************
+ Function : PUSH Window_Select
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : Active_Window_Volume_Subpage
+			Window_Selected_fb
+			EditBar_Active
+			Active_Window
+ Globals  : gnActiveWindow
+			Win[x].EditBar
+			Win[x].Type			
+ Calls    : SetEditBarClear
+			SendData
+ Return   : N/A
+ Purpose  : This function will update the currently selected window, and clear the 
+			volume bar subpage and display the correct buttons in the edit bar.
+ Notes    : N/A
+ ********************************************************************************/
+ 
+Push Window_Select
+{ 
+	Integer nWindowPressed, nLoop, nBookmarkMatch;
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	nWindowPressed = getlastmodifiedarrayindex();
+                  
+	#if_defined DEBUG_PROGRAM
+		print("[Window_Select]Window# %u\n", nWindowPressed );
+	#ENDIF
+
+	Active_Window_Volume_Subpage = FALSE;
+
+	If(nWindowPressed = gnActiveWindow)								//Check if window is active
+	{
+		gnActiveWindow = FALSE;										//if it is, then de-activate it
+		Window_Selected_fb[nWindowPressed] = FALSE;
+		EditBar_Active = FALSE;
+		Active_Window = gnActiveWindow;
+		Win[nWindowPressed].EditBar = 0;
+	}
+	Else															//Else make window active
+	{
+		gnActiveWindow = nWindowPressed;							//assign global variable to new active window
+		Active_Window = gnActiveWindow;
+
+		For(nLoop = 1 to MAX_WINDOWS)
+		{
+			If(nLoop = gnActiveWindow)			
+			{
+				Window_Selected_fb[nLoop] = TRUE;
+            }
+			Else
+			{
+				Window_Selected_fb[nLoop] = FALSE;
+			}
+		}
+	
+		Win[nWindowPressed].EditBar = 1;
+		EditBar_Active = TRUE;									//Show the edit bar
+		SendData(GET_WINDOW_STATUS);
+	}
+}
+        
+
+///Window controls 
+/********************************************************************************
+ Function : PUSH Window_Close
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This will close the selected window (Valid selection 1-4)
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Close
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	nWindowSelected = Getlastmodifiedarrayindex();
+	makestring(sPacket, "%s%s\x00", SET_WINDOW_CONTROL, chr(nWindowSelected - 1));
+	SendData(sPacket);	
+		gnActiveWindow = FALSE;										
+} 
+/********************************************************************************
+ Function : PUSH Window_Mode_Fullscreen
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will put the selected window into fullscreen mode
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Mode_Fullscreen
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	nWindowSelected = Getlastmodifiedarrayindex();
+	makestring(sPacket, "%s%s\x01", SET_WINDOW_CONTROL, chr((nWindowSelected - 1)));
+	SendData(sPacket);	
+}
+/********************************************************************************
+ Function : PUSH Window_Mode_Normal
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will put the selected window into normal mode
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Mode_Normal
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	nWindowSelected = Getlastmodifiedarrayindex();
+		makestring(sPacket, "%s%s\x02", SET_WINDOW_CONTROL, chr((nWindowSelected - 1)));
+		SendData(sPacket);
+}
+/********************************************************************************
+ Function : PUSH Window_Mode_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : Win[x].Screen
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will put the selected window into fullscreen or normal mode
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Mode_Toggle
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	nWindowSelected = Getlastmodifiedarrayindex();
+
+	If(Win[nWindowSelected].Screen = FULL)
+	{
+		makestring(sPacket, "%s%s\x02", SET_WINDOW_CONTROL, chr((nWindowSelected - 1)));
+		SendData(sPacket);	
+	}
+	Else
+	{
+		makestring(sPacket, "%s%s\x01", SET_WINDOW_CONTROL, chr((nWindowSelected - 1)));
+		SendData(sPacket);	
+	}
+} 
+          
+/********************************************************************************
+ Function : CHANGE Window_Volume_In
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will change the volume level for the selected window
+ Notes    : N/A
+ ********************************************************************************/
+Change Window_Volume_In
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	nWindowSelected = Getlastmodifiedarrayindex();
+	makestring(sPacket, "%s%s\x04%s", SET_WINDOW_VOLUME, chr(nWindowSelected - 1), chr(Window_Volume_In[nWindowSelected]));
+	SendData(sPacket); 
+}
+/********************************************************************************
+ Function : PUSH Window_Mute_On
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will set the selected window mute on
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Mute_On
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+         
+	nWindowSelected = Getlastmodifiedarrayindex();
+    makestring(sPacket, "%s\x03%s\x01", SET_WINDOW_VOLUME, chr((nWindowSelected - 1)));
+	SendData(sPacket);
+}  
+/********************************************************************************
+ Function : PUSH Window_Mute_Off
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will set the selected window mute off
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Mute_Off
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+         
+	nWindowSelected = Getlastmodifiedarrayindex();
+    makestring(sPacket, "%s\x03%s\x00", SET_WINDOW_VOLUME, chr((nWindowSelected - 1)));
+	SendData(sPacket);
+}  
+/********************************************************************************
+ Function : PUSH Window_Mute_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : Win[x].Mute
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will toggle the selected window mute on or off
+ Notes    : N/A
+ ********************************************************************************/
+Push Window_Mute_Toggle
+{
+	Integer nWindowSelected;		
+	String sPacket[ MAX_PACKET_SIZE ];
+         
+	nWindowSelected = Getlastmodifiedarrayindex();
+
+	If(	Win[nWindowSelected].Mute = 1)
+	{
+	    makestring(sPacket, "%s\x03%s\x00", SET_WINDOW_VOLUME, chr((nWindowSelected - 1)));
+	}
+	Else
+	{
+	    makestring(sPacket, "%s\x03%s\x01", SET_WINDOW_VOLUME, chr((nWindowSelected - 1)));
+	}
+	SendData(sPacket);
+} 
+ 
+
+//Active window controls
+
+/********************************************************************************
+ Function : PUSH Active_Window_Close
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+ Calls    : SendData
+			WindowControl
+ Return   : N/A
+ Purpose  : This function will close the active window
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Close
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	makestring(sPacket, "%s%s\x00", SET_WINDOW_CONTROL, chr(gnActiveWindow - 1));
+	SendData(sPacket);		
+		gnActiveWindow = FALSE;										
+		WindowControl();
+} 
+/********************************************************************************
+ Function : PUSH Active_Window_Mode_Fullscreen
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : This function will set the active window mode to fullscreen
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Mode_Fullscreen
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	makestring(sPacket, "%s%s\x01", SET_WINDOW_CONTROL, chr((gnActiveWindow - 1)));
+	SendData(sPacket);	
+}
+/********************************************************************************
+ Function : PUSH Active_Window_Mode_Normal
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : This function will set the active window mode to normal
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Mode_Normal
+{	
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	makestring(sPacket, "%s%s\x02", SET_WINDOW_CONTROL, chr((gnActiveWindow - 1)));
+	SendData(sPacket);
+}
+/********************************************************************************
+ Function : PUSH Active_Window_Mode_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+			Win[x].Screen
+ Calls    : SendData 
+ Return   : N/A
+ Purpose  : This function will toggle the active window mode to fullscreen or normal
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Mode_Toggle
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	If(Win[gnActiveWindow].Screen = FULL)
+	{
+		makestring(sPacket, "%s%s\x02", SET_WINDOW_CONTROL, chr((gnActiveWindow - 1)));
+		SendData(sPacket);	
+	}
+	Else
+	{
+		makestring(sPacket, "%s%s\x01", SET_WINDOW_CONTROL, chr((gnActiveWindow - 1)));
+		SendData(sPacket);	
+	}
+} 
+
+/********************************************************************************
+ Function : CHANGE Active_Window_Volume_In
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will change the volume level for the active window
+ Notes    : N/A
+ ********************************************************************************/
+Change Active_Window_Volume_In
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+
+	makestring(sPacket, "%s%s\x04%s", SET_WINDOW_VOLUME, chr(gnActiveWindow - 1), chr(Active_Window_Volume_In));
+	SendData(sPacket); 
+}
+/********************************************************************************
+ Function : PUSH Active_Window_Mute_On
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will set the active window mute on
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Mute_On
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+         
+	makestring(sPacket, "%s%s\x03\x01", SET_WINDOW_VOLUME, chr((gnActiveWindow - 1)));
+	SendData(sPacket);
+}
+/********************************************************************************
+ Function : PUSH Active_Window_Mute_Off
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnActiveWindow
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will set the active window mute off
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Mute_Off
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+         
+	makestring(sPacket, "%s%s\x03\x00", SET_WINDOW_VOLUME, chr((gnActiveWindow - 1)));
+	SendData(sPacket);
+}
+/********************************************************************************
+ Function : PUSH Active_Window_Mute_Toggle
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : Win[x].Mute
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function will toggle the active window mute on or off
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Mute_Toggle
+{
+	String sPacket[ MAX_PACKET_SIZE ];
+         
+	If(	Win[gnActiveWindow].Mute = 1)
+	{
+	    makestring(sPacket, "%s%s\x03\x00", SET_WINDOW_VOLUME, chr((gnActiveWindow - 1)));
+	}
+	Else
+	{
+	    makestring(sPacket, "%s%s\x03\x01", SET_WINDOW_VOLUME, chr((gnActiveWindow - 1)));
+	}
+	SendData(sPacket);
+} 
+ 
+/********************************************************************************
+ Function : PUSH Active_Window_Volume_Button
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : Active_Window_Volume_Subpage
+ Globals  : N/A
+ Calls    : N/A
+ Return   : N/A
+ Purpose  : This function will toggle the Volume Window on or off
+ Notes    : N/A
+ ********************************************************************************/
+Push Active_Window_Volume_Button
+{
+	If(Active_Window_Volume_Subpage)
+	{
+        Active_Window_Volume_Subpage = FALSE;
+	}
+	Else
+	{
+    	Active_Window_Volume_Subpage = TRUE;
+	}
+}
+ 
+/********************************************************************************
+ Function : PUSH Close_Mirroring
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function closes the mirroring popup
+ Notes    : 
+ ********************************************************************************/      
+Push Close_Mirroring{SendData(SET_MIRRORING_OFF);}
+
+/********************************************************************************
+ Function : PUSH Show_Splash_Screen
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : N/A
+ Calls    : SendData
+ Return   : N/A
+ Purpose  : This function shows the splash scren
+ Notes    : 
+ ********************************************************************************/      
+Push Show_Splash_Screen{SendData(SET_SPLASH_SCREEN_SHOW);}
+
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+/********************************************************************************
+ Function : Main
+ --------------------------------------------------------------------------------
+ Arguments: N/A
+ Output   : N/A
+ Globals  : gnEthernetStatus
+ Calls    : Init
+			InitCynapConnection
+ Return   : N/A
+ Purpose  : This function is the startup code used to start the program
+ Notes    : N/A
+ ********************************************************************************/
+Function Main()
+{
+	Init();
+    WaitForInitializationComplete();
+
+	SocketUDP_Enable(UDP_Broadcast, Brodcast_IP, UDP_Port);
+
+	while( 1 )
+	{
+		#IF_DEFINED DEBUG_CRITICAL
+			print("[Main]Start\n");
+		#ENDIF
+	
+	    if( InitCynapConnection() = TRUE )	
+		{
+			#IF_DEFINED DEBUG_CRITICAL
+				print("[Main]InitCynapConnection is good!\n");
+				print("[Main]gnEthernetStatus = %u\n", gnEthernetStatus);
+			#ENDIF
+
+	        if( gnEthernetStatus = ETH_STATUS_CONNECTED )	
+			{
+				// Connection request has been approved                  
+
+				Poll();	// Start polling cycle
+
+				// If we reach this point, it would mean that the poll cycle has ended.
+				// Ethernet connection has been lost to either a) Ethernet issue or b) Unit in deep sleep.
+				// We will need to wait and then retry the connection and poll cycle.
+				#IF_DEFINED DEBUG_CRITICAL
+					print("[Main]No connection to server.\n");
+				#ENDIF
+			
+			}
+			else
+			{
+				#IF_DEFINED DEBUG_CRITICAL
+					print("[Main]No connection to server.\n");
+				#ENDIF
+
+				delay( 3000 ); // Wait for 30 sec. before trying again.
+			}	
+			
+		}
+		else
+		{
+			#IF_DEFINED DEBUG_CRITICAL
+				print("[Main]Unable to connect to Cynap.\n");
+			#ENDIF
+		}
+
+		delay( 1000 );
+	}
+	
+}

@@ -1,0 +1,181 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:MDF
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+ #SYMBOL_NAME "VISCA Local 232 Preset Manager"
+// #HINT ""
+// #DEFINE_CONSTANT
+#DEFINE_CONSTANT FileLocation "\\USER\\"
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+
+Digital_Input Recall, Store, StoreMaster, RecallMaster;
+Buffer_Input In$[100];
+Analog_Input Preset;
+String_Output Out$;
+
+
+Integer StoreType, PresetArray[99][12];//[rows][columns]  Row=Preset# Column= 1-4/PAN 5-8/TILT 9-12/ZOOM   Row 99 is master
+String FileName[250];
+
+
+Function ReadPresets()
+{
+	SIGNED_INTEGER  nFileHandle, iErrorCode;
+	StartFileOperations();
+	nFileHandle = FileOpenShared ( FileName, _O_CREAT | _O_RDONLY);
+	IF (nFileHandle >= 0)
+	{
+		iErrorCode = ReadIntegerArray(nFileHandle, PresetArray);
+		if (iErrorCode > 0)
+		{
+			Trace ( "Read Preset array from file correctly. Length %u\n", iErrorCode);
+		}
+		else
+		{
+			Trace ( "Error code Preset %d\n", iErrorCode);
+		}
+		FileClose(nFileHandle);
+	}
+	EndFileOperations();
+}
+
+Function SendPreset()
+{
+	Makestring(Out$, "\x81\x01\x06\x0b\x18\x14%s%s%s%s%s%s%s%s%s%s%s%s\xff", chr(PresetArray[Preset][1]), chr(PresetArray[Preset][2]), chr(PresetArray[Preset][3]), chr(PresetArray[Preset][4]), chr(PresetArray[Preset][5]), chr(PresetArray[Preset][6]), chr(PresetArray[Preset][7]), chr(PresetArray[Preset][8]), chr(PresetArray[Preset][9]), chr(PresetArray[Preset][10]), chr(PresetArray[Preset][11]), chr(PresetArray[Preset][12]));
+}
+
+Function Recall_Layout()
+{
+	ReadPresets();
+	SendPreset();
+}
+Function WriteArray()
+{
+	SIGNED_INTEGER  nFileHandle, iErrorCode;
+	StartFileOperations();
+	nFileHandle = FileOpenShared (FileName, _O_CREAT | _O_TRUNC | _O_WRONLY);
+	IF (nFileHandle >= 0)
+	{
+		iErrorCode = WriteIntegerArray(nFileHandle, PresetArray);
+		if (iErrorCode > 0)
+		{
+			Trace ( "Array written to file correctly with %d bytes.\n", iErrorCode);
+		}
+		else
+		{
+			Trace ( "Error code %d\n", iErrorCode);
+		}
+		FileClose(nFileHandle);
+	}
+	EndFileOperations();
+}
+
+Function Store_Layout()
+{
+	Out$ = "\x81\x09\x06\x12\xff";
+}
+Change In$
+{
+	String Temp[200];
+	Integer i;
+	Temp = Gather("\xff", In$);
+	If(StoreType = 0)
+	{
+		If((Byte(Temp, 2) = 0x50) && (Len(Temp) = 11))// Is PT response
+		{
+			For(i = 1 to 8)
+			{
+				PresetArray[Preset][i] = Byte(Temp, i+2);
+			}
+			Out$ = "\x81\x09\x04\x47\xff";
+			Trace("Store PT Processed");
+		}
+		If((Byte(Temp, 2) = 0x50) && (Len(Temp) = 7))// Is ZOOM response
+		{
+			For(i = 1 to 4)
+			{
+				PresetArray[Preset][i+8] = Byte(Temp, i+2);
+			}
+			Trace("Store Zoom Processed");
+			WriteArray();
+		}
+	}
+	If(StoreType = 1)
+	{
+		If((Byte(Temp, 2) = 0x50) && (Len(Temp) = 11))// Is PT response
+		{
+			For(i = 1 to 8)
+			{
+				PresetArray[Preset+90][i] = Byte(Temp, i+2);
+			}
+			Out$ = "\x81\x09\x04\x47\xff";
+			Trace("StoreMaster PT Processed");
+		}
+		If((Byte(Temp, 2) = 0x50) && (Len(Temp) = 7))// Is ZOOM response
+		{
+			For(i = 1 to 4)
+			{
+				PresetArray[Preset+90][i+8] = Byte(Temp, i+2);
+			}
+			Trace("Store Zoom Processed");
+			WriteArray();
+		}
+	}
+}
+push Store
+{
+	StoreType = 0;
+	Store_Layout();
+}
+push StoreMaster
+{
+	StoreType = 1;
+	Store_Layout();
+}
+Push RecallMaster
+{
+	integer i,x;
+	ReadPresets();
+	For(i = 1 to 3)
+	{
+		For(x = 1 to 12)
+		{
+			PresetArray[i][X] = PresetArray[i+90][X];
+		}
+	}
+	WriteArray();
+}
+push Recall
+{
+	recall_Layout();	
+}
+Function Main()
+{
+	FileName = FileLocation + "Camera" + GetSymbolReferenceName() + ".dat";
+}

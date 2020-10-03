@@ -1,0 +1,158 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:Fl-INC.	
+System Name:
+System Number:
+Programmer:MDF
+Comments:
+*/
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "Towson Assignalbe Source List"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+// #ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+Digital_Input readyLatch, _SKIP_, itemSelectedFB[10], _SKIP_, itemDisable[10], _SKIP_, listItemSelect[10,10];
+
+Digital_Output _SKIP_, _SKIP_, itemSelect[10], _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, 
+				_SKIP_, _SKIP_, _SKIP_, listItemSelected[10], _SKIP_, listItemEnable[10], _SKIP_, listItemVisible[10,10];
+
+Analog_Input _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_,
+			_SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, listItemPosition[10];
+
+String_Input
+ _SKIP_, itemName[10,10][40];
+
+String_Output _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, listItemName[10,10];
+
+Integer ready, orginPos[10];
+
+Function processList()
+{
+	Integer X;
+	setArray(orginPos, 0);
+	setArray(listItemSelected, 0);
+	setArray(listItemVisible, 0);
+	For(X = 1 to 10)
+	{
+		If(listItemPosition[X] > 0)
+		{
+			orginPos[listItemPosition[X]] = X;
+			itemSelect[X] = listItemSelect[listItemPosition[X]];
+			listItemSelected[listItemPosition[X]] = itemSelectedFB[X];
+			If(len(itemName[X]))
+			{
+				listItemVisible[listItemPosition[X]] = 1;
+			}
+			listItemName[listItemPosition[X]] = itemName[X];
+			listItemEnable[listItemPosition[X]] = !itemDisable[X];
+		}
+		Else
+		{
+			//Set Array Outs to 0
+		}
+	}
+	ready = 1;
+}
+Push itemDisable
+{
+	Integer X;
+	X = getLastModifiedArrayIndex();
+	If (X>0 && ready && listItemPosition[X])
+	{
+		listItemEnable[listItemPosition[X]] = 0;
+	}
+}
+Release itemDisable
+{
+    Integer X;
+	X = getLastModifiedArrayIndex();
+	If (X>0 && ready  && listItemPosition[X])
+	{
+		listItemEnable[listItemPosition[X]] = 1;
+	}
+}
+
+Push itemSelectedFB
+{
+	Integer X;
+	X = getLastModifiedArrayIndex();
+	If (X>0 && ready && listItemPosition[X])
+	{
+		listItemSelected[listItemPosition[X]] = 1;
+	}
+}
+Release itemSelectedFB
+{
+    Integer X;
+	X = getLastModifiedArrayIndex();
+	If (X>0 && ready && listItemPosition[X])
+	{
+		listItemSelected[listItemPosition[X]] = 0;
+	}
+}
+Push listItemSelect
+{
+	Integer X;
+	X = getLastModifiedArrayIndex();
+	If (X>0 && ready)
+	{
+		itemSelect[orginPos[X]] = 1;
+	}
+}
+Release listItemSelect
+{
+	Integer X;
+	X = getLastModifiedArrayIndex();
+	If (X>0 && ready)
+	{
+		itemSelect[orginPos[X]] = 0;
+	}
+}
+Push readyLatch
+{
+	processList();
+}
+Threadsafe Change listItemPosition
+{
+	If(ready)
+	{
+		ready = 0;
+		processList();
+	}
+}
+Threadsafe Change itemName
+{
+	If(ready)
+	{
+		ready = 0;
+		processList();
+	}
+}
+Function Main()
+{
+	ready = 0;	
+}

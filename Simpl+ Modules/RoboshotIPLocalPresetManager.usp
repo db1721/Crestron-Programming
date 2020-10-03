@@ -1,0 +1,319 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:MDF
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+ #SYMBOL_NAME "Vaddio Local IP Preset Manager"
+// #HINT ""
+// #DEFINE_CONSTANT
+#DEFINE_CONSTANT FileLocation "\\USER\\"
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+
+Digital_Input Recall, Store, StoreMaster, RecallMaster, _SKIP_, Tilt[2], Pan[2], Zoom[2];
+digital_Output Stored;
+Buffer_Input In$[100];
+Analog_Input Preset;
+String_Output Out$;
+
+
+Integer StoreType, ParamType;
+Signed_Integer PTZ, PresetArray[99][3];//[rows][columns]  Row=Preset# Column= 1-4/PAN 5-8/TILT 9-12/ZOOM   Row 99 is master
+String FileName[250];
+
+
+Function ReadPresets()
+{
+	SIGNED_INTEGER  nFileHandle, iErrorCode;
+	StartFileOperations();
+	nFileHandle = FileOpenShared ( FileName, _O_CREAT | _O_RDONLY);
+	IF (nFileHandle >= 0)
+	{
+		iErrorCode = ReadSignedIntegerArray(nFileHandle, PresetArray);
+		if (iErrorCode > 0)
+		{
+			Trace ( "Read Preset array from file correctly. Length %u\n", iErrorCode);
+		}
+		else
+		{
+			Trace ( "Error code Preset %d\n", iErrorCode);
+		}
+		FileClose(nFileHandle);
+	}
+	EndFileOperations();
+}
+
+Function SendPreset()
+{
+	Makestring(Out$, "camera pan set %d 24\n", PresetArray[Preset][1]);
+	Makestring(Out$, "camera tilt set %d 20\n", PresetArray[Preset][2]);
+	Makestring(Out$, "camera zoom set %d 7\n", PresetArray[Preset][3]);
+	
+}
+
+Function Recall_Layout()
+{
+	ReadPresets();
+	SendPreset();
+}
+Function WriteArray()
+{
+	SIGNED_INTEGER  nFileHandle, iErrorCode;
+	StartFileOperations();
+	nFileHandle = FileOpenShared (FileName, _O_CREAT | _O_TRUNC | _O_WRONLY);
+	IF (nFileHandle >= 0)
+	{
+		iErrorCode = WriteSignedIntegerArray(nFileHandle, PresetArray);
+		if (iErrorCode > 0)
+		{
+			Trace ( "Array written to file correctly with %d bytes.\n", iErrorCode);
+		}
+		else
+		{
+			Trace ( "Error code %d\n", iErrorCode);
+		}
+		FileClose(nFileHandle);
+	}
+	EndFileOperations();
+}
+
+Function Store_Layout()
+{
+	ParamType = 1;
+	Out$ = "camera pan get\n";
+}
+Change In$
+{
+	String Temp[200];
+	Integer i;
+	Temp = Gather(">", In$);
+	Switch(StoreType)
+	{
+		Case(0)://not storing
+		{
+			If(Find("user", lower(temp)))
+			{
+				out$ = "admin\r";
+			}
+			If(Find("password", lower(temp)))
+			{
+				out$ = "password\r";
+			}
+		
+		}
+		Case(1):
+		{
+			Switch(ParamType)
+			{
+				Case(1):// Is P response
+				{
+					If(Byte(Temp, 1) = Byte("-", 1))//Is Negative
+					{
+						PresetArray[Preset][1] = AtoI(Temp) * -1;
+					}
+					Else
+					{
+						PresetArray[Preset][1] = AtoI(Temp);
+					}
+					ParamType=2;
+					Out$ = "camera tilt get\n";
+					Trace("Store P Processed");
+				}
+				Case(2):// Is T response
+				{
+					If(Byte(Temp, 1) = Byte("-", 1))//Is Negative
+					{
+						PresetArray[Preset][2] = AtoI(Temp) * -1;
+					}
+					Else
+					{
+						PresetArray[Preset][2] = AtoI(Temp);
+					}
+					ParamType=3;
+					Out$ = "camera zoom get\n";
+					Trace("Store T Processed");
+				}
+				Case(3):// Is T response
+				{
+					If(Byte(Temp, 1) = Byte("-", 1))//Is Negative
+					{
+						PresetArray[Preset][3] = AtoI(Temp) * -1;
+					}
+					Else
+					{
+						PresetArray[Preset][3] = AtoI(Temp);
+					}
+					ParamType=0;
+					Trace("Store Z Processed");
+					WriteArray();
+					Pulse(100, Stored);
+				}
+			}
+		}
+		Case(2):
+		{
+			Switch(ParamType)
+			{
+				Case(1):// Is P response
+				{
+					If(Byte(Temp, 1) = Byte("-", 1))//Is Negative
+					{
+						PresetArray[90+Preset][1] = AtoI(Temp) * -1;
+					}
+					Else
+					{
+						PresetArray[90+Preset][1] = AtoI(Temp);
+					}
+					ParamType=2;
+					Out$ = "camera tilt get\n";
+					Trace("Store P Processed");
+				}
+				Case(2):// Is T response
+				{
+					If(Byte(Temp, 1) = Byte("-", 1))//Is Negative
+					{
+						PresetArray[90+Preset][2] = AtoI(Temp) * -1;
+					}
+					Else
+					{
+						PresetArray[90+Preset][2] = AtoI(Temp);
+					}
+					ParamType=3;
+					Out$ = "camera zoom get\n";
+					Trace("Store T Processed");
+				}
+				Case(3):// Is T response
+				{
+					If(Byte(Temp, 1) = Byte("-", 1))//Is Negative
+					{
+						PresetArray[90+Preset][3] = AtoI(Temp) * -1;
+					}
+					Else
+					{
+						PresetArray[90+Preset][3] = AtoI(Temp);
+					}
+					ParamType=0;
+					Trace("Store Z Processed");
+					WriteArray();
+					Pulse(100, Stored);
+				}
+			}
+		}
+	}
+	StoreType = 0;
+	ParamType = 0;
+	If(Find("user", lower(temp)))
+	{
+		out$ = "admin\r";
+	}
+	If(Find("password", lower(temp)))
+	{
+		out$ = "password\r";
+	}
+}
+push Store
+{
+	StoreType = 1;
+	Store_Layout();
+}
+push StoreMaster
+{
+	StoreType = 2;
+	Store_Layout();
+}
+Push RecallMaster
+{
+	integer i,x;
+	ReadPresets();
+	For(i = 1 to 3)
+	{
+		For(x = 1 to 3)
+		{
+			PresetArray[i][X] = PresetArray[i+90][X];
+		}
+	}
+	WriteArray();
+}
+push Recall
+{
+	recall_Layout();	
+}
+Push Tilt
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera tilt up\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera tilt down\r";
+		}
+	}
+}
+Push Pan
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera pan left\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera pan right\r";
+		}
+	}
+}
+Push Zoom
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera zoom in\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera zoom out\r";
+		}
+	}
+}
+release pan
+{Out$ = "camera pan stop\r";}
+release tilt
+{Out$ = "camera tilt stop\r";}
+release zoom
+{Out$ = "camera zoom stop\r";}
+Function Main()
+{
+	FileName = FileLocation + "Camera" + GetSymbolReferenceName() + ".dat";
+}

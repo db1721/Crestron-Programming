@@ -1,0 +1,203 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: The Whitlock Group
+Programmer: Michael Francis
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "SMART Projector"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY ""
+#CATEGORY "24" // TV/Video Projector
+// #DEFAULT_VOLATILE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+#DEFAULT_NONVOLATILE
+#ENABLE_STACK_CHECKING
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+// ANALOG_INPUT 
+// STRING_INPUT 
+buffer_input SMART_PROJ_RX$[250];
+// BUFFER_INPUT 
+String Input$[100];
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT
+analog_output Vol_Level;
+analog_output Brightness_Level;
+analog_output Contrast_Level;
+string_output Lamp_Hours$;
+analog_output Lamp_Hours;
+string_output Projector_ID;
+string_output Serial_Number;
+string_output System_Hours$;
+analog_output System_Hours;
+string_output DDP_Firmware_Ver;
+string_output NET_Firmware_Ver;
+string_output MPU_Firmware_Ver;
+string_output Firmware_Ver;
+string_output Boot_Ver;
+
+/***************
+Globals
+****************/
+Integer iFlag;
+
+CHANGE SMART_PROJ_RX$
+{
+   Integer Start_Loc1, Start_Loc2, Start_Loc3, Start_Loc4, Start_Loc5, Start_Loc6, Start_Loc7, Start_Loc8, Start_Loc9, Start_Loc10, Start_Loc11, Start_Loc12;
+   Integer Temp1, Temp2;
+ 
+ 	If (iFlag = 0)
+ 	{
+ 		iFlag = 1;
+        
+        While(find("\x0D", SMART_PROJ_RX$) > 0)
+        {
+    		Input$ = remove("\x0D", SMART_PROJ_RX$);
+   
+        //PROJECTOR ID
+			Start_Loc1 = FIND("projectorid=",Input$);
+	
+			if (Start_Loc1 > 0)
+			{
+				Projector_ID = MID(Input$, Start_Loc1+12, 3); 
+        	}
+        
+        //SERIAL NUMBER
+			Start_Loc2 = FIND("serialnum=",Input$);
+	
+			if (Start_Loc2 > 0)
+			{
+				Serial_Number = MID(Input$, Start_Loc2+10, 14); 
+        	}
+		
+		//LAMP HOURS	
+			Start_Loc3 = FIND("lamphrs=",Input$);
+	
+			if (Start_Loc3 > 0)
+			{                                                  
+				Temp2 = (FIND("\x0D",Input$, Start_Loc3) - (Start_Loc3+8));
+				Lamp_Hours$ = MID(Input$, Start_Loc3+8, Temp2);
+				Lamp_Hours = atoi(MID(Input$, Start_Loc3+8, Temp2)); 
+        	}
+		
+		//SYSTEM HOURS	
+			Start_Loc4 = FIND("syshrs=",Input$);
+			
+			if (Start_Loc4 > 0)
+			{   
+				Temp2 = (FIND("\x0D",Input$, Start_Loc4) - (Start_Loc4+7));
+				System_Hours$ = MID(Input$, Start_Loc4+7, Temp2);
+				System_Hours = atoi(MID(Input$, Start_Loc4+7, Temp2)); 
+        	}
+	
+		//DDP FIRMWARE VERSION	
+			Start_Loc5 = FIND("fwverddp=",Input$);
+	    	
+	    	if (Start_Loc5 > 0)
+			{
+				DDP_Firmware_Ver = MID(Input$, Start_Loc5+9, 8); 
+        	}
+
+	    //NET FIRMWARE VERSION
+			Start_Loc6 = FIND("fwvernet=",Input$);
+
+			if (Start_Loc6 > 0)
+			{
+				NET_Firmware_Ver = MID(Input$, Start_Loc6+9, 8); 
+        	}
+
+        //MPU FIRMWARE VERSION
+			Start_Loc7 = FIND("fwvermpu=",Input$);
+
+	        if (Start_Loc7 > 0)
+			{
+				MPU_Firmware_Ver = MID(Input$, Start_Loc7+9, 8); 
+        	}
+
+        //FIRMWARE VERSION
+            Start_Loc8 = FIND("fwver=",Input$);
+	
+			if (Start_Loc8 > 0)
+			{
+				Firmware_Ver = MID(Input$, Start_Loc8+6, 8); 
+        	}
+
+       //BOOT VERSION     
+            Start_Loc9 = FIND("bootver=",Input$);
+	
+	        if (Start_Loc9 > 0)
+			{
+				Boot_Ver = MID(Input$, Start_Loc9+8, 8); 
+        	}
+
+
+	   //VOLUME LEVEL     
+            Start_Loc10 = FIND("volume=",Input$);
+	
+	        if (Start_Loc10 > 0)
+			{  
+				Temp1 =	Find("volume=-",Input$);
+			
+			if (Temp1 > 0)
+				{
+				Vol_Level = -1 * atoi(MID(Input$, Start_Loc10+7, 4));
+				}
+			Else
+				{
+				Vol_Level = atoi(MID(Input$, Start_Loc10+7, 4));
+				}
+            }
+           
+       //BRIGHTNESS    
+            Start_Loc11 = FIND("brightness=",Input$);
+	
+	        if (Start_Loc11 > 0)
+			{
+				Brightness_Level = atoi(MID(Input$, Start_Loc11+11, 4)); 
+        	}
+
+
+	   //CONTRAST    
+            Start_Loc12 = FIND("contrast=",Input$);
+	
+	        if (Start_Loc12 > 0)
+			{
+				Contrast_Level = atoi(MID(Input$, Start_Loc12+9, 4)); 
+        	}
+			
+         } 
+       iFlag = 0;
+     }
+   Else Clearbuffer(SMART_PROJ_RX$);
+}
+
+Function Main()
+	{
+		iFlag=0;
+	}

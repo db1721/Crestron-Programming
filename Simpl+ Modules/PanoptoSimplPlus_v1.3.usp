@@ -1,0 +1,306 @@
+//#CATEGORY "0"
+//Compiler Directives
+
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+
+//Include Files
+
+#USER_SIMPLSHARP_LIBRARY "PanoptoSimpl"
+
+//IO Variables
+
+Digital_Input	PanelOnline;
+Digital_Input 	Login; 
+Digital_Output	LoggedIn; 
+
+String_Input	PanoptoServerUrl[300];
+String_Input	PanoptoUserName[100];
+String_Input	PanoptoUserPassword[100];
+String_Input	PanoptoRecorderName[150];
+String_Input	PanoptoRecorderIPAddress[15];
+
+Digital_Input	PanoptoRecordNow;
+Digital_Output	PanoptoIsRecording; 
+String_Output   PanoptoFeedbackMessage;
+String_Input	PanoptoNewRecordingTitle[200]; 
+String_Output	PanoptoNewRecordingTitleFB;
+Analog_Input	PanoptoDurationInSeconds;
+Digital_Input	PanoptoNewSessionIsBroadcast;
+Digital_Input	PanoptoPreview;
+Digital_Input	PanoptoPreviewEarly;
+Digital_Input	PanoptoRecordEarly;  
+Digital_Input	PanoptoRecordStop;
+Digital_Input  	PanoptoResume;
+Digital_Input	PanoptoExtend;
+Digital_Input	PanoptoPause;
+Digital_Input	PanoptoNewRecording;
+Digital_Input	PanoptoCancelRecording;
+Digital_Input	PanoptoBackBtn;
+Digital_Input   PanoptoReconfigure;
+Digital_Input   PanoptoRecordUntil;
+Digital_Input   PanoptoRescheduleConflict;
+Digital_Input   PanoptoEnableLogging;
+Digital_Output  PanoptoIsLogging;
+String_Output   PanoptoLoggingBtnText;
+                            
+Digital_Output 	SupportsFeedback; 
+
+//Page Management
+                    
+Digital_Output	PageInitialization;
+Digital_Output	PageMain; 
+                    
+//Subpage Management     
+
+Digital_Output	SubpageAvailableAllDay;                      
+Digital_Output	SubpageAvailableUpcomingMeeting;
+Digital_Output	SubpageNowRecording;
+Digital_Output	SubpagePreviewSelection;
+Digital_Output	SubpagePausedRecording;
+Digital_Output	SubpageRecordNow;
+Digital_Output	SubpageRecorderLoading;
+Digital_Output	SubpagePreviewEarly; 
+Digital_Output  SubpageOffline;
+Digital_Output  SubpageConflictingSessions;
+ 
+                            
+String_Output 	Description;
+String_Output 	Guid;  
+String_Output 	Manufacturer, _skip_; 
+String_Output 	VersionDate; 
+String_Output	MessageText;
+
+//Session Upcoming Text
+
+String_Output 	UpcomingSessionName;
+String_Output 	UpcomingSessionMinutesToStartText;
+String_Output 	UpcomingSessionSpanText;
+String_Output 	UpcomingSessionHoursMinutesText;
+Digital_Output 	UpcomingSessionIsBroadcast;
+
+//Active Session
+
+String_Output 	ActiveSessionName;
+String_Output	ActiveSessionSpanText;
+String_Output	ActiveReservedForTheNextText;
+String_Output 	ActiveHoursMinutesRemainingText, _skip_; 
+String_Output 	PreviewVideoUrl;
+String_Output	PreviewAudioUrl;
+Digital_Output	ActiveEnableExtendBtn;
+Digital_Output	ActiveEnablePauseBtn;
+
+PanoptoSimplDriver Panopto; 
+
+//Global Variables
+
+Integer LastMainPage, LastSubPage, Initialized;
+    
+//Events
+  
+Change PanoptoNewRecordingTitle
+{
+	PanoptoNewRecordingTitleFB = PanoptoNewRecordingTitle;
+}  
+  
+Push Login
+{
+	LoggedIn = Panopto.PanoptoLogin(PanoptoServerUrl, PanoptoUserName, PanoptoUserPassword, PanoptoRecorderName, PanoptoRecorderIPAddress);
+} 
+
+Threadsafe Push PanoptoRecordNow
+{ 
+	if(PanoptoNewSessionIsBroadcast)
+	{
+	   Panopto.RecordBtn(PanoptoNewRecordingTitle, PanoptoDurationInSeconds, 1);
+	}    
+	else
+	{
+	   Panopto.RecordBtn(PanoptoNewRecordingTitle, PanoptoDurationInSeconds, 0);
+	}	  
+}
+  
+Push PanelOnline
+{
+	Panopto.PanelOnline();
+}  
+  
+Push PanoptoEnableLogging
+{
+	Panopto.EnableLoggingBtn();
+}
+
+Push PanoptoPreview, PanoptoPreviewEarly
+{
+	Panopto.PreviewBtn();
+}                     
+
+Push PanoptoRecordEarly
+{
+	Panopto.RecordEarlyBtn();
+}                         
+
+Push PanoptoRecordStop
+{
+	Panopto.RecordingStopBtn();
+}                              
+
+Push PanoptoResume
+{
+	Panopto.RecordingResumeBtn();
+}                                
+
+Push PanoptoExtend
+{
+	Panopto.RecordingExtendBtn();
+}  
+
+Push PanoptoPause
+{
+	Panopto.RecordingPauseBtn();
+}   
+
+Push PanoptoNewRecording
+{
+	Panopto.NewRecordingBtn();
+}
+
+Push PanoptoCancelRecording
+{
+	Panopto.CancelRecordingBtn();
+}  
+
+Push PanoptoBackBtn
+{
+	Panopto.BackBtn();
+}
+
+Push PanoptoReconfigure
+{
+ 	Panopto.Reconfigure();
+}
+
+Push PanoptoRecordUntil
+{
+ 	Panopto.RecordUntil();
+}
+
+Push PanoptoRescheduleConflict
+{
+ 	Panopto.RescheduleConflict();
+}
+    
+//Callbacks
+
+Callback Function BasicInformationCallback(String sDescription, String sGuid, String sManufacturer,  String sVersionDate, Integer iSupportsFeedback)
+{
+	Description = sDescription;
+	Guid = sGuid; 
+	Manufacturer = sManufacturer;    
+	VersionDate = sVersionDate; 
+	 
+	SupportsFeedback = iSupportsFeedback; 
+} 
+
+Callback Function UpcomingSessionCallback(String sSessionName, String sMinutesToStart, String sSessionSpan, String sSessionHoursMinutesText, Integer iIsBroadcast)
+{
+	UpcomingSessionName = sSessionName;
+	UpcomingSessionMinutesToStartText = sMinutesToStart;
+	UpcomingSessionSpanText = sSessionSpan;
+	UpcomingSessionHoursMinutesText = sSessionHoursMinutesText; 
+	
+	UpcomingSessionIsBroadcast = iIsBroadcast;				
+}   
+
+Callback Function ActiveSessionCallback(String sSessionName, String sSessionSpan, String sSessionReservedForTheNext, String sSessionHoursMinutesRemaining, Integer iExtendMeetingBtnState, Integer iEnablePauseBtnStatus)
+{
+	ActiveSessionName = sSessionName;
+	ActiveSessionSpanText = sSessionSpan;
+	ActiveReservedForTheNextText = sSessionReservedForTheNext;
+	ActiveHoursMinutesRemainingText = sSessionHoursMinutesRemaining;
+	ActiveEnableExtendBtn = iExtendMeetingBtnState;
+	ActiveEnablePauseBtn = iEnablePauseBtnStatus;
+} 
+
+Callback Function PreviewCallback(String sVideoUrl, String sAudioUrl)
+{
+	PreviewVideoUrl = sVideoUrl;
+	PreviewAudioUrl = sAudioUrl;
+}
+
+Callback Function TransitionSessionCallback(String sMessage)
+{
+	MessageText = sMessage;
+} 
+
+Callback Function SessionMainPageCallback(Integer PageNum)
+{
+	cswitch(PageNum)
+	{
+		case (10):{ PageMain = on; PageMain = off; break; }                
+		case (11):{ PageInitialization = on; PageInitialization = off; break; }
+	}
+} 
+
+Callback Function SessionSubPageCallback(Integer PageNum)
+{ 
+    //trace("PageNum = %u", PageNum);
+	//trace("LastSubPage = %u", LastSubPage);
+	if(PageNum != LastSubPage)
+	{
+		SubpageAvailableAllDay = off;                      
+		SubpageAvailableUpcomingMeeting = off;
+		SubpageNowRecording = off;
+		SubpagePreviewSelection = off;
+		SubpagePausedRecording = off;
+		SubpageRecordNow = off;		
+		SubpageRecorderLoading = off;
+		SubpagePreviewEarly = off; 
+        SubpageOffline = off;
+        SubpageConflictingSessions = off;
+		LastSubPage = PageNum;
+		
+		cswitch(PageNum)
+		{
+			case (1):{ SubpageAvailableAllDay = on; break; }
+			case (2):{ SubpageAvailableUpcomingMeeting = on; break; }
+			case (3):{ SubpageNowRecording = on; break; }
+			case (4):{ SubpagePreviewSelection = on; break; }
+			case (5):{ SubpagePausedRecording = on; break; }
+			case (6):{ SubpageRecordNow = on; break; }
+			case (8):{ SubpageRecorderLoading = on; break; }
+			case (9):{ SubpagePreviewEarly = on; break; }
+            case (12):{ SubpageOffline = on; break; }
+            case (13):{ SubpageConflictingSessions = on; break; }
+		}  
+	}
+}
+
+Callback Function FeedbackChangedCallback(String sMessage)
+{
+  	PanoptoFeedbackMessage = sMessage;
+} 
+
+Callback Function LoggingCallback(Integer stateOfLogging, String buttonText)
+{
+	PanoptoIsLogging = stateOfLogging;	
+	PanoptoLoggingBtnText = buttonText;
+}
+
+function Main()
+{
+	waitForInitializationComplete();
+
+	RegisterDelegate(Panopto, BasicInformationUpdated, BasicInformationCallback );
+	RegisterDelegate(Panopto, PanoptoUpcomingSessionUpdated, UpcomingSessionCallback); 
+	RegisterDelegate(Panopto, PanoptoActiveSessionUpdated, ActiveSessionCallback); 
+	RegisterDelegate(Panopto, PanoptoPreviewUpdated, PreviewCallback);  
+	RegisterDelegate(Panopto, PanoptoMainPageUpdated, SessionMainPageCallback); 
+	RegisterDelegate(Panopto, PanoptoSessionSubPageUpdated, SessionSubpageCallback); 
+	RegisterDelegate(Panopto, PanoptoTransitionSessionUpdated, TransitionSessionCallback); 
+    RegisterDelegate(Panopto, PanoptoFeedbackMessageUpdated, FeedbackChangedCallback);
+	RegisterDelegate(Panopto, LoggingToggled, LoggingCallback);
+	LastMainPage = 0;
+	LastSubPage = 0;
+}                                                                               

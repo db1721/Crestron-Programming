@@ -1,0 +1,71 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:VSI
+System Name:The World
+System Number:1
+Programmer:DMB
+Comments:Text Steering Module
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "Static Current Source Selected"
+// #HINT ""
+#DEFINE_CONSTANT MaxIn 32
+#CATEGORY "10" // Serial
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+#HELP_BEGIN
+   Figure it out yourself
+#HELP_END
+
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+ANALOG_INPUT _SKIP_, CurrentSrcIn;
+STRING_INPUT srcName[MaxIn][20];
+// BUFFER_INPUT 
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT 
+STRING_OUTPUT _SKIP_, CurrentSrcName; 
+
+String_Parameter ZeroName[20];
+
+CHANGE CurrentSrcIn
+{
+	If (CurrentSrcIn > 0)
+	{    
+		CurrentSrcName = srcName[CurrentSrcIn];
+	}
+	Else
+	{
+		CurrentSrcName = ZeroName;
+	}
+}
+

@@ -1,0 +1,104 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+// #SYMBOL_NAME ""
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+Buffer_INPUT RX$[100];
+ANALOG_INPUT AV[64], Audio[64], Video[64];
+
+ 
+STRING_OUTPUT TX$;
+ANALOG_OUTPUT AV_FB[64], Audio_FB[64], Video_FB[64,64];
+
+String Gathered[100];
+
+Change AV
+{
+	Integer X;
+	X = Getlastmodifiedarrayindex();
+	Makestring(TX$, "%u*%u!", X, AV[X]);
+}
+Change Audio
+{
+	Integer X;
+	X = Getlastmodifiedarrayindex();
+	Makestring(TX$, "%u*%u$", X, Audio[X]);
+}
+Change Video
+{
+	Integer X;
+	X = Getlastmodifiedarrayindex();
+	Makestring(TX$, "%u*%u&", X, Video[X]);
+}
+Change RX$
+{
+	Integer OutVal, InVal;
+	Gathered = Gather("\n", RX$);
+	If(Find("All", Gathered) && Len(Gathered) > 10)
+	{
+		OutVal = atoI(Mid(Gathered, 4, 2));
+		InVal = atoi(Mid(Gathered, 9, 2));
+		AV_FB[OutVal] = InVal;
+		Audio_FB[OutVal] = InVal;
+		Video_FB[OutVal] = InVal;
+	}
+	Else If((Find("RGB", Gathered) || Find("Vid", Gathered)) && Len(Gathered) > 10)
+	{
+		OutVal = atoI(Mid(Gathered, 4, 2));
+		InVal = atoi(Mid(Gathered, 9, 2));
+		Video_FB[OutVal] = InVal;
+	}
+	Else If(Find("Aud", Gathered) && Len(Gathered) > 10)
+	{
+		OutVal = atoI(Mid(Gathered, 4, 2));
+		InVal = atoi(Mid(Gathered, 9, 2));
+		Audio_FB[OutVal] = InVal;
+	}
+	Clearbuffer(RX$);
+	Gathered = "";
+}

@@ -1,0 +1,1903 @@
+                                    /*******************************************************************************************
+SIMPL+ Module Information
+*****************************************************************************************/
+
+/*
+Dealer Name: Janus Technology
+System Name: TVOne
+System Number:
+Programmer: Janus Technology
+Version: 1.0
+Date: 14/12/2013
+Comments:
+*/
+
+#symbol_name     "tvONE_CORIO"
+
+  
+#LARGE_STACK
+
+
+#define_constant JPTN_MAXCAPTURES 10
+#define_constant JPTN_CAP_UNFINISHED -1
+#define_constant JPTN_CAP_POSITION -2
+#define_constant JPTN_C_ESC 0x25
+#define_constant JPTN_C_START 0x5E
+#define_constant JPTN_C_END 0x24
+#define_constant JPTN_C_GROUP_OPEN 0x5B
+#define_constant JPTN_C_GROUP_CLOSE 0x5D
+#define_constant JPTN_C_GROUP_RANGE 0x2D
+#define_constant JPTN_C_GROUP_INVERT 0x5E
+#define_constant JPTN_C_CAP_OPEN 0x28
+#define_constant JPTN_C_CAP_CLOSE 0x29
+#define_constant JPTN_C_ANY 0x2E
+#define_constant JPTN_C_OPTIONAL 0x3F
+#define_constant JPTN_C_MATCH_0_MAX 0x2A
+#define_constant JPTN_C_MATCH_1_MAX 0x2B
+#define_constant JPTN_C_MATCH_0_MIN 0x2D
+
+/* macro to `unsign' a character */
+
+                 
+structure PatternState {
+    string error[80];            /* Error string initialised on error */
+    integer count;                /* Number of matches */
+    integer start[JPTN_MAXCAPTURES]; /* Start position of each match */
+    integer end[JPTN_MAXCAPTURES];   /* End posittion of each match */
+
+    string pattern[256];        /* the pattern we're looking for */
+    integer src_init;           /* init of source string */
+    integer src_end;            /* end ('\0') of source string */
+    integer p_end;              /* end ('\0') of pattern */
+    integer level;              /* total number of captures (finished or unfinished) */
+    integer cinit[JPTN_MAXCAPTURES]; /* Start of capture */
+    signed_integer clen[JPTN_MAXCAPTURES];  /* Length of capture, -ve special values above */
+};
+
+
+                                  
+integer_function isalpha( integer c )
+{
+    return( (c >= 0x40 && c <= 0x5A) || (c >= 0x60 && c <= 0x7A) );
+}
+
+integer_function iscntrl( integer c )
+{
+    return( c < 0x20 || c = 0x7F );
+}
+
+integer_function isdigit( integer c )
+{
+    return( c >= 0x30 && c <= 0x39 );
+}
+
+integer_function islower( integer c )
+{
+    return( c >= 0x60 && c <= 0x7A );
+}
+
+integer_function ispunct( integer c )
+{
+    return( (c >= 0x21 && c <= 0x2F) ||
+        (c >= 0x3A && c <= 0x40) ||
+        (c >= 0x5B && c <= 0x60) ||
+        (c >= 0x7B && c <= 0x7E) );
+}
+                 
+integer_function isspace( integer c )
+{
+    return( c = 0x09 || c = 0x0A || c = 0x0D || c = 0x20 );
+}
+
+integer_function isupper( integer c )
+{
+    return( c >= 0x40 && c <= 0x5A );
+}
+
+integer_function isalnum( integer c )
+{
+    return( isdigit( c ) || isalpha( c ) );
+}
+
+integer_function isxdigit( integer c )
+{
+    return( isdigit( c ) || 
+        (c >= 0x41 && c <= 0x46) ||
+        (c >= 0x61 && c <= 0x66) );
+}
+      
+integer_function JPTN_initPatternState( byref PatternState ps, integer srcLen, 
+    string pattern, integer patternLen )
+{
+    integer anchor;
+    integer i;
+           
+    ps.pattern = "";
+    if (len( pattern ) > 0 && byte( pattern, 1 ) = JPTN_C_START)
+    {
+        anchor = 1;
+        patternLen = patternLen - 1;  /* skip anchor character */
+        ps.pattern = right( pattern, patternLen );
+    }
+    else
+    {
+        anchor = 0;
+        ps.pattern = pattern;
+    }
+
+    ps.error = "";
+    ps.count = 0;
+    ps.src_init = 1;
+    ps.src_end = srcLen + 1;
+    ps.p_end = patternLen + 1;
+    ps.level = 0;
+
+    for (i = 0 to JPTN_MAXCAPTURES - 1)
+    {
+        ps.start[i] = 0;
+        ps.end[i] = 0;
+        ps.cinit[i] = 0;
+        ps.clen[i] = 0;
+    }
+
+    return( anchor );
+}
+
+integer_function JPTN_checkResultStack( byref PatternState ps, integer pushCount, string msg )
+{
+    if (ps.count + pushCount > JPTN_MAXCAPTURES)
+    {
+        pushCount = 0;
+        ps.error = msg;
+    }
+
+    return( pushCount );
+}
+
+integer_function JPTN_pushCaptureResult( byref PatternState ps, integer s, integer e )
+{
+    integer pushed;
+    integer start;
+                  
+    if (ps.count >= JPTN_MAXCAPTURES)
+    {
+        ps.error = "stack overflow";
+        pushed = 0;
+    }
+    else
+    {
+        start = (s - ps.src_init + 1);
+        ps.start[ps.count] = start;
+        ps.end[ps.count] = start + (e - s);
+        ps.count = ps.count + 1;
+        pushed = 1;
+    }
+
+    return( pushed );
+}
+
+integer_function JPTN_checkCapture( byref PatternState ps, integer l )
+{
+    l = l - 0x31; // Convert character 1-9 to value 1-9
+    if (l < 0 || l >= ps.level || ps.clen[l] = JPTN_CAP_UNFINISHED)
+    {
+        ps.error = "invalid capture index";
+        l = 0;
+    }
+
+    return( l );
+}
+
+
+signed_integer_function JPTN_captureToClose( byref PatternState ps )
+{
+    integer level;
+
+    for (level = ps.level to 0 step -1)
+    {
+        if (ps.clen[level] = JPTN_CAP_UNFINISHED)
+            return( level );
+    }
+
+    ps.error = "invalid pattern capture";
+    return( -1 );
+}
+
+
+integer_function JPTN_classEnd( byref PatternState ps, integer p )
+{
+    p = p + 1;
+    switch (byte( ps.pattern, p - 1 ))
+    {
+    case (JPTN_C_ESC): // %
+        {
+            if (p = ps.p_end)
+            {
+                ps.error = "malformed pattern (ends with %)";
+                return( p );
+            }
+            return( p+1 );
+        }
+    case (JPTN_C_GROUP_OPEN): // [
+        {
+            if (p < ps.p_end && byte( ps.pattern, p ) = JPTN_C_START)
+                p = p + 1;
+            do
+            {  /* look for a ']' */
+                if (p = ps.p_end)
+                {
+                    ps.error = "malformed pattern (missing ])";
+                    return( p );
+                }
+                p = p + 1;
+                if (byte( ps.pattern, p - 1 ) = JPTN_C_ESC && p < ps.p_end)
+                    p = p + 1;  /* skip escapes (e.g. `%]') */
+            }
+            until (byte( ps.pattern, p ) = JPTN_C_GROUP_CLOSE);
+            return( p+1 );
+        }
+    default:
+        {
+            return( p );
+        }
+    }
+}
+
+
+integer_function JPTN_matchClass( integer c, integer cl )
+{
+    integer res;
+
+    switch (lowerchar( cl ))
+    {
+    case (0x61) /*a*/ : res = isalpha( c );
+    case (0x63) /*c*/ : res = iscntrl( c );
+    case (0x64) /*d*/ : res = isdigit( c );
+    case (0x6C) /*l*/ : res = islower( c );
+    case (0x70) /*p*/ : res = ispunct( c );
+    case (0x73) /*s*/ : res = isspace( c );
+    case (0x75) /*u*/ : res = isupper( c );
+    case (0x77) /*w*/ : res = isalnum( c );
+    case (0x78) /*x*/ : res = isxdigit( c );
+    case (0x7A) /*z*/ : return( (c = 0) );
+    default: return( (cl = c) );
+    }
+        
+    if (isupper( cl ))
+        res = !res;
+    
+    return( res );
+}
+
+
+integer_function JPTN_matchBracketClass( byref PatternState ps, integer c, integer p, integer ec )
+{
+    integer sig;
+
+    sig = 1;
+
+    if (p + 1 < ps.p_end && byte( ps.pattern, p+1 ) = JPTN_C_GROUP_INVERT)
+    {
+        sig = 0;
+        p = p + 1;  /* skip the `^' */
+    }
+    p = p + 1;
+    while (p < ec)
+    {
+        if (byte( ps.pattern, p ) = JPTN_C_ESC)
+        {
+            p = p + 1;
+            if (p < ps.p_end && JPTN_matchClass( c, byte( ps.pattern, p ) ))
+                return( sig );
+        }
+        else if (p+1 < ps.p_end && (byte( ps.pattern, p+1 ) = JPTN_C_GROUP_RANGE) && (p+2 < ec))
+        {
+            p = p + 2;
+            if (byte( ps.pattern, p-2 ) <= c && c <= byte( ps.pattern, p ))
+                return( sig );
+        }
+        else if (byte( ps.pattern, p ) = c)
+            return( sig );
+
+        p = p + 1;
+    }
+
+    return( !sig );
+}
+
+
+integer_function JPTN_singleMatch( byref PatternState ps, integer c, integer p, integer ep )
+{
+    switch (byte( ps.pattern, p ))
+    {
+    case (JPTN_C_ANY): return( 1 );  /* matches any char */
+    case (JPTN_C_ESC): return( JPTN_matchClass( c, byte( ps.pattern, p+1 ) ) );
+    case (JPTN_C_GROUP_OPEN): return( JPTN_matchBracketClass( ps, c, p, ep-1 ) );
+    default: return( byte( ps.pattern, p ) = c );
+    }
+}
+
+
+integer_function JPTN_matchBalance( byref PatternState ps, string str, integer s, integer p )
+{
+    integer b;
+    integer e;
+    integer cont;
+
+    if (p >= ps.p_end - 1)
+    {
+        ps.error = "malformed pattern (missing arguments to %b)";
+        return( 0 );
+    }
+
+    if (byte( str, s ) != byte( ps.pattern, p ))
+        return( 0 );
+    else
+    {
+        b = byte( ps.pattern, p );
+        e = byte( ps.pattern, p+1 );
+        cont = 1;
+                
+        s = s + 1;
+        while (s < ps.src_end)
+        {
+            if (byte( str, s ) = e)
+            {
+                cont = cont - 1;
+                if (cont = 0)
+                    return( s+1 );
+            }
+            else if (byte( str, s ) = b)
+                cont = cont + 1;
+
+            s = s + 1;
+        }
+    }
+    return( 0 );  /* string ends out of balance */
+}
+
+integer_function JPTN_matchCapture( byref PatternState ps, string str, integer s, integer l )
+{
+    integer clen;
+
+    l = JPTN_checkCapture( ps, l );
+    clen = ps.clen[l];
+    if (ps.src_end - s >= clen &&
+        mid( str, ps.cinit[l], clen ) = mid( str, s, clen ))
+        return( s+clen );
+    else
+        return( 0 );
+}
+
+integer_function JPTN_match( byref PatternState ps, string str, integer s, integer p )
+{
+    integer ep;
+    integer previous;
+    signed_integer m;
+    integer handled;
+    integer b;
+    signed_integer i;
+    integer res;
+    
+    while (1)
+    {
+        handled = 0;
+        if (p = ps.p_end)  /* end of pattern? */
+        {
+            return( s );  /* match succeeded */
+        }
+        switch (byte( ps.pattern, p ))
+        {
+        case (JPTN_C_CAP_OPEN):
+            {   /* start capture */
+                if (byte( ps.pattern, p+1 ) = JPTN_C_CAP_CLOSE)  /* position capture? */
+                {
+                    m = JPTN_CAP_POSITION;
+                    p = p + 2;
+                }    
+                else
+                {
+                    m = JPTN_CAP_UNFINISHED;
+                    p = p + 1;
+                }
+                if (ps.level >= JPTN_MAXCAPTURES)
+                {
+                    ps.error = "too many captures";
+                    return( 0 );
+                }
+                ps.cinit[ps.level] = s;
+                ps.clen[ps.level] = m;
+                ps.level = ps.level + 1;
+                res = JPTN_match( ps, str, s, p );
+                if (res = 0)  /* match failed? */
+                    ps.level = ps.level - 1;  /* undo capture */
+
+                return( res );
+            }
+        case (JPTN_C_CAP_CLOSE):
+            {  /* end capture */
+                i = JPTN_captureToClose( ps );
+                if (i < 0)
+                  return( 0 );
+                ps.clen[i] = s - ps.cinit[i];  /* close capture */
+                res = JPTN_match( ps, str, s, p + 1 );
+                if (res = 0)  /* match failed? */
+                    ps.clen[i] = JPTN_CAP_UNFINISHED;  /* undo capture */
+
+                return( res );
+            }
+        case (JPTN_C_END):
+            {
+                if (p + 1 = ps.p_end) /* is the `$' the last char in pattern? */
+                {
+                    if (s = ps.src_end)  /* check end of string */
+                    {
+                        return( s );
+                    }
+                    else
+                    {
+                        return( 0 );
+                    }
+                }
+            }
+        case (JPTN_C_ESC):
+            {
+                switch (byte( ps.pattern, p+1 ))
+                {
+                case (0x62) /*b*/:
+                    {  /* balanced string? */
+                        s = JPTN_matchBalance( ps, str, s, p+2 );
+                        if (s = 0)
+                        {
+                            return( 0 );
+                        }
+                        p = p + 4;
+                        handled = 1;
+                    }
+                case (0x66) /*f*/:
+                    {  /* frontier? */
+                        p = p + 2;
+                        if (byte( ps.pattern, p ) != JPTN_C_GROUP_OPEN)
+                        {
+                            ps.error = "missing [ after %f in pattern";
+                            return( 0 );
+                        }
+                        ep = JPTN_classEnd( ps, p );  /* points to what is next */
+                        if (s = ps.src_init)
+                            previous = 0;
+                        else
+                            previous = byte( str, s-1 );
+                        if (JPTN_matchBracketClass( ps, previous, p, ep-1 ) ||
+                            !JPTN_matchBracketClass( ps, byte( str, s ), p, ep-1 ))
+                        {
+                            return( 0 );
+                        }
+                        p = ep;
+                        handled = 1;
+                    }
+                default:
+                    {
+                        if (isdigit( byte( ps.pattern, p+1 ) ))
+                        {  /* capture results (%0-%9)? */
+                            s = JPTN_matchCapture( ps, str, s, byte( ps.pattern, p+1 ) );
+                            if (s = 0)
+                            {
+                                return( 0 );
+                            }
+                            p = p + 2;
+                            handled = 1;
+                        }
+                    }
+                }
+            }
+        default:
+            {
+            }
+        }
+
+        if (!handled)
+        {  /* it is a pattern item */
+            ep = JPTN_classEnd( ps, p );  /* points to what is next */
+            if (s < ps.src_end && JPTN_singleMatch( ps, byte( str, s ), p, ep ))
+                m = 1;
+            else
+                m = 0;
+            if (ep >= ps.p_end)
+                b = 0;
+            else
+                b = byte( ps.pattern, ep );
+            if (b = JPTN_C_OPTIONAL)
+            {  /* optional */
+               if (m != 0)
+                {
+                    m = JPTN_match( ps, str, s+1, ep+1 );
+                    if (m != 0)
+                    {
+                        return( m );
+                    }
+                }
+                p=ep+1;
+            }
+            else if (b = JPTN_C_MATCH_0_MAX || b = JPTN_C_MATCH_1_MAX)
+            {   /* 0 or 1 or more repetitions */
+                if (b = JPTN_C_MATCH_1_MAX)
+                {   /* 1 or more repetitions */
+                    if (m = 0)
+                    {
+                        return( 0 );
+                    }
+                    else
+                        s = s + 1;
+                }
+
+                i = 0;  /* counts maximum expand for item */
+
+                while ((s+i) < ps.src_end && JPTN_singleMatch( ps, byte( str, s+i ), p, ep ))
+                    i = i + 1;
+                /* keeps trying to match with the maximum repetitions */
+                while (i >= 0)
+                {
+                    res = JPTN_match( ps, str, (s+i), ep+1 );
+
+                    if (res > 0)
+                    {
+                        return( res );
+                    }
+                    i = i - 1;  /* else didn't match; reduce 1 repetition to try again */
+                }
+
+                return( 0 );
+            }
+            else if (b = JPTN_C_MATCH_0_MIN)
+            {   /* 0 or more repetitions (minimum) */
+                while (1)
+                {
+                    res = JPTN_match( ps, str, s, ep+1 );
+
+                    if (res != 0)
+                    {
+                        return( res );
+                    }
+                    else if (s < ps.src_end && JPTN_singleMatch( ps, byte( str, s ), p, ep ))
+                        s = s + 1;  /* try with one more repetition */
+                    else
+                    {
+                        return( 0 );
+                    }
+                }
+            }
+            else
+            {
+                if (m = 0)
+                {
+                    return( 0 );
+                }
+                s = s + 1;
+                p=ep;
+            }
+        }
+    }
+}
+
+integer_function JPTN_pushOneCapture( byref PatternState ps, integer i, integer s, integer e )
+{
+    integer pushed;
+    signed_integer l;
+
+    pushed = 1;
+
+    if (i >= ps.level)
+    {
+        if (i = 0)  /* ps.level = 0, too */
+            pushed = JPTN_pushCaptureResult( ps, s, e );  /* add whole match */
+        else
+        {
+            ps.error = "invalid capture index";
+            pushed = 0;
+        }
+    }
+    else
+    {
+        l = ps.clen[i];
+
+        if (l = JPTN_CAP_UNFINISHED)
+        {
+            ps.error = "unfinished capture";
+            pushed = 0;
+        }
+        else
+        {
+            if (l = JPTN_CAP_POSITION)
+                l = 0;
+            pushed = JPTN_pushCaptureResult( ps, ps.cinit[i],
+                ps.cinit[i] + l );
+        }
+    }
+
+    return( pushed );
+}
+
+integer_function JPTN_pushCaptures( byref PatternState ps, integer s, integer e )
+{
+    integer nLevels;
+    integer i;
+    
+    nLevels = JPTN_checkResultStack( ps, ps.level + 1, "too many captures" );
+    if (nLevels > 0)
+    {
+        JPTN_pushCaptureResult( ps, s, e );
+
+        for (i = 0 to nLevels - 2)
+        {
+            if (JPTN_pushOneCapture( ps, i, s, e ) = 0)
+            {
+                nLevels = i;
+                break;
+            }
+        }
+    }
+
+    return( nLevels );
+}
+
+signed_integer_function JPTN_addString( string buffer, integer bufferLen, integer offset,
+    string str, integer strOffset, integer strLen )
+{
+    if (offset + strLen <= bufferLen)
+    {
+        buffer = left( buffer, offset ) + mid( str, strOffset, strLen );
+        return( offset + strLen );
+    }
+    else
+    {
+        buffer = "buffer overflow";
+        return( -15 );
+    }
+}
+
+signed_integer_function JPTN_addSubst( byref PatternState ps, string buffer, integer bufferLen,
+    integer offset, string str, integer s, integer e, string rep, integer repLen )
+{
+    signed_integer newOffset;
+    integer i;
+    integer b;
+
+    newOffset = offset;
+    for (i = 1 to repLen)
+    {
+        if (byte( rep, i ) != JPTN_C_ESC)
+            newOffset = JPTN_addString( buffer, bufferLen, offset, rep, i, 1 );
+        else
+        {
+            i = i + 1;  /* skip ESC */
+            b = byte( rep, i );
+            if (!isdigit( b ))
+            {
+                if (b = JPTN_C_ESC)
+                    newOffset = JPTN_addString( buffer, bufferLen, offset, rep, i, 1 );
+                else
+                {
+                    buffer = "invalid use of %c in replacement string";
+                    newOffset = -len( buffer );
+                }
+            }
+            else if (b = 0x30)
+                newOffset = JPTN_addString( buffer, bufferLen, offset, str, s, e - s );
+            else
+            {
+                if (JPTN_pushOneCapture( ps, b - 0x31, s, e ) = 0)
+                {
+                    buffer = ps.error;
+                    newOffset = -len( buffer );
+                }
+                else
+                {
+                    newOffset = JPTN_addString( buffer, bufferLen, offset,
+                        str, ps.src_init + ps.start[ps.count-1] - 1, 
+                        ps.end[ps.count-1] - ps.start[ps.count-1] );
+                    ps.count = ps.count - 1;
+                }
+            }
+        }
+
+        if (newOffset < 0)
+            break;
+        else
+            offset = newOffset;
+    }
+
+    return( newOffset );
+}
+
+integer_function pattern_find_l( string src, integer srcLen, signed_integer startIndex,
+    string pattern, integer patternLen, byref PatternState ps )
+{
+    integer anchor;
+    integer s1;
+    integer res;
+           
+    if (startIndex < 0)
+        startIndex = srcLen + startIndex + 1;
+    if (startIndex < 1)
+        startIndex = 1;
+    else if (startIndex > srcLen + 1)
+        startIndex = srcLen + 1;
+
+    s1 = startIndex;
+    anchor = JPTN_initPatternState( ps, srcLen, pattern, patternLen );
+    
+    if (s1 < ps.src_end)
+    {
+        do
+        {
+            ps.level = 0;
+            res = JPTN_match( ps, src, s1, 1 );
+            if (res != 0)
+                return( JPTN_pushCaptures( ps, s1, res ) );
+            s1 = s1 + 1;
+        }
+        until (s1 >= ps.src_end || anchor);
+    }
+
+    return( 0 );
+}
+
+integer_function pattern_find( string src, signed_integer startIndex,
+    string pattern, byref PatternState ps )
+{
+    return( pattern_find_l( src, len( src ), startIndex,
+        pattern, len( pattern ), ps ) );
+}
+
+
+signed_integer_function pattern_replace_l( string src, integer srcLen,
+    signed_integer startIndex, string pattern, integer patternLen, string rep,
+    integer repLen, signed_integer repCount, string buffer, byref integer bufferLen )
+{
+    integer anchor;
+    signed_integer n;
+    signed_integer out;
+    integer s1;
+    integer e;
+    PatternState ps;
+            
+    n = 0;
+    out = 0;
+ 
+    if (repCount <= 0)
+        repCount = srcLen + 1;
+    if (startIndex < 0)
+        startIndex = srcLen + startIndex + 1;
+    if (startIndex < 1)
+        startIndex = 1;
+    else if (startIndex > srcLen + 1)
+        startIndex = srcLen + 1;
+
+    buffer = "";
+    s1 = startIndex;
+    if (s1 > 1)
+        out = JPTN_addString( buffer, bufferLen, out, src, 1, s1 - 1 );
+    anchor = JPTN_initPatternState( ps, srcLen, pattern, patternLen );
+
+    while (n < repCount)
+    {
+        ps.level = 0;
+        ps.count = 0;
+        e = JPTN_match( ps, src, s1, 1 );
+        if (len( ps.error ) != 0)
+        {
+            out = len( ps.error );
+            buffer = ps.error;
+            n = -1;
+            break;
+        }
+        if (e != 0)
+        {
+            n = n + 1;
+            out = JPTN_addSubst( ps, buffer, bufferLen, out,
+                src, s1, e, rep, repLen );
+            if (out < 0)
+            {
+                n = -1;
+                out = -out;
+                break;
+            }
+        }
+        if (e > s1) /* non empty match? */
+            s1 = e;  /* skip it */
+        else if (s1 < ps.src_end)
+        {
+            out = JPTN_addString( buffer, bufferLen, out, src, s1, 1 );
+            s1 = s1 + 1;
+            if (out < 0)
+            {
+                n = -1;
+                out = -out;
+                break;
+            }
+        }
+        else
+            break;
+        if (anchor)
+            break;
+    }
+
+    if (n >= 0)
+    {
+        out = JPTN_addString( buffer, bufferLen, out, src, s1, ps.src_end - s1 );
+        if (out < 0)
+        {
+            n = -1;
+            out = -out;
+        }
+        else if (out < bufferLen)
+        {
+        }
+    }
+
+    bufferLen = out;
+    return( n );
+}
+
+signed_integer_function pattern_replace( string src, signed_integer startIndex,
+    string pattern, string rep, signed_integer repCount,
+    string buffer, byref integer bufferLen )
+{
+    return( pattern_replace_l( src, len( src ), startIndex, pattern,
+        len( pattern ), rep, len( rep ), repCount, buffer, bufferLen ) );
+}
+ 
+structure Queue
+{
+  integer iQueueFirst;
+  integer iQueueLast;
+  integer iTotalQueueSize;
+};
+
+
+integer_function __Queue_enqueue( byRef Queue queueVar )
+{
+  integer iAddIndex;
+
+  if (queueVar.iQueueLast + 1 - queueVar.iQueueFirst < queueVar.iTotalQueueSize)    
+  {
+    queueVar.iQueueLast = queueVar.iQueueLast + 1;
+    iAddIndex = queueVar.iQueueLast % queueVar.iTotalQueueSize;
+    if (queueVar.iQueueFirst > queueVar.iTotalQueueSize && queueVar.iQueueLast > queueVar.iTotalQueueSize)
+    {
+      queueVar.iQueueFirst = queueVar.iQueueFirst - queueVar.iTotalQueueSize;
+      queueVar.iQueueLast = queueVar.iQueueLast - queueVar.iTotalQueueSize;
+    }
+  }
+  else
+  {
+    iAddIndex = queueVar.iTotalQueueSize;
+  } 
+  return( iAddIndex );
+}
+
+
+integer_function __Queue_dequeue( Queue queueVar )
+{
+  integer iRemoveIndex;
+
+  if (queueVar.iQueueLast + 1 - queueVar.iQueueFirst < queueVar.iTotalQueueSize)    
+  {
+    iRemoveIndex = (queueVar.iQueueFirst % queueVar.iTotalQueueSize);
+    queueVar.iQueueFirst = queueVar.iQueueFirst + 1;
+  }
+  else
+  {
+    print( "Queue - Queue:Error" );
+    iRemoveIndex = queueVar.iTotalQueueSize;
+  }
+
+  return( iRemoveIndex );
+}  
+               
+
+function __Queue_Queue(byRef Queue queueVar, integer totalSize )
+{
+  queueVar.iQueueFirst = 1;
+  queueVar.iQueueLast = 0;
+  queueVar.iTotalQueueSize = totalSize;
+}
+                       
+function __Queue_clear(byRef Queue queueVar )
+{
+  queueVar.iQueueFirst = 1;
+  queueVar.iQueueLast = 0;
+}  
+  
+            
+integer_function __Queue_empty( byRef Queue queueVar )
+{
+  if(queueVar.iQueueFirst > queueVar.iQueueLast)
+  {
+    __Queue_clear( queueVar );
+    return (1);
+  }
+  else
+  {
+    return (0);
+  }
+} 
+     
+integer_function __Queue_FirstPos( byRef Queue queueVar )
+{
+  return (queueVar.iQueueFirst);
+} 
+
+integer_function __Queue_LastPos( byRef Queue queueVar )
+{
+  return (queueVar.iQueueLast);
+} 
+
+
+
+#define_constant MAX_DEBUG_FILTER 4
+#define_constant DEFAULT_DEBUG_LINEWRAP 128
+
+
+structure DebugStruct
+{
+  integer iDebug;
+  integer iTimeStamp;
+  integer iLineWrap;
+  string filter1[100];
+  string filter2[100];
+  string filter3[100];
+  string filter4[100];
+};
+
+
+function __debugSetLineWrap(byref DebugStruct debug, integer linewrap)
+{
+  debug.iLineWrap = linewrap;
+}
+
+function __debugEnable(byref DebugStruct debug)
+{
+  debug.iDebug = ON;
+  debug.iTimeStamp = ON;
+  debug.iLineWrap = DEFAULT_DEBUG_LINEWRAP;
+}
+
+function __debugDisable(byref DebugStruct debug) 
+{
+  debug.iDebug = OFF;
+}
+
+function __debugTimeStampDisable(byref DebugStruct debug) 
+{
+  debug.iTimeStamp = OFF;
+}
+
+function __debugSetFilter (byref DebugStruct debug, string filter)
+{
+  string filterArray[MAX_DEBUG_FILTER][100];
+  string tmp[100], f[100];
+	integer i; 
+  i = 0;
+  SetArray(filterArray, " ");
+  
+  tmp = filter + " ";
+
+  while ( (len(tmp) > 0) && (i<MAX_DEBUG_FILTER) )
+	{
+    if(find(" ", tmp))
+      f = remove(" ", tmp);
+    else
+    {
+      f = tmp;
+      tmp = "";
+    }	
+  	if (len(f) > 0) 
+		{
+		  filterArray[i] = f;
+			i = i + 1;
+		}
+	}
+  debug.filter1 = left(filterArray[0], len(filterArray[0]) - 1);
+  debug.filter2 = left(filterArray[1], len(filterArray[1]) - 1);
+  debug.filter3 = left(filterArray[2], len(filterArray[2]) - 1);
+  debug.filter4 = left(filterArray[3], len(filterArray[3]) - 1);
+}
+
+
+function __debugOut( DebugStruct debug, string subsystem, string msg ) 
+{
+  integer lw;
+  string tmp[200], timestamp[50];
+  if (debug.iDebug)
+	{ 
+    if ( (subsystem = "*") || (debug.filter1 = "*") ||
+         (subsystem = debug.filter1) || (subsystem = debug.filter2) ||
+         (subsystem = debug.filter3) || (subsystem = debug.filter4) )
+    {
+      if (debug.iTimeStamp)   
+        timestamp = time() + "  ";
+      else
+        timestamp = ""; 
+      print( "%s(%s)  ", timestamp, subsystem );
+
+      while (len(msg) > 0)
+      {
+        if (len(msg) > debug.iLineWrap) 
+        {
+          lw = debug.iLineWrap;
+          tmp = removeByLength(lw, msg);
+          print( "%s   ...\n", tmp );
+        }
+        else
+        {
+          print( "%s\n", msg );
+          break;
+        }
+      }
+    }
+  }
+}
+   
+function __debugBinaryOut( DebugStruct debug, string subsystem, string header, string binaryMsg ) 
+{
+  string msg[2000];
+  integer i;
+  msg = header;
+  
+  for(i=1 to len(binaryMsg))
+  {
+    Makestring(msg, "%s %02x", msg, byte(binaryMsg, i));
+  } 
+  __debugOut(debug, subsystem, msg);
+}                 
+
+#define_constant CRESTRON_VERSION  "V1_10"
+
+/*******************************************************************************************
+  Compiler directives
+*******************************************************************************************/
+
+#define_constant	TRUE	1
+#define_constant	FALSE	0
+#define_constant NULL_MESSAGE              "NULL STRING"
+#define_constant iNULL_MESSAGE             64444
+
+#define_constant TOTAL_MSGQUEUE_SIZE 1000
+#define_constant SIN_BUF_SZE              	64000
+#define_constant COMMS_DATA_MAX_LENGTH      64000
+#define_constant CMD_TIMEOUT            300
+
+#define_constant MESSAGEHANDLER_DATA_MAX_LENGTH  64000
+#define_constant MESSAGEHANDLER_PROMPT_MAX_LENGTH  20
+#define_constant MESSAGEHANDLER_ACTION_MAX_LENGTH  80
+#define_constant MESSAGEHANDLER_MSG_MAX_LENGTH  80
+
+#define_constant MESSAGEHANDLER_NOT_CONNECTED  0
+#define_constant MESSAGEHANDLER_CREATING_CONNECTION  1
+#define_constant MESSAGEHANDLER_CONNECTED  5
+#define_constant MESSAGEHANDLER_PING_TIME_PERIOD  3000
+
+#define_constant cNO_ACTION             0
+#define_constant cPRESET_LIST_FB        1
+
+#define_constant SOCKET_STATUS_NO_CONNECT		0
+#define_constant SOCKET_STATUS_WAITING			1
+#define_constant SOCKET_STATUS_CONNECTED		2
+#define_constant SOCKET_STATUS_CONNECT_FAILED	3
+#define_constant SOCKET_STATUS_BROKEN_REMOTELY	4
+#define_constant SOCKET_STATUS_BROKEN_LOCALLY	5
+#define_constant SOCKET_STATUS_DNS_LOOKUP		6
+#define_constant SOCKET_STATUS_DNS_FAILED		7
+#define_constant SOCKET_STATUS_DNS_RESOLVED		8
+#define_constant SOCKET_STATUS_DISCONNECTED		9
+#define_constant SOCKET_STATUS_UNDEFINED		99
+
+#define_constant LOGIN_STATE_UNKNOWN			0
+#define_constant LOGIN_STATE_SENT				1
+#define_constant LOGIN_STATE_OK					2
+#define_constant LOGIN_STATE_FAILED				3
+                                                    
+#define_constant MAX_CMD_RETRY				    3
+  
+
+
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+*******************************************************************************************/
+
+digital_input  START_MODULE,
+  __REGULAR_TICK,
+  __TRIGGER_SEND_NEXT_CMD,
+  __TRIGGER_HEARTBEAT,
+  __TRIGGER_PROCESS_SOCKET_RECEIVE;
+
+digital_input PresetSelect[50];
+string_input DebugEnable[50];
+
+string_input SetWindowSource[56][20];
+string_input SetAudioSource[8][20]; 		// Sets audio source for each audio-only output
+string_input SetVideoSource[24][20];		// Sets video source for each video output
+string_input SetVideoAudioSourceA[24][20];	// Sets audio source for channel A on each video output
+string_input SetVideoAudioSourceB[24][20];	// Sets audio source for channel B on each video output
+string_input SetVideoAudioSourceC[24][20];	// Sets audio source for channel C on each video output
+string_input SetVideoAudioSourceD[24][20];	// Sets audio source for channel D on each video output
+
+analog_input SetVideoAudioMode[24];
+
+
+digital_output   IsOK,			// Is everything ok?
+  __TRIGGER_SEND_NEXT_CMD_OUT,
+  __TRIGGER_START_HEARTBEAT_OUT,
+  __SOCKET_RECEIVE_BUSY;
+
+string_output CurrentStatus;	// Tell user what current state is
+string_output PresetName$[50];
+analog_Output SetVideoAudioModeFb[24];
+
+
+/*******************************************************************************************
+Parameters
+*******************************************************************************************/
+
+integer_parameter ip_port;			// Port number tjat tvONE device listens on
+string_parameter ip_address[15];	// IP address of tvONE device
+string_parameter username[100];		// Login username
+string_parameter password[100];		// Login password
+
+string_parameter slot_for_audio_card[10];	// E.g. s8
+string_parameter address_for_video_output[24][10];	// E.g. s16o1
+
+
+/*******************************************************************************************
+   SOCKETS
+*******************************************************************************************/
+tcp_client socket[SIN_BUF_SZE];
+
+/*******************************************************************************************
+   Structure Definitions
+*******************************************************************************************/
+
+structure MsgQueueEntry
+{
+  string cmd[100];
+  string tag[50];
+  integer action;
+  integer msgTimeout;
+};
+
+volatile MsgQueueEntry g_msgQueue[TOTAL_MSGQUEUE_SIZE];
+volatile MsgQueueEntry g_currentMsg;
+volatile Queue g_msgQueueCnt;
+
+volatile DebugStruct gDebug;
+
+
+integer g_SocketBusy, g_MessageHandlerConnectState;
+string g_MessageHandlerInputString[SIN_BUF_SZE];
+
+
+
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+
+volatile integer g_LoginState;	// Keep track of whether we're logged in
+volatile integer g_RXSinceConnected;	// Did we receive anything since the socket connected?
+volatile integer g_TicksSincePresetsRead;	// How many ticks since we last read the preset names
+volatile integer g_TicksSinceRXWhileConnected;	// How many ticks since we last had data from the connected socket
+integer g_status;				// Current status of socketinteger g_socketBusy;			// Are we currently awaiting a response via the socket?
+
+integer g_processingRxData;
+
+string g_queue[2048];			// Commands are stored here until we're ready to send them
+
+
+
+
+/*******************************************************************************************
+   Queue
+*******************************************************************************************/
+
+function MsgQueue_enqueue( MsgQueueEntry newMsg )
+{
+  integer iAddIndex;
+  string dbg[2000];
+
+  iAddIndex = __Queue_enqueue( g_msgQueueCnt );
+  makestring( dbg, "_enqueue iAddIndex = %d", iAddIndex );
+  __debugOut( gDebug, "Queue", dbg );
+
+  if (iAddIndex != g_msgQueueCnt.iTotalQueueSize)
+  {
+    g_msgQueue[iAddIndex].cmd           = newMsg.cmd;
+    g_msgQueue[iAddIndex].tag           = newMsg.tag;
+    g_msgQueue[iAddIndex].action        = newMsg.action;
+    g_msgQueue[iAddIndex].msgTimeout    = newMsg.msgTimeout;
+  }
+}
+
+function MsgQueue_value( integer iGetIndex, MsgQueueEntry returnedValue )
+{
+  returnedValue.cmd = g_msgQueue[iGetIndex].cmd;
+  returnedValue.tag = g_msgQueue[iGetIndex].tag;
+  returnedValue.action = g_msgQueue[iGetIndex].action;
+  returnedValue.msgTimeout = g_msgQueue[iGetIndex].msgTimeout;
+}
+
+function MsgQueue_dequeue( byref MsgQueueEntry returnedMsg )
+{
+  integer iRemoveIndex;
+
+  iRemoveIndex = __Queue_dequeue( g_MsgQueueCnt );
+  if (iRemoveIndex < g_MsgQueueCnt.iTotalQueueSize)
+  {
+    MsgQueue_value( iRemoveIndex, returnedMsg );
+    g_MsgQueue[iRemoveIndex].cmd = NULL_MESSAGE;
+  }
+  else
+  {
+    __debugOut( gDebug, "Queue", " dequeue Error" );
+  }
+}
+
+function MsgQueue_RemoveDuplicateTags( string tag )
+{
+  integer i;
+
+  if (!__Queue_empty( g_msgQueueCnt ))
+  {
+    for (i = __Queue_FirstPos( g_msgQueueCnt ) to __Queue_LastPos( g_msgQueueCnt ))
+    {
+      if (g_msgQueue[i].tag = tag)
+        g_msgQueue[i].cmd = NULL_MESSAGE;
+   }
+  }
+}
+
+
+
+
+
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+
+
+string_function socketStatusText()
+{
+	string s[100];
+	switch(g_status) {
+		case (SOCKET_STATUS_NO_CONNECT):
+			s = "DISCONNECTED";
+		case (SOCKET_STATUS_WAITING):
+			s = "Waiting for Connection";
+		case (SOCKET_STATUS_CONNECTED):
+			s = "Connected";
+		case (SOCKET_STATUS_CONNECT_FAILED):
+			s = "Connection Failed";
+		case (SOCKET_STATUS_BROKEN_REMOTELY):
+			s = "DISCONNECTED";
+		case (SOCKET_STATUS_BROKEN_LOCALLY):
+			s = "Connection Broken Locally";
+		case (SOCKET_STATUS_DNS_LOOKUP):
+			s = "Performing DNS Lookup";
+		case (SOCKET_STATUS_DNS_FAILED):
+			s = "DNS Lookup Failed";
+		case (SOCKET_STATUS_DNS_RESOLVED):
+			s = "DNS Name Resolved";
+		case (SOCKET_STATUS_DISCONNECTED):
+			s = "DISCONNECTED";
+		default:
+			s = "UNKNOWN";
+	}
+	return(s);
+}
+
+function Comms_init()
+{
+	string sDebug[100];
+	if (ip_address = "") {
+		__debugOut( gDebug, "Comms_init", "Socket connection cannot be started. IP address is blank.");
+		IsOK = false;
+		CurrentStatus = "IP address not configured";
+		return;
+	}
+	if (ip_port = 0) {
+		__debugOut( gDebug, "Comms_init", "Socket connection cannot be started. IP port is zero.");
+		IsOK = false;
+		CurrentStatus = "IP port not configured";
+		return;
+	}
+	if (g_status = SOCKET_STATUS_CONNECTED) {
+		__debugOut( gDebug, "Comms_init", "Can't start socket connect as socket is already connected.");
+		return;
+	}
+	if (g_status = SOCKET_STATUS_WAITING) {
+		__debugOut( gDebug, "Comms_init", "Can't start socket connect as connection is already in progress.");
+		return;
+	}
+	makestring(sDebug, "Connecting to %s on port %d", ip_address, ip_port);
+	__debugOut( gDebug, "socketStartSocket", sDebug);
+	socketConnectClient(socket, ip_address, ip_port, 1);
+	CurrentStatus = "Connecting";
+}
+
+function Comms_close()
+{
+    __debugOut( gDebug, "Comms_close", "Closing TCP port" );
+    socketdisconnectclient( socket );
+}
+
+
+function Comms_sendMessage( string msg )
+{
+  integer length, msglen;
+  string dbg[2000];
+  string msgString[COMMS_DATA_MAX_LENGTH];
+
+  makestring( dbg, "_sendMessage %s", msg );
+  __debugOut( gDebug, "Comms", dbg );
+
+  makestring( msgString, "%s\n", msg );
+  SocketSend( socket, msgString );
+}
+
+
+
+
+
+
+
+
+
+
+/*******************************************************************************************
+   MessageHandler
+*******************************************************************************************/
+
+
+function MessageHandler__setConnectState( integer state )
+{
+  string dbg[2000];
+  makestring( dbg, "__setConnectState state = %d", state );
+  __debugOut( gDebug, "MessageHandler", dbg );
+  g_MessageHandlerConnectState = state;
+}
+
+function MessageHandler__connect()
+{
+  __debugOut( gDebug, "MessageHandler", "__connect()" );
+
+  if (g_MessageHandlerConnectState = MESSAGEHANDLER_NOT_CONNECTED)
+  {
+    __debugOut( gDebug, "MessageHandler", "_connect()" );
+    MessageHandler__setConnectState( MESSAGEHANDLER_CREATING_CONNECTION );
+    g_currentMsg.cmd            = "";
+    g_MessageHandlerInputString = "";
+    Comms_init();
+  }
+}
+
+function MessageHandler__disconnect()
+{
+  __debugOut( gDebug, "MessageHandler", "__disconnect()" );
+
+  g_socketBusy = false;
+  if (g_MessageHandlerConnectState > MESSAGEHANDLER_NOT_CONNECTED)
+  {
+    Comms_close();
+
+    MessageHandler__setConnectState( MESSAGEHANDLER_NOT_CONNECTED );
+
+    g_currentMsg.cmd            = "";
+    g_currentMsg.action       = cNO_ACTION;
+    g_currentMsg.msgTimeOut   = CMD_TIMEOUT;
+	g_LoginState = LOGIN_STATE_UNKNOWN;
+
+
+  }
+  wait( 500 )
+    MessageHandler__connect();
+}
+
+
+
+function ProcessResponse(string response)
+{
+	string sTmp[200], sDebug[200], sPresetName[200];
+	PatternState ps;
+	integer count, iPresetNumber;
+
+
+	makestring(sDebug, "response (%s)  g_LoginState (%d)", response, g_LoginState);
+	__debugOut( gDebug, "ProcessResponse", sDebug);
+
+	if (find("!Error -132", response) > 0) {
+		__debugOut( gDebug, "ProcessResponse", "Login failed. Disconnecting");
+		g_LoginState = LOGIN_STATE_FAILED;
+		MessageHandler__disconnect();
+		return;
+	}
+	if (g_LoginState != LOGIN_STATE_OK && g_LoginState != LOGIN_STATE_SENT) {
+		if (find("Please login", response) > 0) {
+			makestring(sTmp, "login(%s,%s)\r", username, password);
+			makestring(sDebug, "Sending command: %s", sTmp);
+			__debugOut( gDebug, "ProcessResponse", sDebug);
+			SocketSend(socket, sTmp);
+			g_LoginState = LOGIN_STATE_SENT;
+			return;
+		}
+		return;
+	}
+	if (g_LoginState != LOGIN_STATE_OK && find("!Info", response) > 0 && find("Logged In", response) > 0) {
+		g_LoginState = LOGIN_STATE_OK;
+		__debugOut( gDebug, "ProcessResponse", "Logged in ok");
+		IsOK = true;
+	}
+	if (g_LoginState = LOGIN_STATE_OK) {
+		if (find("Routing.Preset.PresetList", response) > 0) {
+			count = pattern_find(response, 1, "Routing.Preset.PresetList%[(.+)%]=(.+),", ps);
+			if (count > 0) {
+				iPresetNumber = atoi(mid(response, ps.start[1], ps.end[1] - ps.start[1]));
+				sPresetName = mid(response, ps.start[2], ps.end[2] - ps.start[2]);
+				PresetName$[iPresetNumber] = sPresetName;
+			}
+		}
+	}
+}
+
+
+
+
+
+function MessageHandler_queueTimeOut()
+{
+  __debugOut( gDebug, "MessageHandler", "_queueTimeOut" );
+  MessageHandler__disconnect();
+}
+
+function MessageHandler__startQueueTimer( integer msgTimeout )
+{
+  string dbg[2000];
+  makestring( dbg, "__startQueueTimer msgTimeout = %d", msgTimeout );
+  __debugOut( gDebug, "MessageHandler", dbg );
+  wait( msgTimeout, QUEUE_TIMEOUT )
+  {
+    MessageHandler_queueTimeOut();
+  }
+}
+
+function MessageHandler__sendCorioCommand( string cmd, integer msgTimeout )
+{
+  __debugOut( gDebug, "MessageHandler", "__sendCorioCommand" );
+  MessageHandler__startQueueTimer( msgTimeout );
+  Comms_sendMessage( cmd );
+}
+
+
+function MessageHandler__SendNow( MsgQueueEntry msg )
+{
+  __debugOut( gDebug, "MessageHandler", "__SendNow" );
+  g_currentMsg.cmd          = msg.cmd;
+  g_currentMsg.tag          = msg.tag;
+  g_currentMsg.action       = msg.action;
+  g_currentMsg.msgTimeOut   = msg.msgTimeOut;
+  MessageHandler__sendCorioCommand( g_currentMsg.cmd, g_currentMsg.msgTimeOut );
+}
+
+
+function MessageHandler__SendNextCmd()
+{
+  String Cmd$[200];
+  MsgQueueEntry msgItem;
+
+  pulse( 10, __TRIGGER_START_HEARTBEAT_OUT );
+
+  if (__Queue_empty( g_msgQueueCnt ))
+  {
+    __debugOut( gDebug, "MessageHandler", "__SendNextCmd QUEUE WAS EMTRY" );
+    g_currentMsg.cmd = NULL_MESSAGE;
+    g_socketBusy = false;
+  }
+  else if (g_MessageHandlerConnectState = MESSAGEHANDLER_NOT_CONNECTED)
+  {
+    __debugOut( gDebug, "MessageHandler", "__SendNextCmd NOT CONNECTED" );
+    MessageHandler__connect();
+  }
+  else if (g_LoginState = LOGIN_STATE_OK)		// only send if we're logged in
+  {
+    g_socketBusy = true;
+    MsgQueue_dequeue( msgItem );
+    if (msgItem.cmd = NULL_MESSAGE)
+    {
+      pulse (5, __TRIGGER_SEND_NEXT_CMD_OUT);
+    }
+    else
+    {
+      MessageHandler__SendNow( msgItem );
+    }
+  }
+}
+
+function MessageHandler__SendToQueue( string msg,
+  string tag, integer action, integer timeout, integer sendNow  )
+{
+  integer i;
+  string dbg[2000];
+  MsgQueueEntry addMsg;
+
+  addMsg.cmd = msg;
+  addMsg.tag = tag;
+  addMsg.action = action;
+  addMsg.MsgTimeOut = timeout;
+  if (sendNow = TRUE)
+  {
+    g_socketBusy = true;
+    MessageHandler__SendNow( addMsg );
+  }
+  else
+  {
+    makestring( dbg,
+      "__SendToQueue msg = %s,  action = %d,  timeout = %d",
+      msg, action, timeOut );
+    __debugOut( gDebug, "MessageHandler", dbg );
+    MsgQueue_enqueue( addMsg );
+    makestring( dbg, "__SendToQueue g_socketBusy = %d", g_socketBusy );
+    __debugOut( gDebug, "MessageHandler", dbg );
+    if (g_socketBusy = false)
+      MessageHandler__SendNextCmd();
+  }
+}
+
+
+function MessageHandler__heartbeat()
+{
+  string sCommand[200], sTag[200];
+  __debugOut(gDebug, "MessageHandler", "__heartbeat" );
+
+  makestring( sTag, "routing.preset.PresetList" );
+  makestring( sCommand, "routing.preset.PresetList" );
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+}
+
+function MessageHandler__doAction( integer action, string data )
+{
+  string dbg[2000];
+  makestring( dbg, "__doAction Action = %d,  data = %s", action, data );
+  __debugOut( gDebug, "MessageHandler", dbg );
+  switch (action)
+  {
+    case (0):
+    {
+      __debugOut( gDebug, "MessageHandler", "_doAction  No action to do" );
+    }
+    default:
+    {
+    }
+  }
+}
+
+function MessageHandler_onCommRx( )
+{
+  integer pos, i, dest, packetlen;
+  integer cmdPos;
+  string response[MESSAGEHANDLER_DATA_MAX_LENGTH];
+  string sDebug[2000];
+  makestring( sDebug, "_onCommRx g_MessageHandlerInputString %s", g_MessageHandlerInputString );
+  __debugOut( gDebug, "MessageHandler", sDebug );
+
+  while(find("\n", g_MessageHandlerInputString, 1) > 0)
+  {
+      response = remove( "\n", g_MessageHandlerInputString, 1 );
+
+	  if (len(response) = 0) {
+		break;
+	  } else {
+        cancelallwait();
+      }
+
+	  IsOK = true;
+	  CurrentStatus = "Connected";
+	  if (len(response) > 1) {
+		response = left(response, len(response) - 2);
+	  }
+	  makestring(sDebug, "Processing response: %s", response);
+	  __debugOut( gDebug, "SocketReceive", sDebug);
+	  ProcessResponse(response);
+	  if (find("!", response) = 1 || find("/", response) = 1) {
+		__debugOut( gDebug, "SocketReceive", "Socket no longer busy");
+		g_socketBusy = FALSE;
+	  }
+        }
+    
+	if (g_LoginState = LOGIN_STATE_OK && g_socketBusy = FALSE) {
+      wait( 50 )
+         pulse( 1, __TRIGGER_SEND_NEXT_CMD_OUT );
+  }
+}
+
+function MessageHandler_onConnectionStatusChanged( integer connected )
+{
+  string dbg[2000];
+  makestring( dbg, "_onConnectionStatusChanged  connected = %d", connected );
+  __debugOut( gDebug, "MessageHandler", dbg );
+  if (connected > 0)
+  {
+    MessageHandler__setConnectState( MESSAGEHANDLER_CONNECTED );
+  }
+  else
+  {
+    MessageHandler__setConnectState( MESSAGEHANDLER_NOT_CONNECTED );
+  }
+}
+
+function MessageHandler__closeComms()
+{
+  __debugOut( gDebug, "MessageHandler", "__closeComms" );
+  MessageHandler__disconnect();
+}
+
+
+function MessageHandler_initialiseComms()
+{
+  __debugOut( gDebug, "MessageHandler", "_initialiseComms" );
+  MessageHandler__closeComms();
+}
+
+
+
+
+
+/*******************************************************************************************
+   Corio
+*******************************************************************************************/
+
+function Corio_startUp()
+{
+  g_socketBusy = false;
+
+  __debugSetFilter(gDebug, "*");
+  __debugDisable(gDebug);
+
+  __debugOut(  gDebug, "Corio", "Corio_startUp" );
+  __Queue_Queue( g_MsgQueueCnt, TOTAL_MSGQUEUE_SIZE );
+  g_processingRxData = false;
+  MessageHandler_initialiseComms();
+}
+
+
+
+
+function handleSocketReceive()
+{
+  if (g_processingRxData)
+  {
+    Pulse ( 10, __SOCKET_RECEIVE_BUSY );
+  }
+  else
+  {
+    g_processingRxData = true;
+    if(len(socket.SocketRxBuf) > 0)
+    {
+       g_MessageHandlerInputString = g_MessageHandlerInputString + removebylength( len( socket.SocketRxBuf ), socket.SocketRxBuf  );
+        MessageHandler_onCommRx();
+    }
+    g_processingRxData = false;
+  }
+}
+
+
+
+
+SocketStatus socket
+{
+	string sTmp[200], sDebug[200];
+	g_status = SocketGetStatus();
+	__debugOut( gDebug, "SocketStatus", socketStatusText());
+	if (g_status = SOCKET_STATUS_CONNECTED) {
+		CurrentStatus = "Connected";
+		g_RXSinceConnected = false;
+		return;
+	}
+	g_LoginState = LOGIN_STATE_UNKNOWN;
+	if (g_status = SOCKET_STATUS_BROKEN_LOCALLY || g_status = SOCKET_STATUS_BROKEN_REMOTELY || g_status = SOCKET_STATUS_DISCONNECTED) {
+		if (g_RXSinceConnected = false) {
+			IsOK = false;
+			CurrentStatus = "Nothing received while connected. In use elsewhere?";
+		}
+		return;
+	}
+	if (g_status = SOCKET_STATUS_CONNECT_FAILED) {
+		IsOK = false;
+		CurrentStatus = "Connection failed";
+	}
+}
+
+SocketReceive socket
+{
+  handleSocketReceive();
+}
+
+CHANGE DebugEnable
+{
+  if (DebugEnable = "enable debug")
+    __debugEnable(gDebug);
+  else
+    __debugDisable(gDebug);
+}
+
+PUSH PresetSelect
+{
+	integer iPresetNumber;
+	string sCommand[200], sTag[200];
+	iPresetNumber = GetLastModifiedArrayIndex();
+	makestring(sTag, "Routing.Preset.Take");
+	makestring(sCommand, "Routing.Preset.Take=%d\r", iPresetNumber);
+	MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+}
+
+CHANGE SetWindowSource
+{
+	integer iWindowNumber;
+	string sCommand[200], sTag[100];
+	iWindowNumber = GetLastModifiedArrayIndex();
+	makestring(sTag, "Windows.Window%d.input=", iWindowNumber);
+	makestring(sCommand, "Windows.Window%d.input=%s\r", iWindowNumber, SetWindowSource[iWindowNumber]);
+	MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+}
+
+             
+CHANGE SetAudioSource
+{
+	integer iOutputNumber;
+	string sSlot[20];
+	string sCommand[200], sTag[100];
+	iOutputNumber = GetLastModifiedArrayIndex();
+	sSlot = slot_for_audio_card;
+	makestring(sTag, "%s.Out1.AudOutA=", sSlot);
+	makestring(sCommand, "%s.Out%d.AudOutA=%s\r", sSlot, iOutputNumber, SetAudioSource[iOutputNumber]);
+	MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+}
+
+CHANGE SetVideoAudioMode
+{
+  integer iOutputNumber;
+  string sSlot[20];
+  string sCommand[200], sTag[200];
+  iOutputNumber = GetLastModifiedArrayIndex();
+  makestring(sTag, "%s.Audio = ", address_for_video_output[iOutputNumber]  );
+  if(SetVideoAudioMode[iOutputNumber] = 0)
+    sCommand = "off";
+  else if(SetVideoAudioMode[iOutputNumber] = 1)
+    sCommand = "breakaway";
+  else if(SetVideoAudioMode[iOutputNumber] = 2)
+    sCommand = "afv";
+  makestring(sCommand, "%s %s\r", sTag, sCommand );
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+  SetVideoAudioModeFB[iOutputNumber] = SetVideoAudioMode[iOutputNumber];
+}
+
+CHANGE SetVideoSource
+{
+  integer iOutputNumber;
+  string sSlotOutput[20];
+  string sCommand[200], sTag[200];
+  iOutputNumber = GetLastModifiedArrayIndex();
+  sSlotOutput = address_for_video_output[iOutputNumber];
+  makestring(sTag, "> %s\r", sSlotOutput);
+  makestring(sCommand, "%s > %s\r", SetVideoSource[iOutputNumber], sSlotOutput);
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+
+}
+
+CHANGE SetVideoAudioSourceA
+{
+  integer iOutputNumber;
+  string sSlotOutput[20];
+  string sCommand[200], sTag[200];
+  iOutputNumber = GetLastModifiedArrayIndex();
+  sSlotOutput = address_for_video_output[iOutputNumber];
+  makestring(sTag, "%s.AudOutA=", sSlotOutput);
+  makestring(sCommand, "%s.AudOutA=%s\r", sSlotOutput, SetVideoAudioSourceA[iOutputNumber]);
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+}
+
+CHANGE SetVideoAudioSourceB
+{
+  integer iOutputNumber;
+  string sSlotOutput[20];
+  string sCommand[200], sTag[200];
+  iOutputNumber = GetLastModifiedArrayIndex();
+  sSlotOutput = address_for_video_output[iOutputNumber];
+  makestring(sTag, "%s.AudOutB=", sSlotOutput);
+  makestring(sCommand, "%s.AudOutB=%s\r", sSlotOutput, SetVideoAudioSourceB[iOutputNumber]);
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+
+}
+ 
+CHANGE SetVideoAudioSourceC
+{
+  integer iOutputNumber;
+  string sSlotOutput[20];
+  string sCommand[200], sTag[200];
+  iOutputNumber = GetLastModifiedArrayIndex();
+  sSlotOutput = address_for_video_output[iOutputNumber];
+  makestring(sTag, "%s.AudOutC=", sSlotOutput);
+  makestring(sCommand, "%s.AudOutC=%s\r", sSlotOutput, SetVideoAudioSourceC[iOutputNumber]);
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+
+}
+
+CHANGE SetVideoAudioSourceD
+{
+  integer iOutputNumber;
+  string sSlotOutput[20];
+  string sCommand[200], sTag[200];
+  iOutputNumber = GetLastModifiedArrayIndex();
+  sSlotOutput = address_for_video_output[iOutputNumber];
+  makestring(sTag, "%s.AudOutD=", sSlotOutput);
+  makestring(sCommand, "%s.AudOutD=%s\r", sSlotOutput, SetVideoAudioSourceD[iOutputNumber]);
+  MessageHandler__SendToQueue( sCommand, sTag, cNO_ACTION, CMD_TIMEOUT, FALSE );
+}
+
+
+push Start_Module
+{
+  Corio_startUp();
+}
+push __TRIGGER_PROCESS_SOCKET_RECEIVE
+{
+  handleSocketReceive();
+}
+
+push __TRIGGER_SEND_NEXT_CMD
+{
+  MessageHandler__SendNextCmd();
+}
+
+push __TRIGGER_HEARTBEAT
+{
+  MessageHandler__heartbeat();
+}
+
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+function Main()
+{
+
+	__debugOut( gDebug, "Main", "Starting");
+	IsOK = false;
+	CurrentStatus = "Not implemented yet";
+	g_LoginState = LOGIN_STATE_UNKNOWN;
+	g_status = SOCKET_STATUS_UNDEFINED;
+
+  g_processingRxData = FALSE;
+  g_socketBusy = false;
+
+  if ( WaitForInitializationComplete() < 0 )
+  {
+    return;
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

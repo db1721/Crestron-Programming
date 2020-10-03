@@ -1,0 +1,152 @@
+#CATEGORY "13" // Timers
+
+/*******************************************************************************************
+  SIMPL+ Module Information
+*******************************************************************************************
+
+	Programmer:       Dan Whidden
+	Updated:		  12/2/05
+	Comments:		  Sleep timer
+
+*******************************************************************************************
+  Compiler Directives
+*******************************************************************************************/
+
+#SYMBOL_NAME "Sleep Timer Countdown"
+
+#DEFAULT_VOLATILE
+//#DEFAULT_NONVOLATILE
+#ENABLE_STACK_CHECKING   
+  
+#HELP_BEGIN
+   This is a 30, 60 and 90 minutes timer.
+#HELP_END
+
+
+#DEFINE_CONSTANT	Timer_1			30    
+#DEFINE_CONSTANT	Timer_2			60    
+#DEFINE_CONSTANT	Timer_3			90     
+#DEFINE_CONSTANT	Warning_time 	 2  
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL(BUFFER) INPUTS and OUTPUTS
+*******************************************************************************************/
+
+digital_input Start_30min, Start_60min, Start_90min, cancel;
+digital_output Start_30min_FB, Start_60min_FB, Start_90min_FB, Timer_finished, Warning;
+String_output Countdown$;
+
+
+/*******************************************************************************************
+  Global Variables  -- Interger String
+*******************************************************************************************/
+
+integer X, timer_going;
+   
+   
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/ 
+   
+function Cancel_func()  
+{
+	timer_going = 0;	
+	start_30min_fb = 0;
+	start_60min_fb = 0;
+	start_90min_fb = 0; 
+   	X = 0;
+   	makestring(countdown$,"Timer cancelled"); 
+   	
+   	delay(500); 
+   	makestring(countdown$," ");  
+   	
+}
+
+
+function Timer_func() 
+{
+    while (X > 0 && timer_going = 1)
+	{                              
+		makestring(countdown$,"Sleep timer has %u minute(s) left",X);
+		If (X = warning_time)
+		{
+			pulse (20, warning);
+		}
+		X = X - 1;  
+		
+		delay(6000);	
+	}              
+			
+	If (X = 0 && Timer_going = 1)
+	{
+		pulse (20, Timer_finished);
+		call cancel_func();
+	}
+} 
+
+
+
+/*******************************************************************************************
+  Event Handlers***   Push Release Change Event
+****************************************************************************************/
+
+Push cancel
+{
+	Call Cancel_func();
+} 
+ 
+Push start_30min
+{
+	X = Timer_1;
+	start_30min_fb = 1;
+	start_60min_fb = 0;
+	start_90min_fb = 0;
+	makestring(countdown$,"Sleep timer reset, %u minutes",X);
+    
+    if (timer_going = 0)
+	 {                    
+	    timer_going = 1;
+	 	call timer_func(); 	
+	 }
+}
+ 
+Push start_60min
+{
+	X = Timer_2;
+	start_60min_fb = 1;
+	start_30min_fb = 0;
+	start_90min_fb = 0;
+	makestring(countdown$,"Sleep timer reset, %u minutes",X);  
+	
+    if (timer_going = 0)
+	 {
+		timer_going = 1; 	
+		call timer_func();
+	 }
+}
+  
+Push start_90min
+{                      
+	X = Timer_3;
+	start_90min_fb = 1; 
+	start_30min_fb = 0;
+	start_60min_fb = 0;
+	makestring(countdown$,"Sleep timer reset, %u minutes",X);
+    
+    if (timer_going = 0)
+	 {
+	 	timer_going = 1;
+	 	call timer_func(); 	
+	 }
+}
+
+
+/*******************************************************************************************
+  Main()          Start-up Code
+*******************************************************************************************/
+Function Main()
+{
+   call cancel_func();
+}
+
+

@@ -1,0 +1,131 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "InFocus MondoPad 232 Driver"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+// DIGITAL_INPUT 
+// ANALOG_INPUT 
+STRING_INPUT _SKIP_, FromDevice$[20], ToProcess[10];
+// BUFFER_INPUT 
+Analog_Input VolumeSet;
+
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT 
+STRING_OUTPUT _SKIP_, ToDevice$;
+Analog_Output _SKIP_, PowerFB, InputFB, AudioInputFB, VolumeFB, MuteFB;
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+STRING_PARAMETER ASCII_ID[2];
+
+String LengthHex[15][1], sTempCmd[20];
+
+Function ProcessCmd()
+{
+	
+}
+Change ToProcess
+{
+	Makestring (ToDevice$, "\x35%s%s%s\r", LengthHex[Len(ToProcess) + 5], ASCII_ID, ToProcess);
+}
+Change VolumeSet
+{
+	If(VolumeSet <> VolumeFB)
+	{
+		Makestring (ToDevice$, "\x35b%s150%03u\r", ASCII_ID, VolumeSet);
+	}
+}
+Change FromDevice$
+{
+	String Gathered[20];
+	Integer Val;
+	While(Len(FromDevice$))
+	{
+		Gathered = Gather("\x0d", FromDevice$);
+		If(Len(Gathered) > 6 && (Byte(Gathered, 5) = 51) && (Mid(Gathered, 3,2) = ASCII_ID))
+		{
+			Val = atoi(Mid(Gathered, 8,3));
+			Switch(atoi(Mid(Gathered, 5,2)))
+			{
+				Case(0):
+				{
+					PowerFB = Val;
+				}
+				Case(1):
+				{
+					InputFB = Val;
+				}
+				Case(2):
+				{
+					AudioInputFB = Val;
+				}
+				Case(50):
+				{
+					VolumeFB = Val;
+				}
+				Case(55):
+				{
+					MuteFB = Val;
+				}
+			}
+		}
+	}
+}
+Function Main()
+{
+	LengthHex[1] = "1";
+	LengthHex[2] = "2";
+	LengthHex[3] = "3";
+	LengthHex[4] = "4";
+	LengthHex[5] = "5";
+	LengthHex[6] = "6";
+	LengthHex[7] = "7";
+	LengthHex[8] = "8";
+	LengthHex[9] = "9";
+	LengthHex[10] = "a";
+	LengthHex[11] = "b";
+	LengthHex[12] = "c";
+	LengthHex[13] = "d";
+	LengthHex[14] = "e";
+	LengthHex[15] = "f";
+}
+                                                                                                                                                   
