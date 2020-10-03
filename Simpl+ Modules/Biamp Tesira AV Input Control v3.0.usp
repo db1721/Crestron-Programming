@@ -1,0 +1,406 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: Control Concepts, Inc.
+System Name: Biamp Tesira AV Input Control v3.0
+System Number:
+Programmer: JJM
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+// #SYMBOL_NAME ""
+// #HINT ""
+// #DEFINE_CONSTANT
+#DEFINE_CONSTANT TRUE 1
+#DEFINE_CONSTANT FALSE 0
+#CATEGORY "0" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+#HELP_BEGIN
+To be used with Biamp Tesira AV Input Control v3.0.umc module only.
+Not to be used as a stand-alone module.
+#HELP_END
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+#USER_SIMPLSHARP_LIBRARY "BiampTesiraLib3"
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// SKIP FOR PARAMETER
+DIGITAL_INPUT _SKIP_, _SKIP_;
+DIGITAL_OUTPUT _SKIP_, _SKIP_;
+
+// Base
+DIGITAL_INPUT Poll_AV_Input;
+DIGITAL_OUTPUT Is_Initialized;
+
+// Media Source
+ANALOG_INPUT MediaSource_Input_Port; // videoSource
+ANALOG_OUTPUT MediaSource_Input_Port_Fb;
+STRING_OUTPUT MediaSource_Input_Port_Fb$;
+STRING_OUTPUT MediaSource_Resolution_Fb$; // nego1atedInputResolu1on
+STRING_OUTPUT MediaSource_Framerate_Fb$; // nego1atedInputFrameRate
+ANALOG_OUTPUT MediaSource_Active_Source_Fb; // activeVideoSource
+STRING_OUTPUT MediaSource_Active_Source_Fb$;
+ANALOG_OUTPUT MediaSource_Connected_Port_Fb; // inputDeviceConnected
+STRING_OUTPUT MediaSource_Connected_Port_Fb$; 
+DIGITAL_OUTPUT MediaSource_Is_Deinterlace_Fb; // activeDeinterlace
+
+ANALOG_INPUT MediaSource_Test_Pattern; // testPahern
+ANALOG_OUTPUT MediaSource_Test_Pattern_Fb;
+STRING_OUTPUT MediaSource_Test_Pattern_Fb$;
+
+// Embedded Audio
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_L; // embeddedAudioPresents
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_R;
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_LFE;
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_C;
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_Lr;
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_Rr;
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_Ls;
+DIGITAL_OUTPUT EmbeddedAudio_Is_Present_Rs;
+STRING_OUTPUT EmbeddedAudio_Threshold_Fb$; // embeddedAudioThreshold
+
+// Bandwidth Configuration
+STRING_OUTPUT Bandwidth_Max_Resolution_Fb$; // videoBandwidth.resMax
+STRING_OUTPUT Bandwidth_Min_Framerate_Fb$; // videoBandwidth.frameRate
+STRING_OUTPUT Bandwidth_Max_Compression_Fb$; // videoBandwidth.compressionFactor
+STRING_OUTPUT Bandwidth_Max_Bandwidth_Fb$; // maxRequiredBandwidth
+STRING_OUTPUT Bandwidth_Required_Connection_Fb$; // bandwidthLimit
+
+// Stream
+DIGITAL_INPUT Stream_Audio_Mute_On, Stream_Audio_Mute_Off, Stream_Audio_Mute_Toggle; // audioMute
+DIGITAL_OUTPUT Stream_Audio_Mute_Is_On, Stream_Audio_Mute_Is_Off;
+
+DIGITAL_INPUT Stream_Video_Mute_On, Stream_Video_Mute_Off, Stream_Video_Mute_Toggle; // videoMute
+DIGITAL_OUTPUT Stream_Video_Mute_Is_On, Stream_Video_Mute_Is_Off;
+
+DIGITAL_INPUT Stream_Video_Freeze_On, Stream_Video_Freeze_Off, Stream_Video_Freeze_Toggle; // videoFreeze
+DIGITAL_OUTPUT Stream_Video_Freeze_Is_On, Stream_Video_Freeze_Is_Off;
+
+STRING_OUTPUT Stream_Resolution_Fb$; // outgoingResolu1on
+STRING_OUTPUT Stream_FrameRate_Fb$; // outgoingFrameRate
+STRING_OUTPUT Stream_Bandwidth_Fb$; // currentBandwidth
+STRING_OUTPUT Stream_Connection_Fb$; // networkInterfaceType
+                                                                          
+DIGITAL_INPUT Enable;
+/*******************************************************************************************
+  SOCKETS
+  (Uncomment and define socket definitions as needed)
+*******************************************************************************************/
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+STRING_PARAMETER Instance_Tag[50];
+INTEGER_PARAMETER Command_Processor_ID;
+
+/*******************************************************************************************
+  Parameter Properties
+  (Uncomment and declare parameter properties as needed)
+*******************************************************************************************/
+#BEGIN_PARAMETER_PROPERTIES Instance_Tag
+   propValidUnits = unitString;
+   propDefaultUnit = unitString;
+   propDefaultValue = "";
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES Command_Processor_ID
+   propValidUnits = unitDecimal;
+   propDefaultUnit = unitDecimal;
+   propBounds = 1d , 32d;
+   propDefaultValue = 1d;
+#END_PARAMETER_PROPERTIES
+
+/*******************************************************************************************
+  Structure Definitions
+  (Uncomment and define structure definitions as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: struct.myString = "";
+*******************************************************************************************/
+
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+StateComponent audioMute;
+StateComponent videoMute;
+StateComponent videoFreeze;
+AVInputComponent avInput;
+                               
+INTEGER audioMuteInit;
+INTEGER videoMuteInit;
+INTEGER videoFreezeInit;
+INTEGER avInputInit;
+INTEGER IsReady;
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+EVENTHANDLER OnAudioMuteInitializeChange(StateComponent sender, UInt16EventArgs args)
+{
+	audioMuteInit = args.Payload;
+
+	Is_Initialized = (audioMuteInit && videoMuteInit && videoFreezeInit && avInputInit);
+}
+
+EVENTHANDLER OnAudioMuteStateChange(StateComponent sender, UInt16EventArgs args)
+{
+	Stream_Audio_Mute_Is_On = args.Payload;
+	Stream_Audio_Mute_Is_Off = !args.Payload;
+}
+
+EVENTHANDLER OnVideoMuteInitializeChange(StateComponent sender, UInt16EventArgs args)
+{
+	videoMuteInit = args.Payload;
+
+	Is_Initialized = (audioMuteInit && videoMuteInit && videoFreezeInit && avInputInit);
+}
+
+EVENTHANDLER OnVideoMuteStateChange(StateComponent sender, UInt16EventArgs args)
+{
+	Stream_Video_Mute_Is_On = args.Payload;
+	Stream_Video_Mute_Is_Off = !args.Payload;
+}
+
+EVENTHANDLER OnVideoFreezeInitializeChange(StateComponent sender, UInt16EventArgs args)
+{
+	videoFreezeInit = args.Payload;
+
+	Is_Initialized = (audioMuteInit && videoMuteInit && videoFreezeInit && avInputInit);
+}
+
+EVENTHANDLER OnVideoFreezeStateChange(StateComponent sender, UInt16EventArgs args)
+{
+	Stream_Video_Freeze_Is_On = args.Payload;
+	Stream_Video_Freeze_Is_Off = !args.Payload;
+}
+
+EVENTHANDLER OnAvInputInitializeChange(AVInputComponent sender, UInt16EventArgs args)
+{
+	avInputInit = args.Payload;
+
+	Is_Initialized = (audioMuteInit && videoMuteInit && videoFreezeInit && avInputInit);
+}
+
+EVENTHANDLER OnAVInputStateChange(AVInputComponent sender, AVInputStateEventArgs args)
+{
+	AVInputState status;
+
+	status = args.Payload;
+
+	// Media Source
+	MediaSource_Input_Port_Fb = status.MediaSourceInputPort;
+	MediaSource_Input_Port_Fb$ = status.MediaSourceInputPortText;
+	MediaSource_Resolution_Fb$ = status.MediaSourceResolution;
+	MakeString(MediaSource_Framerate_Fb$,"%dHz", status.MediaSourceFramerate);
+	MediaSource_Active_Source_Fb = status.MediaSourceActiveSource;
+	MediaSource_Active_Source_Fb$ = status.MediaSourceActiveSourceText;
+	MediaSource_Connected_Port_Fb = status.MediaSourceConnectedPort;
+	MediaSource_Connected_Port_Fb$ = status.MediaSourceConnectedPortText;
+	MediaSource_Is_Deinterlace_Fb = status.MediaSourceDeinterlace;	
+	MediaSource_Test_Pattern_Fb = status.MediaSourceTestPattern;
+	MediaSource_Test_Pattern_Fb$ = status.MediaSourceTestPatternText;
+	
+	// Embedded Audio
+	EmbeddedAudio_Is_Present_L = status.EmbeddedAudioPresense_L;
+	EmbeddedAudio_Is_Present_R = status.EmbeddedAudioPresense_R;
+	EmbeddedAudio_Is_Present_LFE = status.EmbeddedAudioPresense_LFE;
+	EmbeddedAudio_Is_Present_C = status.EmbeddedAudioPresense_C;
+	EmbeddedAudio_Is_Present_Lr = status.EmbeddedAudioPresense_Lr;
+	EmbeddedAudio_Is_Present_Rr = status.EmbeddedAudioPresense_Rr;
+	EmbeddedAudio_Is_Present_Ls = status.EmbeddedAudioPresense_Ls;
+	EmbeddedAudio_Is_Present_Rs = status.EmbeddedAudioPresense_Rs;
+	EmbeddedAudio_Threshold_Fb$ = status.EmbeddedAudioThresholdText;
+	
+	// Bandwidth Configuration
+	Bandwidth_Max_Resolution_Fb$ = status.BandwidthMaxResolutionText;
+	Bandwidth_Min_Framerate_Fb$ = status.BandwidthMinFrameRateText;
+
+	if (status.BandwidthMaxCompression = 0)
+		Bandwidth_Max_Compression_Fb$ = "Off";
+	else
+		MakeString(Bandwidth_Max_Compression_Fb$,"%d:1", (status.BandwidthMaxCompression + 1));
+
+	Bandwidth_Max_Bandwidth_Fb$ = status.BandwidthMaxBandwidthText;
+	Bandwidth_Required_Connection_Fb$ = status.BandwidthRequiredConnectionText;
+	
+	// Stream
+	MakeString(Stream_Resolution_Fb$,"%s",status.StreamResolution);
+	MakeString(Stream_FrameRate_Fb$,"%dHz",status.StreamFrameRate);
+	Stream_Bandwidth_Fb$ = status.StreamBandwidthText;
+	Stream_Connection_Fb$ = status.StreamConnectionText;
+}
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+///////////////////////////////////////
+// MediaSource AV Input
+///////////////////////////////////////
+THREADSAFE CHANGE MediaSource_Input_Port
+{
+	AVInput.SetMediaSourceInputPort(MediaSource_Input_Port);
+}
+
+THREADSAFE CHANGE MediaSource_Test_Pattern
+{
+	AVInput.SetMediaSourceTestPattern(MediaSource_Test_Pattern);
+}
+
+///////////////////////////////////////
+// Stream AudioMute
+///////////////////////////////////////
+THREADSAFE PUSH Stream_Audio_Mute_On
+{
+	audioMute.SetState(TRUE);
+}
+
+THREADSAFE PUSH Stream_Audio_Mute_Off
+{
+	audioMute.SetState(FALSE);
+}
+
+THREADSAFE PUSH Stream_Audio_Mute_Toggle
+{
+	audioMute.ToggleState();
+}
+
+
+///////////////////////////////////////
+// Stream VideoMute
+///////////////////////////////////////
+THREADSAFE PUSH Stream_Video_Mute_On
+{
+	videoMute.SetState(TRUE);
+}
+
+THREADSAFE PUSH Stream_Video_Mute_Off
+{
+	videoMute.SetState(FALSE);
+}
+
+THREADSAFE PUSH Stream_Video_Mute_Toggle
+{
+	videoMute.ToggleState();
+}
+
+///////////////////////////////////////
+// Stream VideoFreeze
+///////////////////////////////////////
+THREADSAFE PUSH Stream_Video_Freeze_On
+{
+	videoFreeze.SetState(TRUE);
+}
+
+THREADSAFE PUSH Stream_Video_Freeze_Off
+{
+	videoFreeze.SetState(FALSE);
+}
+
+THREADSAFE PUSH Stream_Video_Freeze_Toggle
+{
+	videoFreeze.ToggleState();
+}
+    
+///////////////////////////////////////
+// Poll_AVInput
+///////////////////////////////////////                                     
+THREADSAFE PUSH Poll_AV_Input
+{
+	videoFreeze.PollState();
+	videoMute.PollState();
+	audioMute.PollState();
+	AVInput.Poll();
+}
+
+///////////////////////////////////////
+// Enable
+///////////////////////////////////////
+THREADSAFE PUSH Enable
+{
+	IF (IsReady)
+	{
+	    audioMute.Configure(Command_Processor_ID, Instance_Tag, "embeddedAudioMute", 1, 0);
+	    videoMute.Configure(Command_Processor_ID, Instance_Tag, "videoMute", 1, 0);
+	    videoFreeze.Configure(Command_Processor_ID, Instance_Tag, "videoFreeze", 1, 0);
+		AVInput.Configure(Command_Processor_ID, Instance_Tag);
+	}
+}
+THREADSAFE RELEASE Enable
+{
+	IF (IsReady)
+	{
+	    audioMute.UnRegister();
+	    videoMute.UnRegister();
+	    videoFreeze.UnRegister();
+		AVInput.UnRegister();
+	}
+}
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+Function Main()
+{
+	IsReady = FALSE;
+
+	audioMuteInit = 0;
+	videoMuteInit = 0;
+	videoFreezeInit = 0;
+	AVInputInit = 0;
+	
+    WaitForInitializationComplete();
+	REGISTEREVENT(audioMute, OnInitializeChange, OnAudioMuteInitializeChange); 
+	REGISTEREVENT(audioMute, OnStateChange, OnAudioMuteStateChange); 
+	REGISTEREVENT(videoMute, OnInitializeChange, OnVideoMuteInitializeChange); 
+	REGISTEREVENT(videoMute, OnStateChange, OnVideoMuteStateChange); 
+	REGISTEREVENT(videoFreeze, OnInitializeChange, OnVideoFreezeInitializeChange); 
+	REGISTEREVENT(videoFreeze, OnStateChange, OnVideoFreezeStateChange); 
+	REGISTEREVENT(avInput, OnInitializeChange, OnAvInputInitializeChange);
+	REGISTEREVENT(avInput, OnStateChange, OnAvInputStateChange);
+                  
+	IF (Enable)
+	{
+	    audioMute.Configure(Command_Processor_ID, Instance_Tag, "embeddedAudioMute", 1, 0);
+	    videoMute.Configure(Command_Processor_ID, Instance_Tag, "videoMute", 1, 0);
+	    videoFreeze.Configure(Command_Processor_ID, Instance_Tag, "videoFreeze", 1, 0);
+		AVInput.Configure(Command_Processor_ID, Instance_Tag);
+	}
+
+	IsReady = TRUE;
+}

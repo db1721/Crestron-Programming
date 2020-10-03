@@ -1,0 +1,53 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "Clevertouch Command Transmit + Volume & Checksum"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+ANALOG_INPUT VolSet0to100;
+// STRING_INPUT 
+// BUFFER_INPUT 
+
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT 
+STRING_OUTPUT To_Device$;
+
+Change VolSet0to100
+{
+	//Makestring(To_Device$, "\xAA\xBB\xCC\x03\x00%c%c\xdd\xee\xff", VolSet0to100, 0x03 + Volset0to100);
+	To_Device$ = "\xAA\xBB\xCC\x03\x00" + chr(VolSet0to100) + Chr(0x03 + Volset0to100) + "\xdd\xee\xff";
+}
+
+//print

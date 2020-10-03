@@ -1,0 +1,180 @@
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=ArchiveManifest
+  RelVrs=4.09.04
+  IsProgram=1
+  TopLevelProgram=Biamp TesiraLUX v3.0 IP Demo.smw
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp TesiraLUX v3.0 IP Demo.smw
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp TesiraLUX v3.0 IP Demo.sig
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp TesiraLUX v3.0 IP Demo.lpz
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp TesiraLUX v3.0 IP Demo.smft
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp TesiraLUX v3.0 IP Demo.lpz.hash
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Command Processor IP v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Comm v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=BiampTesiraLib3.clz
+  Scope=1
+  Module=Biamp Tesira Comm v3.0
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Command Processor IP v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Comm v3.0.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Router Control v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Router Control v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Router Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Router Control v3.0.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Router Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Router Control v3.0.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Input Control v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Input Control v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Input Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira AV Input Control v3.0.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Input Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira AV Input Control v3.0.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Output Control v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Output Control v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Output Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira AV Output Control v3.0.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira AV Output Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira AV Output Control v3.0.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Level Control v3.0.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira State Control v3.0.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Level Control v3.0.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira State Control v3.0.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v3.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v3.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v3.0 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Preset Control v3.0.ush
+[END]
