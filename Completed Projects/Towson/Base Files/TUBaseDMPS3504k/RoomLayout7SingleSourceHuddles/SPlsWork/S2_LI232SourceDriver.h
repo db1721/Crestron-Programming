@@ -1,0 +1,142 @@
+#ifndef __S2_LI232SOURCEDRIVER_H__
+#define __S2_LI232SOURCEDRIVER_H__
+
+
+
+
+/*
+* Constructor and Destructor
+*/
+
+/*
+* DIGITAL_INPUT
+*/
+#define __S2_LI232SourceDriver_SETALL_DIG_INPUT 0
+#define __S2_LI232SourceDriver_CLEARALL_DIG_INPUT 1
+#define __S2_LI232SourceDriver_SYSTEMONPRESS_DIG_INPUT 2
+
+#define __S2_LI232SourceDriver_MONITORPRESS_DIG_INPUT 3
+#define __S2_LI232SourceDriver_MONITORPRESS_ARRAY_LENGTH 8
+#define __S2_LI232SourceDriver_SOURCEPRESS_DIG_INPUT 11
+#define __S2_LI232SourceDriver_SOURCEPRESS_ARRAY_LENGTH 14
+
+/*
+* ANALOG_INPUT
+*/
+
+
+
+
+/*
+* DIGITAL_OUTPUT
+*/
+
+#define __S2_LI232SourceDriver_SOURCEPRESSED_DIG_OUTPUT 0
+#define __S2_LI232SourceDriver_SOURCEPRESSED_ARRAY_LENGTH 14
+
+/*
+* ANALOG_OUTPUT
+*/
+#define __S2_LI232SourceDriver_MASTERSWVALUE_ANALOG_OUTPUT 0
+
+
+#define __S2_LI232SourceDriver_MONITORVAL_ANALOG_OUTPUT 1
+#define __S2_LI232SourceDriver_MONITORVAL_ARRAY_LENGTH 8
+#define __S2_LI232SourceDriver_MONITORSOURCE_STRING_OUTPUT 9
+#define __S2_LI232SourceDriver_MONITORSOURCE_ARRAY_LENGTH 8
+
+/*
+* Direct Socket Variables
+*/
+
+
+
+
+/*
+* INTEGER_PARAMETER
+*/
+/*
+* SIGNED_INTEGER_PARAMETER
+*/
+/*
+* LONG_INTEGER_PARAMETER
+*/
+/*
+* SIGNED_LONG_INTEGER_PARAMETER
+*/
+/*
+* INTEGER_PARAMETER
+*/
+/*
+* SIGNED_INTEGER_PARAMETER
+*/
+/*
+* LONG_INTEGER_PARAMETER
+*/
+/*
+* SIGNED_LONG_INTEGER_PARAMETER
+*/
+/*
+* STRING_PARAMETER
+*/
+#define __S2_LI232SourceDriver_SOURCENAME_STRING_PARAMETER 10
+#define __S2_LI232SourceDriver_SOURCENAME_ARRAY_NUM_ELEMS 14
+#define __S2_LI232SourceDriver_SOURCENAME_ARRAY_NUM_CHARS 22
+CREATE_STRING_ARRAY( S2_LI232SourceDriver, __SOURCENAME, __S2_LI232SourceDriver_SOURCENAME_ARRAY_NUM_ELEMS, __S2_LI232SourceDriver_SOURCENAME_ARRAY_NUM_CHARS );
+
+
+/*
+* INTEGER
+*/
+CREATE_INTARRAY1D( S2_LI232SourceDriver, __ISOURCEIN, 14 );;
+
+
+/*
+* LONG_INTEGER
+*/
+
+
+/*
+* SIGNED_INTEGER
+*/
+
+
+/*
+* SIGNED_LONG_INTEGER
+*/
+
+
+/*
+* STRING
+*/
+
+/*
+* STRUCTURE
+*/
+
+START_GLOBAL_VAR_STRUCT( S2_LI232SourceDriver )
+{
+   void* InstancePtr;
+   struct GenericOutputString_s sGenericOutStr;
+   unsigned short LastModifiedArrayIndex;
+
+   DECLARE_IO_ARRAY( __MONITORPRESS );
+   DECLARE_IO_ARRAY( __SOURCEPRESS );
+   DECLARE_IO_ARRAY( __SOURCEPRESSED );
+   DECLARE_IO_ARRAY( __MONITORVAL );
+   DECLARE_IO_ARRAY( __MONITORSOURCE );
+   unsigned short __X;
+   unsigned short __ILOOP;
+   unsigned short __ISOURCE;
+   DECLARE_INTARRAY( S2_LI232SourceDriver, __ISOURCEIN );
+   DECLARE_STRING_ARRAY( S2_LI232SourceDriver, __SOURCENAME );
+};
+
+START_NVRAM_VAR_STRUCT( S2_LI232SourceDriver )
+{
+};
+
+
+
+#endif //__S2_LI232SOURCEDRIVER_H__
+

@@ -1,0 +1,11 @@
+<Device Model="DMPS-300-C" Name="DMPS-300-C.">
+   <Network Type="Cresnet" Id="06">
+      <Device Model="TPS-6L," DeviceId="03" Name="TPS-6L (Cresnet)"/>
+   </Network>
+   <Network Type="Ethernet" Id="07">
+      <Device Model="TPS-6L," DeviceId="03" Name="TPS-6L (Ethernet)"/>
+      <Device Model="RoomView SE/RoomView 7.0" DeviceId="04"/>
+      <Device Model="DM-TX-201-C" DeviceId="06"/>
+      <Device Model="DM-RMC-4K-100-C" DeviceId="14"/>
+   </Network>
+</Device>

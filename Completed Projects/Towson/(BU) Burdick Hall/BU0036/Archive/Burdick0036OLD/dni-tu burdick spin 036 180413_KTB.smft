@@ -1,0 +1,12 @@
+<Device Model="CP3">
+   <Network Type="Cresnet" Id="01"/>
+   <Network Type="Ethernet" Id="02">
+      <Device Model="Core3 UI XPanel" DeviceId="03" Name="XPanel 2.0 Smart Graphics"/>
+      <Device Model="Fusion Room" DeviceId="07"/>
+      <Device Model="CEN-GWEXER" DeviceId="0F">
+         <Network Type="RF">
+            <Device Model="TST-902" DeviceId="03" Name="TST-902 (EX)"/>
+         </Network>
+      </Device>
+   </Network>
+</Device>

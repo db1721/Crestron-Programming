@@ -1,0 +1,208 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+*******************************************************************************************/
+/*
+Dealer Name:  Beowulf, L.L.C.
+Programmer:  Kirk Patton
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+*******************************************************************************************/
+											//times are in hundredths of seconds:
+#DEFINE_CONSTANT	IDLE_TIME			200	//time for changes to stop before storing value
+#DEFINE_CONSTANT	STARTUP_TIME		50	//time after initialization to recall values
+#DEFINE_CONSTANT	MAX_SIGNALS			50	//maximum number of inputs/outputs
+#DEFINE_CONSTANT	FILE_PATH			"\\NVRAM\\Analogs"
+
+
+#SYMBOL_NAME "Analog Non-Volatile to Disk"
+#CATEGORY "9" // Memory
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+
+#HELP_BEGIN
+This module is designed to allow analog signals to remain
+non-volatile, and recall their previous values on startup,
+and be irrespective of the position of the module in the
+program tree.  This is achieved by saving the values to
+NVRAM disk, and recalling them on system startup.
+
+The inputs and outputs are to be tied to the same analog
+analog signal, with the input being used to save values, and
+the output used to recall values on startup.  After a period
+of time with no changes on any signal, all the current values
+are written to disk.  On system startup, the values are
+recalled from the disk.
+
+If NVRAM is left as the file path, then NVRAM must be
+initialized in the processor.  This module will also generate
+a user error on startup if the file doesn't exist (i.e. the
+first time a program is run using this module with a given
+instance ID).  This has been done intentionally to notify
+the programmer if these files have been lost or corrupted in
+later restarts.
+
+INPUTS:
+
+Instance_ID:  This is an analog value that is used to keep
+              one instance of this module separate from other
+              instances.  In practice, the decimal equivalent
+              of this value is appended to the end of the 
+              filename.  This value is only read on system
+              startup, and should be set with an INIT with
+              a '1' on the input.
+                            
+In[x]:        To be tied to analog signals for store/recall.
+              Must be the same signal as Out[x] of the same
+              index for proper operation.
+              
+OUTPUTS:
+
+FileOp_Busy:  This signal goes high during the file save/recall
+              operation.  May be tied to an unused signal if
+              not needed.
+              
+Out[x]:       To be tied to analog signals for store/recall.
+              Must be the same signal as In[x] of the same
+              index for proper operation.
+              
+#DEFINE_CONSTANTS:
+
+IDLE_TIME     The period of time after the last change on any
+              input that the values are stored to disk.
+              
+STARTUP_TIME: The time after program initialization when the values
+              are recalled from disk.
+              
+MAX_SIGNALS:  Sets the maximum size of the input/output arrays, and
+              sets the sizes of the file recorded to disk.  All
+              unused inputs are set to zero for predictable
+              behavior if inputs/outputs are added later.
+              
+FILE_PATH:    The path and filename to use for storing the values.
+              The Instance_ID and ".dat" will be appended.  Use
+              double backslash (\\) to express a backslash.
+#HELP_END
+
+/*******************************************************************************************
+INPUTS and OUTPUTS
+*******************************************************************************************/
+ANALOG_INPUT Instance_ID;
+ANALOG_INPUT In[MAX_SIGNALS];
+
+DIGITAL_OUTPUT FileOp_Busy;
+ANALOG_OUTPUT Out[MAX_SIGNALS];
+
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+INTEGER gDefinedInputs, gStartup, gThread;
+
+INTEGER gValue[MAX_SIGNALS];
+
+STRING gFilePath$[40];
+
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+Function SaveValues()	//saves array to RAM disk
+{
+	SIGNED_INTEGER iHandle, iResult;
+	
+	FileOp_Busy = 1;
+	StartFileOperations();
+	
+	iHandle = FileOpen(gFilePath$, _O_WRONLY | _O_CREAT | _O_TRUNC);
+
+	IF(iHandle >=0)
+		iResult = WriteIntegerArray(iHandle, gValue);
+	ELSE
+		GenerateUserError ("Unable to open file for writing");
+	
+	FileClose(iHandle);
+	
+	EndFileOperations();
+	FileOp_Busy = 0;
+}
+
+Function RecallValues()	//recalls array from RAM disk
+{
+	SIGNED_INTEGER iHandle, iResult;
+	
+	FileOp_Busy = 1;
+	StartFileOperations();
+	
+	iHandle = FileOpen(gFilePath$, _O_RDONLY);
+	
+	IF(iHandle >=0)
+		iResult = ReadIntegerArray(iHandle, gValue);
+	ELSE
+		GenerateUserError ("Unable to open file for reading");
+	
+	FileClose(iHandle);
+	
+	EndFileOperations();
+	FileOp_Busy = 0;
+}
+
+/*******************************************************************************************
+  Event Handlers
+*******************************************************************************************/
+
+CHANGE In
+{
+	INTEGER iIndex, iThread;
+	
+	IF(gStartup)											//prevents excess activity on
+		TerminateEvent;										//startup
+	
+	iIndex = GetLastModifiedArrayIndex();
+	
+	gValue[iIndex] = In[iIndex];							//updates internal array
+	
+	gThread = gThread + 1 MOD 256;							//counts thread
+	iThread = gThread;
+	
+	DELAY(IDLE_TIME);										//wait for further changes
+	
+	IF(iThread = gThread)									//writes to disk only if this
+		SaveValues();										//is the last thread	
+}
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+FUNCTION Main()
+{
+    INTEGER I;
+
+	gStartup = 1;    
+
+    WaitForInitializationComplete();
+        
+    gFilePath$ = FILE_PATH + ITOA(Instance_ID) +".dat";		//assemble file path string
+//	PRINT ("gFilePath$ = %s\n", gFilePath$);
+    
+	FOR(gDefinedInputs = MAX_SIGNALS TO 1 STEP -1)			//determine number of defined
+	{														//inputs and outputs
+		IF(IsSignalDefined(In[gDefinedInputs]))
+			BREAK;
+		ELSE
+			gValue[gDefinedInputs] = 0;						//sets unused array indices to 0
+	}
+	
+	gValue[0] = 0;
+	
+	DELAY (STARTUP_TIME);									//waits for program to settle
+	
+	RecallValues();											//reads values from disk
+	
+	FOR(I = 1 TO gDefinedInputs)							//sends values to outputs
+		Out[I] = gValue[I];
+	
+	ProcessLogic();
+	
+	gStartup = 0;
+	    
+}

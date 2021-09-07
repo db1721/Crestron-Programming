@@ -1,0 +1,2335 @@
+[
+Version=1
+]
+[
+ObjTp=FSgntr
+Sgntr=UserMacro
+RelVrs=4.09.04
+IntStrVrs=2
+MinSMWVrs=3.00.00
+MinTIOVrs=0
+SavedBy=SMW4.03.20
+]
+[
+ObjTp=Hd
+S0Nd=1
+S1Nd=2
+SLNd=3
+PrNm=Fusion SSI Device Usage v1.2 custom2.umc
+CmVr=3.03
+DbVr=66.06.003.00
+DvcDbVr=92.00.002.00
+OpVr=CP3 1.012.0017
+PgmNm=BJM/AA
+DlrNm=Crestron Electronics
+Incl=362,378,380,405,407,408,409,478,522,537,554,586,590,611,624,767,830,883,1032,1062,1079,1134,1157,1199,1220,1222,1299,1348,1439,1472,1473,1499,1746,1803,1975,2229,2354,2514,2523,2532,3708,3902,3912,3918,3925,1766,2574,2651,2817,2886,2938,2947,3181,3197,3233,3710,3735,3736,3816,3888,4176,4308,4476,4591,4769,5360,5388,5420,5455,
+McNm=Fusion SSI Device Usage v1.2
+SmVr=1055
+DvVr=1055
+TpN1=1
+TpN2=2
+TpN3=3
+TpN4=4
+TpN5=5
+PdfHelp=Fusion SSI Device Usage v1.2.pdf
+APg=1
+FltTmp=1
+FpCS=0
+EnType=0
+ZeroOnIoOk=0
+SGMethod=1
+]
+[
+ObjTp=Bk
+Nm1=\
+Sx1=0
+Sy1=0
+Mx1=0
+]
+[
+ObjTp=Bw
+H=1
+Lx=0
+Ly=0
+Rx=821
+Ry=595
+Xm=-1
+Ym=-1
+SH=6
+Z=100
+Ht=3
+Hi=19
+]
+[
+ObjTp=Symbol
+Name=Fusion SSI Device Usage v1.2 custom2
+Code=1
+SmplCName=Fusion SSI Device Usage v1.2 custom2.umc
+Smpl-C=3
+CompilerTimePrecision=Single_Or_Double_Precision
+Exclusions=1,19,20,21,88,89,167,168,179,216,225,248,249,266,302,305,213,214,215,217,226,267,310,718,756,854,
+SMWRev=3.00.00
+TIORev=0
+S+=1
+HelpID=1055
+PdfHelp=Fusion SSI Device Usage v1.2.pdf
+APg=1
+StdCmd=0
+FltTmp=1
+FpCS=0
+NumFixedInputs=57
+NumFixedOutputs=1
+NumFixedParams=32
+MinVariableInputs=0
+MinVariableInputsList2=0
+MinVariableInputsList3=0
+MinVariableOutputs=0
+MinVariableOutputsList2=0
+MinVariableOutputsList3=0
+MinVariableParams=0
+SymbolTree=58
+InputSigType1=Digital
+InputSigType2=Digital|Analog|Serial|String
+InputSigType3=Digital|Analog|Serial|String
+InputSigType4=Digital
+InputSigType5=Digital
+InputSigType6=Digital
+InputSigType7=Digital
+InputSigType8=Digital
+InputSigType9=Digital
+InputSigType10=Digital
+InputSigType11=Digital
+InputSigType12=Digital
+InputSigType13=Digital
+InputSigType14=Digital
+InputSigType15=Digital
+InputSigType16=Digital
+InputSigType17=Digital
+InputSigType18=Digital
+InputSigType19=Digital
+InputSigType20=Digital|Analog|Serial|String
+InputSigType21=Digital|Analog|Serial|String
+InputSigType22=Digital|Analog|Serial|String
+InputSigType23=Serial
+InputSigType24=Serial
+InputSigType25=Serial
+InputSigType26=Serial
+InputSigType27=Serial
+InputSigType28=Serial
+InputSigType29=Serial
+InputSigType30=Serial
+InputSigType31=Serial
+InputSigType32=Serial
+InputSigType33=Serial
+InputSigType34=Serial
+InputSigType35=Serial
+InputSigType36=Serial
+InputSigType37=Serial
+InputSigType38=Serial
+InputSigType39=Digital|Analog|Serial|String
+InputSigType40=Digital|Analog|Serial|String
+InputSigType41=Serial
+InputSigType42=Serial
+InputSigType43=Serial
+InputSigType44=Serial
+InputSigType45=Serial
+InputSigType46=Serial
+InputSigType47=Serial
+InputSigType48=Serial
+InputSigType49=Serial
+InputSigType50=Serial
+InputSigType51=Serial
+InputSigType52=Serial
+InputSigType53=Serial
+InputSigType54=Serial
+InputSigType55=Serial
+InputSigType56=Serial
+InputSigType57=Digital|Analog|Serial|String
+OutputSigType1=Serial
+ParamSigType1=String
+ParamSigType2=String
+ParamSigType3=String
+ParamSigType4=String
+ParamSigType5=String
+ParamSigType6=String
+ParamSigType7=String
+ParamSigType8=String
+ParamSigType9=String
+ParamSigType10=String
+ParamSigType11=String
+ParamSigType12=String
+ParamSigType13=String
+ParamSigType14=String
+ParamSigType15=String
+ParamSigType16=String
+ParamSigType17=String
+ParamSigType18=String
+ParamSigType19=String
+ParamSigType20=String
+ParamSigType21=List
+ParamSigType22=String
+ParamSigType23=List
+ParamSigType24=String
+ParamSigType25=List
+ParamSigType26=String
+ParamSigType27=List
+ParamSigType28=String
+ParamSigType29=List
+ParamSigType30=String
+ParamSigType31=List
+ParamSigType32=String
+InputCue1=Restart_Counters
+InputCue2=[~UNUSED~]
+InputCue3=[~UNUSED~]
+InputCue4=Device_1_In_Use
+InputCue5=Device_2_In_Use
+InputCue6=Device_3_In_Use
+InputCue7=Device_4_In_Use
+InputCue8=Device_5_In_Use
+InputCue9=Device_6_In_Use
+InputCue10=Device_7_In_Use
+InputCue11=Device_8_In_Use
+InputCue12=Device_9_In_Use
+InputCue13=Device_10_In_Use
+InputCue14=Device_11_In_Use
+InputCue15=Device_12_In_Use
+InputCue16=Device_13_In_Use
+InputCue17=Device_14_In_Use
+InputCue18=Device_15_In_Use
+InputCue19=Device_16_In_Use
+InputCue20=[~UNUSED~]
+InputCue21=[~UNUSED~]
+InputCue22=[~BeginGroup~]Device__Type
+InputCue23=[Device_1_Type_txt$]
+InputCue24=[Device_2_Type_txt$]
+InputCue25=[Device_3_Type_txt$]
+InputCue26=[Device_4_Type_txt$]
+InputCue27=[Device_5_Type_txt$]
+InputCue28=[Device_6_Type_txt$]
+InputCue29=[Device_7_Type_txt$]
+InputCue30=[Device_8_Type_txt$]
+InputCue31=[Device_9_Type_txt$]
+InputCue32=[Device_10_Type_txt$]
+InputCue33=[Device_11_Type_txt$]
+InputCue34=[Device_12_Type_txt$]
+InputCue35=[Device_13_Type_txt$]
+InputCue36=[Device_14_Type_txt$]
+InputCue37=[Device_15_Type_txt$]
+InputCue38=[Device_16_Type_txt$]
+InputCue39=[~EndGroup~]Device__Type
+InputCue40=[~BeginGroup~]Device__Name
+InputCue41=[Device_1_Name_txt$]
+InputCue42=[Device_2_Name_txt$]
+InputCue43=[Device_3_Name_txt$]
+InputCue44=[Device_4_Name_txt$]
+InputCue45=[Device_5_Name_txt$]
+InputCue46=[Device_6_Name_txt$]
+InputCue47=[Device_7_Name_txt$]
+InputCue48=[Device_8_Name_txt$]
+InputCue49=[Device_9_Name_txt$]
+InputCue50=[Device_10_Name_txt$]
+InputCue51=[Device_11_Name_txt$]
+InputCue52=[Device_12_Name_txt$]
+InputCue53=[Device_13_Name_txt$]
+InputCue54=[Device_14_Name_txt$]
+InputCue55=[Device_15_Name_txt$]
+InputCue56=[Device_16_Name_txt$]
+InputCue57=[~EndGroup~]Device__Name
+OutputCue1=Device_Usage_String_tx$
+ParamCue1=Device_1_Type$
+ParamCue2=Device_1_Name$
+ParamCue3=Device_2_Type$
+ParamCue4=Device_2_Name$
+ParamCue5=Device_3_Type$
+ParamCue6=Device_3_Name$
+ParamCue7=Device_4_Type$
+ParamCue8=Device_4_Name$
+ParamCue9=Device_5_Type$
+ParamCue10=Device_5_Name$
+ParamCue11=Device_6_Type$
+ParamCue12=Device_6_Name$
+ParamCue13=Device_7_Type$
+ParamCue14=Device_7_Name$
+ParamCue15=Device_8_Type$
+ParamCue16=Device_8_Name$
+ParamCue17=Device_9_Type$
+ParamCue18=Device_9_Name$
+ParamCue19=Device_10_Type$
+ParamCue20=Device_10_Name$
+ParamCue21=Device_11_Type$,Audio Codec,CD Player,Document Camera,Door_Panel,DVD Player,Generic Source,Television,VCR,Video Capture,Video Codec,Whiteboard,Amplifer,Control Processor,Keypad,Media Player,Occupancy Sensor,Power Conditioner,Presentation Gateway,Projector,Digital Media,Switcher,Touchscreen
+ParamCue22=Device_11_Name$
+ParamCue23=Device_12_Type$,Audio Codec,CD Player,Document Camera,Door_Panel,DVD Player,Generic Source,Television,VCR,Video Capture,Video Codec,Whiteboard,Amplifer,Control Processor,Keypad,Media Player,Occupancy Sensor,Power Conditioner,Presentation Gateway,Projector,Digital Media,Switcher,Touchscreen
+ParamCue24=Device_12_Name$
+ParamCue25=Device_13_Type$,Audio Codec,CD Player,Document Camera,Door_Panel,DVD Player,Generic Source,Television,VCR,Video Capture,Video Codec,Whiteboard,Amplifer,Control Processor,Keypad,Media Player,Occupancy Sensor,Power Conditioner,Presentation Gateway,Projector,Digital Media,Switcher,Touchscreen
+ParamCue26=Device_13_Name$
+ParamCue27=Device_14_Type$,Audio Codec,CD Player,Document Camera,Door_Panel,DVD Player,Generic Source,Television,VCR,Video Capture,Video Codec,Whiteboard,Amplifer,Control Processor,Keypad,Media Player,Occupancy Sensor,Power Conditioner,Presentation Gateway,Projector,Digital Media,Switcher,Touchscreen
+ParamCue28=Device_14_Name$
+ParamCue29=Device_15_Type$,Audio Codec,CD Player,Document Camera,Door_Panel,DVD Player,Generic Source,Television,VCR,Video Capture,Video Codec,Whiteboard,Amplifer,Control Processor,Keypad,Media Player,Occupancy Sensor,Power Conditioner,Presentation Gateway,Projector,Digital Media,Switcher,Touchscreen
+ParamCue30=Device_15_Name$
+ParamCue31=Device_16_Type$,Audio Codec,CD Player,Document Camera,Door_Panel,DVD Player,Generic Source,Television,VCR,Video Capture,Video Codec,Whiteboard,Amplifer,Control Processor,Keypad,Media Player,Occupancy Sensor,Power Conditioner,Presentation Gateway,Projector,Digital Media,Switcher,Touchscreen
+ParamCue32=Device_16_Name$
+MPp=32
+Pp1=1
+Pp2=2
+Pp3=3
+Pp4=18
+Pp5=4
+Pp6=19
+Pp7=5
+Pp8=20
+Pp9=6
+Pp10=21
+Pp11=7
+Pp12=22
+Pp13=8
+Pp14=23
+Pp15=9
+Pp16=24
+Pp17=10
+Pp18=25
+Pp19=11
+Pp20=26
+Pp21=12
+Pp22=27
+Pp23=13
+Pp24=28
+Pp25=14
+Pp26=29
+Pp27=15
+Pp28=30
+Pp29=16
+Pp30=31
+Pp31=17
+Pp32=32
+FileName=Fusion SSI Device Usage v1.2 custom2.umc
+EncodingType=0
+ZeroOnIoOk=0
+]
+[
+ObjTp=Sm
+H=1
+SmC=157
+Nm=Central Control Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=2
+SmC=157
+Nm=Network Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=3
+SmC=157
+Nm=Ethernet
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=4
+SmC=156
+Nm=Logic
+ObjVer=1
+CF=2
+mC=8
+C1=8
+C2=14
+C3=12
+C4=7
+C5=13
+C6=10
+C7=15
+C8=11
+]
+[
+ObjTp=Sm
+H=5
+SmC=157
+Nm=DefineArguments
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mC=1
+C1=6
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=6
+SmC=55
+Nm=Argument Definition
+ObjVer=1
+PrH=5
+CF=2
+n1I=57
+n1O=1
+mI=57
+I1=5
+I2=11
+I3=11
+I4=198
+I5=199
+I6=200
+I7=201
+I8=202
+I9=203
+I10=204
+I11=205
+I12=206
+I13=207
+I14=208
+I15=209
+I16=210
+I17=211
+I18=212
+I19=213
+I20=11
+I21=11
+I22=6
+I23=53
+I24=61
+I25=68
+I26=77
+I27=82
+I28=91
+I29=96
+I30=105
+I31=110
+I32=119
+I33=124
+I34=133
+I35=138
+I36=147
+I37=152
+I38=161
+I39=4
+I40=7
+I41=214
+I42=215
+I43=216
+I44=217
+I45=218
+I46=219
+I47=220
+I48=221
+I49=222
+I50=223
+I51=224
+I52=225
+I53=226
+I54=227
+I55=228
+I56=229
+I57=8
+mO=1
+tO=1
+O1=197
+mP=32
+P1=Device_1_Type$
+P2=Device_1_Name$
+P3=Device_2_Type$
+P4=Device_2_Name$
+P5=Device_3_Type$
+P6=Device_3_Name$
+P7=Device_4_Type$
+P8=Device_4_Name$
+P9=Device_5_Type$
+P10=Device_5_Name$
+P11=Device_6_Type$
+P12=Device_6_Name$
+P13=Device_7_Type$
+P14=Device_7_Name$
+P15=Device_8_Type$
+P16=Device_8_Name$
+P17=Device_9_Type$
+P18=Device_9_Name$
+P19=Device_10_Type$
+P20=Device_10_Name$
+P21=Device_11_Type$
+P22=Device_11_Name$
+P23=Device_12_Type$
+P24=Device_12_Name$
+P25=Device_13_Type$
+P26=Device_13_Name$
+P27=Device_14_Type$
+P28=Device_14_Name$
+P29=Device_15_Type$
+P30=Device_15_Name$
+P31=Device_16_Type$
+P32=Device_16_Name$
+MPp=32
+Pp1=1
+Pp2=2
+Pp3=3
+Pp4=18
+Pp5=4
+Pp6=19
+Pp7=5
+Pp8=20
+Pp9=6
+Pp10=21
+Pp11=7
+Pp12=22
+Pp13=8
+Pp14=23
+Pp15=9
+Pp16=24
+Pp17=10
+Pp18=25
+Pp19=11
+Pp20=26
+Pp21=12
+Pp22=27
+Pp23=13
+Pp24=28
+Pp25=14
+Pp26=29
+Pp27=15
+Pp28=30
+Pp29=16
+Pp30=31
+Pp31=17
+Pp32=32
+]
+[
+ObjTp=Sm
+H=7
+SmC=46
+Nm=Analog Buffer
+ObjVer=1
+PrH=4
+CF=2
+n1I=17
+n1O=16
+Cmn1=Make Outputs Jamable\\
+mI=17
+I1=1
+I2=180
+I3=181
+I4=182
+I5=183
+I6=184
+I7=185
+I8=186
+I9=187
+I10=188
+I11=189
+I12=190
+I13=191
+I14=192
+I15=193
+I16=194
+I17=195
+mO=16
+tO=16
+O1=17
+O2=17
+O3=17
+O4=17
+O5=17
+O6=17
+O7=17
+O8=17
+O9=17
+O10=17
+O11=17
+O12=17
+O13=17
+O14=17
+O15=17
+O16=17
+]
+[
+ObjTp=Sm
+H=8
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Parameters\\
+mC=1
+C1=9
+]
+[
+ObjTp=Sm
+H=9
+SmC=1477
+Nm=Multiple Serial Send
+ObjVer=1
+PrH=8
+CF=2
+n1I=1
+n1O=32
+Cmn1=Device_ Type and Name\\
+mI=1
+I1=19
+mO=32
+tO=32
+O1=12
+O2=62
+O3=69
+O4=78
+O5=83
+O6=92
+O7=97
+O8=104
+O9=106
+O10=109
+O11=111
+O12=117
+O13=118
+O14=120
+O15=122
+O16=123
+O17=125
+O18=127
+O19=129
+O20=130
+O21=131
+O22=132
+O23=134
+O24=135
+O25=136
+O26=137
+O27=139
+O28=140
+O29=141
+O30=142
+O31=143
+O32=144
+mP=32
+P1=#Device_1_Type$
+P2=#Device_2_Type$
+P3=#Device_3_Type$
+P4=#Device_4_Type$
+P5=#Device_5_Type$
+P6=#Device_6_Type$
+P7=#Device_7_Type$
+P8=#Device_8_Type$
+P9=#Device_9_Type$
+P10=#Device_10_Type$
+P11=#Device_11_Type$
+P12=#Device_12_Type$
+P13=#Device_13_Type$
+P14=#Device_14_Type$
+P15=#Device_15_Type$
+P16=#Device_16_Type$
+P17=#Device_1_Name$
+P18=#Device_2_Name$
+P19=#Device_3_Name$
+P20=#Device_4_Name$
+P21=#Device_5_Name$
+P22=#Device_6_Name$
+P23=#Device_7_Name$
+P24=#Device_8_Name$
+P25=#Device_9_Name$
+P26=#Device_10_Name$
+P27=#Device_11_Name$
+P28=#Device_12_Name$
+P29=#Device_13_Name$
+P30=#Device_14_Name$
+P31=#Device_15_Name$
+P32=#Device_16_Name$
+]
+[
+ObjTp=Sm
+H=10
+SmC=98
+Nm=Stepper
+ObjVer=1
+PrH=4
+CF=2
+n1I=1
+n1O=4
+Cmn1=System Startup\\
+mI=1
+I1=2
+mO=4
+tO=4
+O1=20
+O2=19
+O3=57
+O4=177
+mP=6
+P1=.1s
+P2=1t
+P3=.1s
+P4=1t
+P5=.1s
+P6=1t
+]
+[
+ObjTp=Sm
+H=11
+SmC=103
+Nm=Fusion SSI Device Usage Helper v1.1.csp
+ObjVer=1
+PrH=4
+CF=2
+n1I=23
+n2I=87
+mI=110
+I2=20
+I4=56
+I6=5
+I8=198
+I9=199
+I10=200
+I11=201
+I12=202
+I13=203
+I14=204
+I15=205
+I16=206
+I17=207
+I18=208
+I19=209
+I20=210
+I21=211
+I22=212
+I23=213
+I25=14
+I27=145
+I28=146
+I29=148
+I30=149
+I31=150
+I32=151
+I33=153
+I34=154
+I35=155
+I36=156
+I37=157
+I38=158
+I39=159
+I40=160
+I41=162
+I42=179
+I44=53
+I45=61
+I46=68
+I47=77
+I48=82
+I49=91
+I50=96
+I51=105
+I52=110
+I53=119
+I54=124
+I55=133
+I56=138
+I57=147
+I58=152
+I59=161
+I61=214
+I62=215
+I63=216
+I64=217
+I65=218
+I66=219
+I67=220
+I68=221
+I69=222
+I70=223
+I71=224
+I72=225
+I73=226
+I74=227
+I75=228
+I76=229
+I78=12
+I79=62
+I80=69
+I81=78
+I82=83
+I83=92
+I84=97
+I85=104
+I86=106
+I87=109
+I88=111
+I89=117
+I90=118
+I91=120
+I92=122
+I93=123
+I95=125
+I96=127
+I97=129
+I98=130
+I99=131
+I100=132
+I101=134
+I102=135
+I103=136
+I104=137
+I105=139
+I106=140
+I107=141
+I108=142
+I109=143
+I110=144
+mO=23
+tO=23
+O2=196
+O8=180
+O9=181
+O10=182
+O11=183
+O12=184
+O13=185
+O14=186
+O15=187
+O16=188
+O17=189
+O18=190
+O19=191
+O20=192
+O21=193
+O22=194
+O23=195
+mP=2
+P1=
+P2=0d
+]
+[
+ObjTp=Sm
+H=12
+SmC=8
+Nm=Oscillator
+ObjVer=1
+PrH=4
+CF=2
+n1I=1
+n1O=1
+Cmn1=Timer\\
+mI=1
+I1=178
+mO=1
+tO=1
+O1=56
+mP=2
+P1=1t
+P2=29.59s
+]
+[
+ObjTp=Sm
+H=13
+SmC=46
+Nm=Analog Buffer
+ObjVer=1
+PrH=4
+CF=2
+n1I=2
+n1O=1
+mI=2
+I1=2
+I2=196
+mO=1
+tO=1
+O1=197
+]
+[
+ObjTp=Sm
+H=14
+SmC=1477
+Nm=Multiple Serial Send
+ObjVer=1
+PrH=4
+CF=2
+n1I=1
+n1O=16
+Cmn1=Asset ID's\\
+mI=1
+I1=57
+mO=16
+tO=16
+O1=145
+O2=146
+O3=148
+O4=149
+O5=150
+O6=151
+O7=153
+O8=154
+O9=155
+O10=156
+O11=157
+O12=158
+O13=159
+O14=160
+O15=162
+O16=179
+mP=16
+P1="-"
+P2="-"
+P3="-"
+P4="-"
+P5="-"
+P6="-"
+P7="-"
+P8="-"
+P9="-"
+P10="-"
+P11="-"
+P12="-"
+P13="-"
+P14="-"
+P15="-"
+P16="-"
+]
+[
+ObjTp=Sm
+H=15
+SmC=12
+Nm=Set/Reset Latch
+ObjVer=1
+PrH=4
+CF=2
+n1I=2
+n1O=2
+Cmn1=Enabled\\
+mI=2
+I1=177
+I2=20
+mO=2
+tO=2
+O1=178
+]
+[
+ObjTp=Sg
+H=4
+Nm=[~EndGroup~]Device__Type
+SgTp=31
+]
+[
+ObjTp=Sg
+H=5
+Nm=Restart_Counters
+]
+[
+ObjTp=Sg
+H=6
+Nm=[~BeginGroup~]Device__Type
+SgTp=31
+]
+[
+ObjTp=Sg
+H=7
+Nm=[~BeginGroup~]Device__Name
+SgTp=31
+]
+[
+ObjTp=Sg
+H=8
+Nm=[~EndGroup~]Device__Name
+SgTp=31
+]
+[
+ObjTp=Sg
+H=11
+Nm=[~UNUSED~]
+SgTp=31
+]
+[
+ObjTp=Sg
+H=12
+Nm=Device_1_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=14
+Nm=//__serial_reserved__
+SgTp=4
+]
+[
+ObjTp=Sg
+H=17
+Nm=//__analog_reserved__
+SgTp=31
+]
+[
+ObjTp=Sg
+H=19
+Nm=sys_startup_step1_go
+]
+[
+ObjTp=Sg
+H=20
+Nm=//__digital_reserved__
+]
+[
+ObjTp=Sg
+H=53
+Nm=[Device_1_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=56
+Nm=clock_osc
+]
+[
+ObjTp=Sg
+H=57
+Nm=sys_startup_step2_go
+]
+[
+ObjTp=Sg
+H=61
+Nm=[Device_2_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=62
+Nm=Device_2_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=68
+Nm=[Device_3_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=69
+Nm=Device_3_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=77
+Nm=[Device_4_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=78
+Nm=Device_4_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=82
+Nm=[Device_5_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=83
+Nm=Device_5_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=91
+Nm=[Device_6_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=92
+Nm=Device_6_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=96
+Nm=[Device_7_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=97
+Nm=Device_7_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=104
+Nm=Device_8_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=105
+Nm=[Device_8_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=106
+Nm=Device_9_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=109
+Nm=Device_10_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=110
+Nm=[Device_9_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=111
+Nm=Device_11_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=117
+Nm=Device_12_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=118
+Nm=Device_13_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=119
+Nm=[Device_10_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=120
+Nm=Device_14_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=122
+Nm=Device_15_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=123
+Nm=Device_16_type_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=124
+Nm=[Device_11_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=125
+Nm=Device_1_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=127
+Nm=Device_2_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=129
+Nm=Device_3_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=130
+Nm=Device_4_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=131
+Nm=Device_5_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=132
+Nm=Device_6_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=133
+Nm=[Device_12_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=134
+Nm=Device_7_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=135
+Nm=Device_8_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=136
+Nm=Device_9_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=137
+Nm=Device_10_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=138
+Nm=[Device_13_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=139
+Nm=Device_11_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=140
+Nm=Device_12_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=141
+Nm=Device_13_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=142
+Nm=Device_14_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=143
+Nm=Device_15_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=144
+Nm=Device_16_name_direct_msend$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=145
+Nm=Device_1_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=146
+Nm=Device_2_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=147
+Nm=[Device_14_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=148
+Nm=Device_3_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=149
+Nm=Device_4_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=150
+Nm=Device_5_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=151
+Nm=Device_6_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=152
+Nm=[Device_15_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=153
+Nm=Device_7_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=154
+Nm=Device_8_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=155
+Nm=Device_9_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=156
+Nm=Device_10_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=157
+Nm=Device_11_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=158
+Nm=Device_12_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=159
+Nm=Device_13_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=160
+Nm=Device_14_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=161
+Nm=[Device_16_Type_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=162
+Nm=Device_15_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=177
+Nm=sys_startup_step3_go
+]
+[
+ObjTp=Sg
+H=178
+Nm=clock_sr
+]
+[
+ObjTp=Sg
+H=179
+Nm=Device_16_Asset_ID_txt$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=180
+Nm=Device_1_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=181
+Nm=Device_2_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=182
+Nm=Device_3_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=183
+Nm=Device_4_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=184
+Nm=Device_5_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=185
+Nm=Device_6_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=186
+Nm=Device_7_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=187
+Nm=Device_8_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=188
+Nm=Device_9_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=189
+Nm=Device_10_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=190
+Nm=Device_11_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=191
+Nm=Device_12_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=192
+Nm=Device_13_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=193
+Nm=Device_14_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=194
+Nm=Device_15_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=195
+Nm=Device_16_current_used_minutes_fb
+SgTp=2
+]
+[
+ObjTp=Sg
+H=196
+Nm=Device_usage_tx$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=197
+Nm=Device_Usage_String_tx$
+SgTp=4
+]
+[
+ObjTp=Sg
+H=198
+Nm=Device_1_In_Use
+]
+[
+ObjTp=Sg
+H=199
+Nm=Device_2_In_Use
+]
+[
+ObjTp=Sg
+H=200
+Nm=Device_3_In_Use
+]
+[
+ObjTp=Sg
+H=201
+Nm=Device_4_In_Use
+]
+[
+ObjTp=Sg
+H=202
+Nm=Device_5_In_Use
+]
+[
+ObjTp=Sg
+H=203
+Nm=Device_6_In_Use
+]
+[
+ObjTp=Sg
+H=204
+Nm=Device_7_In_Use
+]
+[
+ObjTp=Sg
+H=205
+Nm=Device_8_In_Use
+]
+[
+ObjTp=Sg
+H=206
+Nm=Device_9_In_Use
+]
+[
+ObjTp=Sg
+H=207
+Nm=Device_10_In_Use
+]
+[
+ObjTp=Sg
+H=208
+Nm=Device_11_In_Use
+]
+[
+ObjTp=Sg
+H=209
+Nm=Device_12_In_Use
+]
+[
+ObjTp=Sg
+H=210
+Nm=Device_13_In_Use
+]
+[
+ObjTp=Sg
+H=211
+Nm=Device_14_In_Use
+]
+[
+ObjTp=Sg
+H=212
+Nm=Device_15_In_Use
+]
+[
+ObjTp=Sg
+H=213
+Nm=Device_16_In_Use
+]
+[
+ObjTp=Sg
+H=214
+Nm=[Device_1_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=215
+Nm=[Device_2_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=216
+Nm=[Device_3_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=217
+Nm=[Device_4_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=218
+Nm=[Device_5_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=219
+Nm=[Device_6_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=220
+Nm=[Device_7_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=221
+Nm=[Device_8_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=222
+Nm=[Device_9_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=223
+Nm=[Device_10_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=224
+Nm=[Device_11_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=225
+Nm=[Device_12_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=226
+Nm=[Device_13_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=227
+Nm=[Device_14_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=228
+Nm=[Device_15_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Sg
+H=229
+Nm=[Device_16_Name_txt$]
+SgTp=4
+]
+[
+ObjTp=Dp
+H=1
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=2
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 1"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=3
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=4
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=5
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=6
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=7
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=8
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=9
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=10
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=11
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=12
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+VVS=2
+VN=22
+Val1=Audio Codec
+Lbl1=Audio Codec
+Val2=CD Player
+Lbl2=CD Player
+Val3=Document Camera
+Lbl3=Document Camera
+Val4=Door_Panel
+Lbl4=Door Panel
+Val5=DVD Player
+Lbl5=DVD/Blu-ray Player
+Val6=Generic Source
+Lbl6=Generic Source
+Val7=Television
+Lbl7=Television
+Val8=VCR
+Lbl8=VCR
+Val9=Video Capture
+Lbl9=Video Capture
+Val10=Video Codec
+Lbl10=Video Codec
+Val11=Whiteboard
+Lbl11=Whiteboard
+Val12=Amplifer
+Lbl12=Amplifer
+Val13=Control Processor
+Lbl13=Control Processor
+Val14=Keypad
+Lbl14=Keypad
+Val15=Media Player
+Lbl15=Media Player
+Val16=Occupancy Sensor
+Lbl16=Occupancy Sensor
+Val17=Power Conditioner
+Lbl17=Power Conditioner
+Val18=Presentation Gateway
+Lbl18=Presentation Gateway
+Val19=Projector
+Lbl19=Projector
+Val20=Digital Media
+Lbl20=Digital Media
+Val21=Switcher
+Lbl21=Switcher
+Val22=Touchscreen
+Lbl22=Touchscreen
+Sgn=0
+]
+[
+ObjTp=Dp
+H=13
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+VVS=2
+VN=22
+Val1=Audio Codec
+Lbl1=Audio Codec
+Val2=CD Player
+Lbl2=CD Player
+Val3=Document Camera
+Lbl3=Document Camera
+Val4=Door_Panel
+Lbl4=Door Panel
+Val5=DVD Player
+Lbl5=DVD/Blu-ray Player
+Val6=Generic Source
+Lbl6=Generic Source
+Val7=Television
+Lbl7=Television
+Val8=VCR
+Lbl8=VCR
+Val9=Video Capture
+Lbl9=Video Capture
+Val10=Video Codec
+Lbl10=Video Codec
+Val11=Whiteboard
+Lbl11=Whiteboard
+Val12=Amplifer
+Lbl12=Amplifer
+Val13=Control Processor
+Lbl13=Control Processor
+Val14=Keypad
+Lbl14=Keypad
+Val15=Media Player
+Lbl15=Media Player
+Val16=Occupancy Sensor
+Lbl16=Occupancy Sensor
+Val17=Power Conditioner
+Lbl17=Power Conditioner
+Val18=Presentation Gateway
+Lbl18=Presentation Gateway
+Val19=Projector
+Lbl19=Projector
+Val20=Digital Media
+Lbl20=Digital Media
+Val21=Switcher
+Lbl21=Switcher
+Val22=Touchscreen
+Lbl22=Touchscreen
+Sgn=0
+]
+[
+ObjTp=Dp
+H=14
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+VVS=2
+VN=22
+Val1=Audio Codec
+Lbl1=Audio Codec
+Val2=CD Player
+Lbl2=CD Player
+Val3=Document Camera
+Lbl3=Document Camera
+Val4=Door_Panel
+Lbl4=Door Panel
+Val5=DVD Player
+Lbl5=DVD/Blu-ray Player
+Val6=Generic Source
+Lbl6=Generic Source
+Val7=Television
+Lbl7=Television
+Val8=VCR
+Lbl8=VCR
+Val9=Video Capture
+Lbl9=Video Capture
+Val10=Video Codec
+Lbl10=Video Codec
+Val11=Whiteboard
+Lbl11=Whiteboard
+Val12=Amplifer
+Lbl12=Amplifer
+Val13=Control Processor
+Lbl13=Control Processor
+Val14=Keypad
+Lbl14=Keypad
+Val15=Media Player
+Lbl15=Media Player
+Val16=Occupancy Sensor
+Lbl16=Occupancy Sensor
+Val17=Power Conditioner
+Lbl17=Power Conditioner
+Val18=Presentation Gateway
+Lbl18=Presentation Gateway
+Val19=Projector
+Lbl19=Projector
+Val20=Digital Media
+Lbl20=Digital Media
+Val21=Switcher
+Lbl21=Switcher
+Val22=Touchscreen
+Lbl22=Touchscreen
+Sgn=0
+]
+[
+ObjTp=Dp
+H=15
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+VVS=2
+VN=22
+Val1=Audio Codec
+Lbl1=Audio Codec
+Val2=CD Player
+Lbl2=CD Player
+Val3=Document Camera
+Lbl3=Document Camera
+Val4=Door_Panel
+Lbl4=Door Panel
+Val5=DVD Player
+Lbl5=DVD/Blu-ray Player
+Val6=Generic Source
+Lbl6=Generic Source
+Val7=Television
+Lbl7=Television
+Val8=VCR
+Lbl8=VCR
+Val9=Video Capture
+Lbl9=Video Capture
+Val10=Video Codec
+Lbl10=Video Codec
+Val11=Whiteboard
+Lbl11=Whiteboard
+Val12=Amplifer
+Lbl12=Amplifer
+Val13=Control Processor
+Lbl13=Control Processor
+Val14=Keypad
+Lbl14=Keypad
+Val15=Media Player
+Lbl15=Media Player
+Val16=Occupancy Sensor
+Lbl16=Occupancy Sensor
+Val17=Power Conditioner
+Lbl17=Power Conditioner
+Val18=Presentation Gateway
+Lbl18=Presentation Gateway
+Val19=Projector
+Lbl19=Projector
+Val20=Digital Media
+Lbl20=Digital Media
+Val21=Switcher
+Lbl21=Switcher
+Val22=Touchscreen
+Lbl22=Touchscreen
+Sgn=0
+]
+[
+ObjTp=Dp
+H=16
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+VVS=2
+VN=22
+Val1=Audio Codec
+Lbl1=Audio Codec
+Val2=CD Player
+Lbl2=CD Player
+Val3=Document Camera
+Lbl3=Document Camera
+Val4=Door_Panel
+Lbl4=Door Panel
+Val5=DVD Player
+Lbl5=DVD/Blu-ray Player
+Val6=Generic Source
+Lbl6=Generic Source
+Val7=Television
+Lbl7=Television
+Val8=VCR
+Lbl8=VCR
+Val9=Video Capture
+Lbl9=Video Capture
+Val10=Video Codec
+Lbl10=Video Codec
+Val11=Whiteboard
+Lbl11=Whiteboard
+Val12=Amplifer
+Lbl12=Amplifer
+Val13=Control Processor
+Lbl13=Control Processor
+Val14=Keypad
+Lbl14=Keypad
+Val15=Media Player
+Lbl15=Media Player
+Val16=Occupancy Sensor
+Lbl16=Occupancy Sensor
+Val17=Power Conditioner
+Lbl17=Power Conditioner
+Val18=Presentation Gateway
+Lbl18=Presentation Gateway
+Val19=Projector
+Lbl19=Projector
+Val20=Digital Media
+Lbl20=Digital Media
+Val21=Switcher
+Lbl21=Switcher
+Val22=Touchscreen
+Lbl22=Touchscreen
+Sgn=0
+]
+[
+ObjTp=Dp
+H=17
+Tp=1
+SD=The name of the group that will be shown in the Fusion reporting client
+HD=TRUE
+DV=Generic Source
+NoS=FALSE
+EncFmt=0
+DVLF=1
+VVS=2
+VN=22
+Val1=Audio Codec
+Lbl1=Audio Codec
+Val2=CD Player
+Lbl2=CD Player
+Val3=Document Camera
+Lbl3=Document Camera
+Val4=Door_Panel
+Lbl4=Door Panel
+Val5=DVD Player
+Lbl5=DVD/Blu-ray Player
+Val6=Generic Source
+Lbl6=Generic Source
+Val7=Television
+Lbl7=Television
+Val8=VCR
+Lbl8=VCR
+Val9=Video Capture
+Lbl9=Video Capture
+Val10=Video Codec
+Lbl10=Video Codec
+Val11=Whiteboard
+Lbl11=Whiteboard
+Val12=Amplifer
+Lbl12=Amplifer
+Val13=Control Processor
+Lbl13=Control Processor
+Val14=Keypad
+Lbl14=Keypad
+Val15=Media Player
+Lbl15=Media Player
+Val16=Occupancy Sensor
+Lbl16=Occupancy Sensor
+Val17=Power Conditioner
+Lbl17=Power Conditioner
+Val18=Presentation Gateway
+Lbl18=Presentation Gateway
+Val19=Projector
+Lbl19=Projector
+Val20=Digital Media
+Lbl20=Digital Media
+Val21=Switcher
+Lbl21=Switcher
+Val22=Touchscreen
+Lbl22=Touchscreen
+Sgn=0
+]
+[
+ObjTp=Dp
+H=18
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 2"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=19
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 3"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=20
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 4"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=21
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 5"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=22
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 6"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=23
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 7"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=24
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 8"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=25
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 9"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=26
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 10"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=27
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 11"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=28
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 12"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=29
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 13"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=30
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 14"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=31
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 15"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+[
+ObjTp=Dp
+H=32
+Tp=1
+SD=The name that will be shown in the Fusion reporting client
+HD=TRUE
+DV="Device 16"
+NoS=FALSE
+EncFmt=0
+DVLF=1
+Sgn=0
+]

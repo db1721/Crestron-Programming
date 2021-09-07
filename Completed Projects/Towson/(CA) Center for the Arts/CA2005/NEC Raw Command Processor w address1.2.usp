@@ -1,0 +1,191 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "NEC UHD Command Processor With Address1.2"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+#HELP_BEGIN
+	Address, if not set to 1 to 104 will default to broadcast 0*.  In the broadcast state, only feedback from device 1 will be reported.
+#HELP_END
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+ANALOG_INPUT SetVol, _SKIP_, Address;
+// STRING_INPUT 
+string_input InParamSet[200], InCmdSet[200], InParamGet[200], InCmdGet[200];
+Buffer_Input _SKIP_, FromDevice[100];
+
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT 
+STRING_OUTPUT out, _SKIP_, FromDeviceMatch;
+
+/*******************************************************************************************
+  SOCKETS
+  (Uncomment and define socket definitions as needed)
+*******************************************************************************************/
+// TCP_CLIENT
+// TCP_SERVER
+// UDP_SOCKET
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+
+String AddressBytes[3], ProcessRX$[100];
+
+string_function ProcessSend(string cmd)
+{
+   	Integer cmdLength,i,result;
+	cmdLength = len(cmd);
+	Result = Byte(cmd,1);
+
+	for(i = 2 to cmdLength)
+	{
+ 		result = result ^ Byte(cmd,i); 	   	
+	}
+ 
+    out = "\x01" + cmd + chr(low(Result)) + "\x0d";
+}
+Function GetAddressBytes()
+{
+	Integer Large, Small;
+	If((Address>0) && (Address < 105))
+	{
+		If(Address < 27)//Straight assignment
+		{
+			Large = 0;
+			Small = Address;
+			Makestring (AddressBytes, "%s%s", chr(large+0x30), chr(Small+0x40));
+		}
+		Else If(Address >= 27)//"Z" handeling since Z will mod to 0, reassign 0 to 26
+		{
+			Large = Address/27;
+			Small = Address mod 26;
+			If(Small = 0)
+			{
+				Small = 26;
+			}
+			Makestring (AddressBytes, "%s%s", chr(large+0x30), chr(Small+0x40));
+		}
+	}
+	Else
+	{
+		AddressBytes = "0*";
+	}
+}
+Change InParamSet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InParamSet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "%s\x30\x45%s%s\x02%s\x03" ,AddressBytes, mid(sMsgLen,1,1), mid(sMsgLen,2,1), InParamSet);
+	ProcessSend(sTemp);
+	
+}
+Change InCmdSet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InCmdSet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "%s\x30\x41%s%s\x02%s\x03" ,AddressBytes, mid(sMsgLen,1,1), mid(sMsgLen,2,1), InCmdSet);
+	ProcessSend(sTemp);
+	
+}
+
+Change InParamGet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InParamGet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "%s\x30\x43%s%s\x02%s\x03" ,AddressBytes, mid(sMsgLen,1,1), mid(sMsgLen,2,1), InParamGet);
+	ProcessSend(sTemp);
+}
+Change InCmdGet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InCmdGet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "%s\x30\x41%s%s\x02%s\x03" ,AddressBytes, mid(sMsgLen,1,1), mid(sMsgLen,2,1), InCmdGet);
+	ProcessSend(sTemp);
+}
+Change SetVol
+{
+	Long_Integer iVolScale, iMsgLen;
+	String msg[30], sMsgLen[2], sTemp[200], volTemp[10], volTemp2[10];
+	iVolScale = SetVol * 100 / 65535;
+	makeString(volTemp, "%02X", lowword(iVolScale));
+	makestring(volTemp2, "%s%s", mid(volTemp,1,1), mid(volTemp,2,1));
+	Makestring(msg, "006200%s", volTemp2);
+	iMsgLen = len(msg)+2;
+	makeString(sMsgLen, "%02X", LowWord(iMsgLen)); 
+	makeString(sTemp, "%s\x30\x45%s%s\x02%s\x03" ,AddressBytes, mid(sMsgLen,1,1), mid(sMsgLen,2,1), msg);
+	ProcessSend(sTemp);
+}
+
+Change FromDevice
+{
+	ProcessRX$ = Gather("\x0d", FromDevice);
+	If((byte(ProcessRX$, 2) = Byte(AddressBytes, 1)) && (byte(ProcessRX$, 3) = Byte(AddressBytes, 2)))
+	{
+		FromDeviceMatch = ProcessRX$;
+	}
+	Else If((AddressBytes = "0*") && (Mid(ProcessRX$, 2, 2) = "0A"))
+	{
+		FromDeviceMatch = ProcessRX$;
+	}
+}
+Change Address
+{
+	GetAddressBytes();
+}
+Function Main()
+{
+	GetAddressBytes();
+}

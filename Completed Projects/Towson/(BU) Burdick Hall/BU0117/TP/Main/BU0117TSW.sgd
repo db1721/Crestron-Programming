@@ -1,0 +1,87 @@
+[
+ObjTp=FSgntr
+Sgntr=SGD
+RelVrs=3
+VTProeVer=6.2.02
+Schema=1
+CRCGUID=4521811B-BCD5-48E7-B87C-B3DD455D5F9A
+]
+;================================================================================
+[
+ObjTp=Hd
+ProjectFile=BU0117TSW.vtp
+VtpGuid=E399D86D-5E7A-4436-8B0F-4435BE1D25F5
+]
+;================================================================================
+[
+ObjTp=Symbol
+Name=BU0117TSW_Projector Monitor Subpage_Tab Button Horizontal.ced
+Hint=Tab Button Horizontal (Smart Object ID=2)
+Code=1
+SGControlType=Horizontal Tab Button
+SGControlName=Tab Button Horizontal
+GUID=F7293A96-1ED6-49BC-B418-741D72C9482A
+SmplCName=BU0117TSW_Projector Monitor Subpage_Tab Button Horizontal.ced
+SMWRev=4.02.19
+Expand=expand_random
+HelpID=10031
+;Define the number of inputs, outputs and parameters
+MinVariableInputs=4
+MaxVariableInputs=4
+MinVariableOutputs=4
+MaxVariableOutputs=4
+NumFixedParams=1
+MinVariableInputsList2=0
+MaxVariableInputsList2=0
+MinVariableOutputsList2=0
+MaxVariableOutputsList2=0
+MinVariableInputsList3=0
+MaxVariableInputsList3=0
+MinVariableOutputsList3=0
+MaxVariableOutputsList3=0
+;Define the cues, and signal types  each input, output and parameter.
+InputCue1=[~UNUSED3~]
+InputSigType1=Digital
+OutputCue1=Tab Button 1 Press
+OutputSigType1=Digital
+InputCue2=Tab Button 1 Select
+InputSigType2=Digital
+OutputCue2=[~UNUSED3~]
+OutputSigType2=Digital
+InputCue3=[~UNUSED3~]
+InputSigType3=Digital
+OutputCue3=Tab Button 2 Press
+OutputSigType3=Digital
+InputCue4=Tab Button 2 Select
+InputSigType4=Digital
+OutputCue4=[~UNUSED3~]
+OutputSigType4=Digital
+ParamCue1=SmartObjectId
+ParamSigType1=Constant
+MPp=1
+Pp1=1
+CedH=1
+SmartObjId=2d
+]
+; Parameter Properties for Smart Object ID
+[
+ObjTp=Dp
+H=1
+Tp=1
+HD=TRUE
+DV=2d
+NF=1
+DNF=1
+EncFmt=0
+DVLF=1
+Sgn=0
+]
+; Smart Objects Definition section
+[
+ObjTp=CED
+H=1
+Name=BU0117TSW_Projector Monitor Subpage_Tab Button Horizontal.ced
+;Cedver is the version of the Smart Graphics control, not the CED file format.
+;If the control definition changes, increment this.
+CedVer=1
+]

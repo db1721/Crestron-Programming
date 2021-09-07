@@ -1,0 +1,149 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:MDF
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+ #SYMBOL_NAME "Vaddio IP PTZ"
+// #HINT ""
+// #DEFINE_CONSTANT
+#DEFINE_CONSTANT FileLocation "\\USER\\"
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+
+Digital_Input Recall, Store, _SKIP_, PowerOn, PowerOff, _SKIP_, Home, _SKIP_, AutoFocus, _SKIP_, Tilt[2], Pan[2], Zoom[2], Focus[2];
+
+String_Input In$[500];
+Analog_Input Preset;
+String_Output Out$;
+
+
+Integer StoreType, ParamType;
+Signed_Integer PTZ, PresetArray[99][3];//[rows][columns]  Row=Preset# Column= 1-4/PAN 5-8/TILT 9-12/ZOOM   Row 99 is master
+String FileName[250];
+
+
+
+push Store
+{
+	makestring(Out$, "camera preset store %u\n", Preset);
+}
+
+
+push Recall
+{
+	makestring(Out$, "camera preset recall %u\n", Preset);	
+}
+Push Tilt
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera tilt up\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera tilt down\r";
+		}
+	}
+}
+Push Pan
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera pan left\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera pan right\r";
+		}
+	}
+}
+Push AutoFocus
+{
+	Out$ = "camera focus mode auto\r";
+}
+Push Zoom
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera zoom in\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera zoom out\r";
+		}
+	}
+}
+Push Focus
+{
+	PTZ = GetLastModifiedArrayIndex();
+	Switch(PTZ)
+	{
+		Case(1):
+		{
+			Out$ = "camera focus near\r";
+		}
+		Case(2):
+		{
+			Out$ = "camera focus far\r";
+		}
+	}
+}
+
+Push Home
+{
+	Out$ = "camera home\r";
+}
+Push PowerOn
+{
+	Out$ = "camera standby off\r";
+}
+Push PowerOff
+{
+	Out$ = "camera standby on\r";
+}
+
+release pan
+{Out$ = "camera pan stop\r";}
+release tilt
+{Out$ = "camera tilt stop\r";}
+release zoom
+{Out$ = "camera zoom stop\r";}
+release focus
+{Out$ = "camera focus stop\r";}
+Function Main()
+{
+	FileName = FileLocation + "Camera" + GetSymbolReferenceName() + ".dat";
+}

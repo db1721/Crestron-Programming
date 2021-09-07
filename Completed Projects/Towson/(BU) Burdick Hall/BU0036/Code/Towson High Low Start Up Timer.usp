@@ -1,0 +1,56 @@
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+ #SYMBOL_NAME "Towson High Low Start Up Timer"
+ #CATEGORY "46" 
+ ANALOG_INPUT timer_ana,SECONDS;
+digital_input _skip_,power_on;
+// BUFFER_INPUT
+ DIGITAL_OUTPUT _skip_,warming_up;
+ STRING_OUTPUT timer_high_time,timer_low_time;
+string low_time$[10],high_time$[10];
+ 
+
+
+CHANGE timer_ana
+
+{
+low_time$= itoa(timer_ana-10);
+high_time$= itoa(timer_ana);
+MakeString(timer_high_time, "%s", high_time$);
+MakeString(timer_low_time, "%s", low_time$);
+}
+push power_on
+{
+
+
+warming_up = 1;
+
+wait(SECONDS) {warming_up =0;}
+
+}
+
+
+
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+    // TODO:  Add code here
+    // Initialize declared global and local variables/arrays as needed.
+
+    // WaitForInitializationComplete();
+    // If you are reading any Input or Output variables, uncomment
+    //   the WaitForInitializationComplete statement above and read
+    //   them afterwards.  Input/Output variables will not have
+    //   their correct values set until after the logic processor
+    //   runs and propagates the values to them.
+}
+
+

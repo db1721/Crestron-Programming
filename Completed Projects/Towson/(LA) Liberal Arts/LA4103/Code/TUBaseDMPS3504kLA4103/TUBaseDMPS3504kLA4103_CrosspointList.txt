@@ -1,0 +1,13 @@
+Crosspoint listing for C:\Users\dbeck\Desktop\Working Code\LA4103\Code\TUBaseDMPS3504kLA4103\TUBaseDMPS3504kLA4103.SMW
+
+Note:  Crosspoint symbols with EquipID or ControlID set to 0d are not routeable.
+
+Equipment Crosspoint Routing.                                                                       EquipID
+===========================================================================================================
+No symbols of this type found in the program
+
+Control Crosspoint Routing.                                                                         ControlID
+=============================================================================================================
+S-6.3 in macro S-5.1 (Module File C:\Program Files (x86)\Crestron\Cresdb\Modules\Fusion SS          1
+I v2.3.0.cmc)                                                                                       
+

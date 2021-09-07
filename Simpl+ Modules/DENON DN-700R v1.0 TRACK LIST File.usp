@@ -1,0 +1,179 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:	CrestronJapan
+System Name:
+System Number:
+Programmer:		Lim
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "DENON DN-700R v1.0 TRACK LIST File"
+// #HINT ""
+//#DEFINE_CONSTANT
+// #CATEGORY "" 
+//#CATEGORY "24" 
+// #DEFAULT_VOLATILE
+//#DEFAULT_NONVOLATILE
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+digital_input Poll_file_name;
+digital_input file_Page_UP;
+digital_input file_Page_Down;
+digital_input Refresh_file_Number;
+digital_input file_Select[4];
+
+digital_output Root_Folder_fb;
+digital_output Not_busy_fb;
+digital_output file_Select_fb[4];
+
+BUFFER_INPUT file_Name$[128];
+BUFFER_INPUT file_SIZE$[128];
+
+String_Output TX$;
+String_output file_Number$;
+String_output Folder$;
+String_output Track_Name_FB$[4]; 
+String_output Track_Size_FB$[4]; 
+/******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+INTEGER i,file_Number, Total_file_Number ,RX_OK, file_last_enter,page_number;
+STRING  TEMP_NAME$[4][265], TEMP_SIZE$[4][12], ZERO_string[4];
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/	
+function poll_file_Name_f(integer base_i)
+{
+String Folder_temp$[256];
+clearbuffer(file_Name$);
+Not_busy_fb =off;
+	for (i = 1 to 4)
+		{
+		TX$ = "@0?tn"+ RIGHT(ZERO_string,4 -len(ITOA(i + base_i))) + ITOA(i + base_i) +"\r";
+		delay(5);
+		TX$ = "@0?ts"+ RIGHT(ZERO_string,4 -len(ITOA(i + base_i))) + ITOA(i + base_i) +"\r";
+        delay(30);//change tanimoto delay(20)->delay(30)
+
+		IF (FIND("\r",file_Name$))
+			{
+			TEMP_NAME$[i] = gather ("\r",file_Name$);
+			TEMP_NAME$[i] = left(TEMP_NAME$[i],len(TEMP_NAME$[i])- 1);
+			Track_Name_FB$[i] = right(TEMP_NAME$[i],len(TEMP_NAME$[i])- ReverseFind("/",TEMP_NAME$[i]));
+			}
+		IF (FIND("\r",file_SIZE$))
+			{
+			TEMP_SIZE$[i] = gather ("\r",file_SIZE$);
+			Track_Size_FB$[i] = left(TEMP_SIZE$[i],len(TEMP_SIZE$[i])- 1);
+			}
+ 		}
+
+
+
+Folder_temp$ = left(TEMP_NAME$[1],ReverseFind("/",TEMP_NAME$[1]));
+Folder$ = Folder_temp$;
+
+If (len(Folder_temp$) = 1)Root_Folder_fb = on;
+else Root_Folder_fb = off;
+
+
+Not_busy_fb =on;
+
+}
+
+function file_Select_fb_clear()
+{
+for (i = 1 to 4)
+	{
+	file_Select_fb[i] = off;
+	}
+}
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+PUSH Poll_file_name
+{
+file_Select_fb_clear();
+poll_file_Name_f(0);
+}
+
+
+
+Push file_Select
+{
+file_Select_fb_clear();
+file_Number = page_number * 4;
+file_last_enter = GetLastModifiedArrayIndex();
+file_Select_fb[file_last_enter] = on;
+file_Number = file_Number  + file_last_enter;
+file_Number$ = RIGHT(ZERO_string,4 -len(ITOA(file_Number)))+ ITOA(file_Number);
+}
+
+Push file_Page_UP
+{
+if ((page_number < 50) && Len(TEMP_NAME$[4]))
+	{
+	file_Select_fb_clear();
+
+    page_number = page_number +1;
+    poll_file_Name_f(page_number * 4);
+	file_last_enter =0;
+	file_Number =0;
+	}
+}
+
+Push file_Page_Down
+{
+ if (page_number >  0) 
+	{
+	file_Select_fb_clear();
+
+    page_number = page_number -1;
+    poll_file_Name_f(page_number * 4);
+	file_last_enter =0;
+	file_Number =0;
+
+	}
+}
+Push Refresh_file_Number
+{
+
+file_Number$ = RIGHT(ZERO_string,4 -len(ITOA(file_Number)))+ ITOA(file_Number);
+}
+/******************************************************************************************* =
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+Not_busy_fb =on;
+
+RX_OK = on;
+file_Number = 0;
+ZERO_string = "0000";
+page_number = 0;
+}

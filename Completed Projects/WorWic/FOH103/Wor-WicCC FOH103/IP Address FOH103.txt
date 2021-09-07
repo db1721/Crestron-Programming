@@ -1,0 +1,12 @@
+May vary as these devices do not need static IP's
+CEN-SWPOE-16 - 192.168.0.102
+DIN-FOH-103 - 192.168.0.101
+DM-MD8x8-CPU3 - 192.168.0.107
+TSW-FOH103A - 192.168.0.103
+TSW-FOH103B - 192.168.0.104
+TSW-FOH103C - 192.168.0.105
+
+Static IP's
+Camera A - 192.168.0.114
+Camera B - 192.168.0.115
+Camera C - 192.168.0.116

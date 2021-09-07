@@ -1,0 +1,25 @@
+Crosspoint listing for C:\Users\dbeck\Desktop\Working Code\WorWic\Wor-WicCC FOH103_compiled\Wor-WicCC FOH103.SMW
+
+Note:  Crosspoint symbols with EquipID or ControlID set to 0d are not routeable.
+
+Equipment Crosspoint Routing.                                                                       EquipID
+===========================================================================================================
+S-4.1.3                                                                                             101
+S-4.2.2                                                                                             102
+S-4.3.2                                                                                             103
+S-4.4.4                                                                                             104
+S-4.5.4                                                                                             105
+S-4.6.4                                                                                             106
+
+Control Crosspoint Routing.                                                                         ControlID
+=============================================================================================================
+S-6.3 in macro S-4.1.8.1 (Module File C:\Program Files (x86)\Crestron\Cresdb\Modules\Fusio          0
+n SSI v2.3.0.cmc)                                                                                   
+S-6.3 in macro S-4.2.8.1 (Module File C:\Program Files (x86)\Crestron\Cresdb\Modules\Fusio          0
+n SSI v2.3.0.cmc)                                                                                   
+S-6.3 in macro S-4.3.8.1 (Module File C:\Program Files (x86)\Crestron\Cresdb\Modules\Fusio          0
+n SSI v2.3.0.cmc)                                                                                   
+S-5.1.1                                                                                             101
+S-5.2.1                                                                                             102
+S-5.3.1                                                                                             103
+

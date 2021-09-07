@@ -1,0 +1,85 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.02.21
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=This SMPL+ module is only to be used in conjuction\\with the Epson||1
+  Cmn2=PowerLite Pro G6650WU v1.0 module.
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=5
+  Inclusions_CDS=6
+  Name=Epson PowerLite Pro G6650WU Processor v1.0
+  SmplCName=Epson PowerLite Pro G6650WU Processor v1.0.usp
+  Code=1
+  InputList2Cue1=FROM_DEVICE$
+  InputList2SigType1=Serial
+  OutputList2Cue1=Contrast
+  OutputList2SigType1=Analog
+  OutputList2Cue2=Brightness
+  OutputList2SigType2=Analog
+  OutputList2Cue3=Color
+  OutputList2SigType3=Analog
+  OutputList2Cue4=Tint
+  OutputList2SigType4=Analog
+  OutputList2Cue5=Sharpness
+  OutputList2SigType5=Analog
+  OutputList2Cue6=Volume
+  OutputList2SigType6=Analog
+  OutputList2Cue7=Lamp
+  OutputList2SigType7=Analog
+  ParamCue1=[Reference Name]
+  MinVariableInputs=0
+  MaxVariableInputs=0
+  MinVariableInputsList2=1
+  MaxVariableInputsList2=1
+  MinVariableOutputs=0
+  MaxVariableOutputs=0
+  MinVariableOutputsList2=7
+  MaxVariableOutputsList2=7
+  MinVariableParams=0
+  MaxVariableParams=0
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=24
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  MPp=1
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlusShortSaveName=EPSONP~1.UF
+  SPlusLongSaveName=EPSON POWERLITE PRO G6650WU PROCESSOR V1.0.UF
+  SPlus2CompiledName=S2_Epson_PowerLite_Pro_G6650WU_Processor_v1_0
+  SymJam=NonExclusive
+  FileName=Epson PowerLite Pro G6650WU Processor v1.0.ush
+  SIMPLPlusModuleEncoding=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]

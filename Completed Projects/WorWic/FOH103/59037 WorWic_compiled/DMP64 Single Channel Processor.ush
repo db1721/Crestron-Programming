@@ -1,0 +1,132 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.04.01
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=
+  Inclusions_CDS=5,6
+  Name=DMP64 Single Channel Processor
+  SmplCName=DMP64 Single Channel Processor.usp
+  Code=1
+  SysRev5=4.000
+  SMWRev=2.02.05
+  InputCue1=[~UNUSED~]
+  InputSigType1=Digital
+  InputCue2=GetVal
+  InputSigType2=Digital
+  InputCue3=MuteOn
+  InputSigType3=Digital
+  InputCue4=MuteOff
+  InputSigType4=Digital
+  OutputCue1=[~UNUSED~]
+  OutputSigType1=Digital
+  OutputCue2=[~UNUSED~]
+  OutputSigType2=Digital
+  OutputCue3=MuteOnFB
+  OutputSigType3=Digital
+  OutputCue4=MuteOffFB
+  OutputSigType4=Digital
+  InputList2Cue1=[~UNUSED~]
+  InputList2SigType1=Analog
+  InputList2Cue2=SetVal
+  InputList2SigType2=Analog
+  InputList2Cue3=[~UNUSED~]
+  InputList2SigType3=Serial
+  InputList2Cue4=[~UNUSED~]
+  InputList2SigType4=Serial
+  InputList2Cue5=RX$
+  InputList2SigType5=Serial
+  OutputList2Cue1=[~UNUSED~]
+  OutputList2SigType1=Analog
+  OutputList2Cue2=ValFB
+  OutputList2SigType2=Analog
+  OutputList2Cue3=[~UNUSED~]
+  OutputList2SigType3=Serial
+  OutputList2Cue4=[~UNUSED~]
+  OutputList2SigType4=Serial
+  OutputList2Cue5=TX$
+  OutputList2SigType5=Serial
+  ParamCue1=[Reference Name]
+  ParamCue2=[~UNUSED~]
+  ParamSigType2=Constant
+  ParamCue3=[~UNUSED~]
+  ParamSigType3=Constant
+  ParamCue4=[~UNUSED~]
+  ParamSigType4=Constant
+  ParamCue5=[~UNUSED~]
+  ParamSigType5=Constant
+  ParamCue6=[~UNUSED~]
+  ParamSigType6=Constant
+  ParamCue7=[~UNUSED~]
+  ParamSigType7=Constant
+  ParamCue8=[~UNUSED~]
+  ParamSigType8=Constant
+  ParamCue9=[~UNUSED~]
+  ParamSigType9=Constant
+  ParamCue10=[~UNUSED~]
+  ParamSigType10=Constant
+  ParamCue11=CtlPnt
+  ParamSigType11=String
+  MinVariableInputs=4
+  MaxVariableInputs=4
+  MinVariableInputsList2=5
+  MaxVariableInputsList2=5
+  MinVariableOutputs=4
+  MaxVariableOutputs=4
+  MinVariableOutputsList2=5
+  MaxVariableOutputsList2=5
+  MinVariableParams=10
+  MaxVariableParams=10
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=32
+  Hint=DMP64 Single Channel Processor
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  Pp11=11
+  MPp=11
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_DMP64_Single_Channel_Processor
+  SymJam=NonExclusive
+  FileName=DMP64 Single Channel Processor.ush
+  SIMPLPlusModuleEncoding=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=11
+  Tp=1
+  HD=False
+  NoS=False
+  VVS=0
+[END]

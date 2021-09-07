@@ -1,0 +1,2682 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BiampTesiraLib3</name>
+    </assembly>
+    <members>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatusList">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.TesiraClassCodes">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.RequestMsg">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.IOriginal">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.RequestMsgAttribute">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.BoolParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.IParser`1">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.VoipCallStatusesEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting 'VoipCallStatuses'.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.VoipCallStatusesEventArgs">
+            <summary>
+            This class is used to define the property 'Payload' as a 'VoipCallStatuses' object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.CustomEventArgs`1">
+            <summary>
+            This class is used to define the propery 'PayLoad' as a 'Custom' object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.AVInputConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the AVInputComponent to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.ITCPTransport">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.ITransport">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.VoipDialerComponent">
+            <summary>
+            This class was designed to control VoIP functionality in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.Component">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.IMainProcessListener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.IMainProcess">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.ISubscriptionListener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Configure(System.UInt16,System.String,System.String,System.UInt16)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+            <param name="DialerInstanceID">This parameter is where you associate this component with the "Dialer" block's Instance Tag in your Tesira configuration.</param>
+            <param name="ControlStatusInstanceID">This parameter is where you associate this component with the "VoIP Control/Status" block's Instance Tag in your Tesira configuration.</param>
+            <param name="LineNumber">This parameter is where you determine the line number of the VoIP Dialer would you like to initialize.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.UnRegister">
+            <summary>
+            This method unregisters this component from the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.SetCall(System.UInt16)">
+            <summary>
+            This method is used to determine which call instance is to be used in your Tesira configuration.
+            </summary>
+            <param name="call">Valid integers are 1 - 6</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.CallSelect(System.UInt16)">
+            <summary>
+            This method is used to set the selected call instance. 
+            </summary>
+            <param name="call">Valid integers are 1 - 6</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Conference">
+            <summary>
+            This method is used to join two separate call instances in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Answer">
+            <summary>
+            This method is used to answer an incoming call in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Answer_Call(System.UInt16)">
+            <summary>
+            This method is used to answer an incoming call in a specific instance in your Tesira configuration.
+            </summary>
+            <param name="Call">Valid integers are 1 - 6</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.End_Call(System.UInt16)">
+            <summary>
+            This method is used to end a specific instance of an active call in your Tesira configuration.
+            </summary>
+            <param name="Call">Valid integers are 1 - 6</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.End_All">
+            <summary>
+            This method is used to end all active calls in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Flash">
+            <summary>
+            This method is used to flash between active calls in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Redial">
+            <summary>
+            This method is used to redial the most recently dialed number in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Send">
+            <summary>
+            This method is used to initiate a call in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.End">
+            <summary>
+            This method is used to end the active call in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Resume">
+            <summary>
+            This method is used to resume a call that was placed on hold in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Hold">
+            <summary>
+            This method is used to put an active call on hold in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.OnHook">
+            <summary>
+            This method is used to simulate putting the line on hook (hanging up the call) in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.OffHook">
+            <summary>
+            This method is used to simulate putting the line off hook (answering the call) in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.AutoAnswer(System.UInt16)">
+             <summary>
+             This method is used to set the state of the AutoAnswer function in your Tesira configuration.
+             </summary>
+             <param name="state">The options are as follows:
+            <para>- "0" (Auto Answer is off)</para> 
+            <para>- "1" (Auto Answer is on)</para>
+             </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.AutoAnswerToggle">
+            <summary>
+            This method is used to toggle the status of the Auto Answer function in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.isOffHook(System.UInt16)">
+            <summary>
+            This boolean determines the hook status of the selected call instance.
+            </summary>
+            <returns>"true" if off hook. "false" if on hook.</returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DialDigit(System.String)">
+            <summary>
+            This method is used to dial a specific digit with the Dialer block in your Tesira configuration. (Will send DTMF if call is active)
+            </summary>
+            <param name="Digit">Available digits are: (( 0 - 9, # , * ))</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DialKeypadText">
+            <summary>
+            This method is used to dial the string that was entered from the keypad in the Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Dial(System.String)">
+            <summary>
+            This method is used to create a dial string that can be called in the Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Transfer">
+            <summary>
+            This method is used to transfer a call in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.ClearKeypadText">
+            <summary>
+            This method clears the value propagated to the KeypadText string.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.BackspaceKeypadText">
+            <summary>
+            This method is used to remove the most recently added character to the KeypadText string.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DNDEnable(System.UInt16)">
+            <summary>
+            This method is used to determine the state of the Do Not Disturb function in your Tesira configuration.
+            </summary>
+            <param name="State">"true" turns DND on. "false" turns DND off.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DNDEnableToggle">
+            <summary>
+            This method is used to toggle the state of the Do Not Disturb function in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DNDResponseDND">
+            <summary>
+            This method is used set the DND response to Do Not Disturb if DND is on in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DNDResponseBusy">
+            <summary>
+            This method is used to the set the DND response to a busy signal if DND is on in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DNDResponseDecline">
+            <summary>
+            This method is used to set the DND response to decline the incoming call if DND is on in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.SelectSpeedDialEntry(System.UInt16)">
+            <summary>
+            This method is used to select a speed dial entry of the Dialer block in your Tesira configuration.
+            </summary>
+            <param name="ID">Valid integers are: " 1 - 16 "</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.DialSpeedDialEntry">
+            <summary>
+            This method is used to dial the number of the selected speed dial entry of the Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.SaveSpeedDialEntry(System.UInt16,System.String,System.String)">
+            <summary>
+            This method is used to save a speed dial entry in the Dialer block in your Tesira configuration.
+            </summary>
+            <param name="ID">This parameter determines the entry ID of the speed dial entry. Valid integers: " 1 - 16 ".</param>
+            <param name="Name">This parameter determines the name you would like the speed dial entry to have.</param>
+            <param name="Number">This parameter determines the number you would the speed dial entry to have.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Poll">
+            <summary>
+            This method is used to poll the states of the attributes of the Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.FinalizeInitialization">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.IsInitialized">
+             <summary>
+             This boolean is used to indicate the initialization status of this component and the desired Command Processor. 
+             </summary>
+             <returns>
+            <para>- "True" (Is initialized)</para>
+            <para>- "False" (Is not initialized)</para>
+             </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.VoipDialerComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnInitializeChange">
+            <summary>
+            This event indicates there was a change in the state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnStateChange">
+            <summary>
+            This event indicates there was a state change in the VoIP Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnKeypadTextChange">
+            <summary>
+            This event indicates a change in keypad text in the block in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnSpeedDialItemChange">
+            <summary>
+            This event indicates a change in a Speed Dial item in the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnCallChange">
+            <summary>
+            This event indicates there was a call status change in the block of your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnCallStatusListChange">
+            <summary>
+            This event indicates there was a change made on the call list in the block of your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.VoipDialerComponent.OnSpeedDialSeletion">
+            <summary>
+            This event indicates there was a speed dial selection made in the block of your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.VoipDialerComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.VoipDialerStatus">
+            <summary>
+            This class is designed to report feedback from the 'Voip Dialer' block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.VoipDialerStatus.DNDModes">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.StateComponent">
+            <summary>
+            This class is designed the control a state attribute of a block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.Configure(System.UInt16,System.String,System.String,System.UInt16,System.UInt16)">
+             <summary>
+             This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+             </summary>
+             <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+             <param name="InstanceTag">This parameter is where you associate this component with a specific block's Instance Tag in your Tesira configuration.</param>
+             <param name="StateType">This parameter is where you decide which type of state attribute you would like to control. The options are as follows:
+            <para>- "mute" (Mute Block)</para>
+            <para>- "inputMute" (Input Block)</para>
+            <para>- "outputMute" (Output Block)</para>
+            <para>- "channelMute" (Specific channel of a block)</para>
+            <para>- "crosspoint" (Crosspoint state)</para>
+            <para>- "crosspointLevel" (Crosspoint Level Mute)</para>
+            <para>- "wallState" (Closed wall state)</para>
+            <para>- "muteOut" (Mute Output of Room Combiner Block)</para>
+            <para>- "muteIn" (Mute Input of Room Combiner Block)</para>
+            <para>- "muteSource" (Mute Source of Room Combiner Block)</para>
+            <para>- "state" (Generic state control)</para>
+            <para>- "connected" (Host Connection Status State for USB Block)</para>
+            <para>- "hostMasterMute" (Host Master Mute for USB Block)</para>
+            <para>- "hostMute" (Host Mute for USB Block)</para>
+            <para>- "streaming" (Streaming Status for USB Block)</para>
+            <para>- "embeddedAudioMute" (Embedded Audio Mute for AV Output Block for TesiraLux)</para>
+            <para>- "videoMute" (Video Mute for AV Output Block for TesiraLux)</para>
+            <para>- "videoFreeze" (Video Freeze for AV Output Block for TesiraLux)</para>
+            <para>- "auxMute" (Auxiliary Audio Mute for AV Input Block for TesiraLux)</para>
+            </param>
+             <param name="Index1">When this parameter is not required, set to 0. In most cases this parameter represents the input value of a block.
+                                  If controlling a single-channel block, set to 1. If controlling a multi-channel Block, use Index1 to determine channel #
+             </param>
+             <param name="Index2">When this parameter is not required, set to 0. In most cases this parameter represents the output value of a block.
+                                  If controlling a single-channel block or a multi-channel Block, set to 0.
+             </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.UnRegister">
+            <summary>
+            This method is used to unregister this component from its associated Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.SetState(System.UInt16)">
+            <summary>
+            This method is used to set the state of the desired attribute your Tesira configuration.
+            </summary>
+            <param name="state">Set the state to "True" or "False".</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.ToggleState">
+            <summary>
+            This method is used to toggle the state of the desired attribute in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.GetState">
+            <summary>
+            This method is used to get the current state of the desired attribute in your Tesira configuration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.PollState">
+            <summary>
+            This method is used to poll the current state of the desired attribute in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.Poll">
+            <summary>
+            This method is used to poll the current state of the desired attribute in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.Dispose">
+            <summary>
+            This method is used to unregister this component from its associated command processor and reset all values.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.IsInitialized">
+            <summary>
+            This boolean indicates the intialization status of this component to its associated Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.StateComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.StateComponent.OnSendDebug">
+            <summary>
+            This event is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.StateComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate the state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.StateComponent.OnStateChange">
+            <summary>
+            This event is used to indicate a state change in the state attribute of the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.StateComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component. 
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.SystemCommands">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.TesiraLevelAttributes">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.UInt16ArrayParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.CallerIDEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting ‘CallerID’.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.CallerIDEventArgs">
+            <summary>
+            This class is used to define the property ‘Payload’ as a ‘CallerID’ object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.AVOutputStateEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting ‘AVOutputState’.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.AVOutputStateEventArgs">
+            <summary>
+            This class is used to define the property ‘Payload’ as a ‘AVOutputState’ object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.AVInputStateEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting ‘AVInputState’.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.AVInputStateEventArgs">
+            <summary>
+            This class is used to define the property ‘Payload’ as a ‘AVInputState’ object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.AVOutputComponent">
+            <summary>
+            This class is designed to control attributes in the AV Output block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.Configure(System.UInt16,System.String)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+            <param name="InstanceTag">This parameter is where you associate this component with a specific block's Instance Tag in your Tesira configuration.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.SetOutputMediaTestPattern(System.UInt16)">
+            <summary>
+            This method is used to choose the desired test pattern to outputted from this block in your Tesira configuration.
+            </summary>
+            <param name="pattern">This parameter must be an integer 1 - 4. The options are as follows:
+            <para>- "1" (Off)</para> 
+            <para>- "2" (Color Bars)</para>
+            <para>- "3" (Grid)</para>
+            <para>- "4" (HDMI 4:2:0 Test)</para>
+            </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.Poll">
+            <summary>
+            This method is used to retrieve the current states of attributes in the AV Output block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.GetInitialized(System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.IsInitialized">
+            <summary>
+            Use this method to show if the current component is initialized with the Command Processor.
+            </summary>
+            <returns>
+            Returns "True" if component is initialized.
+            </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVOutputComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.AVOutputComponent.OnSendDebug">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.AVOutputComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.AVOutputComponent.OnStateChange">
+            <summary>
+            This event is used to indicate a state change in attribute(s) of the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVOutputComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.AVOutputState">
+            <summary>
+            This class is designed to retrieve information regarding specific attributes/properties of the AV Output block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.AVInputComponent">
+            <summary>
+            This class is designed to control attributes associated with the AV Input Block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.Configure(System.UInt16,System.String)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+            <param name="InstanceTag">This parameter is where you associate this component with a specific block's Instance Tag in your Tesira configuration.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.SetMediaSourceInputPort(System.UInt16)">
+             <summary>
+             This method is used to set the desired source input port of the AV Input block.
+             </summary>
+             <param name="port">The options are as follows:
+            <para>- "1" = HDMI</para>
+            <para>- "2" = Display Port</para>
+             </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.SetMediaSourceTestPattern(System.UInt16)">
+            <summary>
+            This method is used to choose the desired test pattern to outputted from this block in your Tesira configuration.
+            </summary>
+            <param name="pattern">This parameter must be an integer 1 - 4. The options are as follows:
+            <para>- "1" (Off)</para> 
+            <para>- "2" (Color Bars)</para>
+            <para>- "3" (Grid)</para>
+            <para>- "4" (HDMI 4:2:0 Test)</para>
+            </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.Poll">
+            <summary>
+            This method is used to retrieve the current state of attributes in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.GetInitialized(System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.IsInitialized">
+            <summary>
+            Use this method to show if the current component is initialized with the Command Processor.
+            </summary>
+            <returns>
+            Returns "True" if component is initialized.
+            </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.AVInputComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.AVInputComponent.OnSendDebug">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.AVInputComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.AVInputComponent.OnStateChange">
+            <summary>
+            This event is used to indicate a state change in attribute(s) of the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.AVInputState">
+            <summary>
+            This class is designed to retrieve information regarding specific attributes/properties of the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceInputPort">
+            <summary>
+            This integer indicates the Input Port being used in the AV Input block in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceInputPortText">
+            <summary>
+            This string displays which Media Source Input is being used in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceResolution">
+            <summary>
+            This string displays the Media Source Resolution of the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceFramerate">
+            <summary>
+            This integer indicates the Media Source Framerate of the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceActiveSource">
+            <summary>
+            This integer indicates the Active Media Source of the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceActiveSourceText">
+            <summary>
+            This string displays the Active Media Source of the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceConnectedPort">
+            <summary>
+            This integer indicates which input ports are connected in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceConnectedPortText">
+            <summary>
+            This string displays which input ports are connected in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceDeinterlace">
+            <summary>
+            This integer indicates which Deinterlace Input Mode is being used for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceTestPattern">
+            <summary>
+            This integer indicates which Test Pattern is being used for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.MediaSourceTestPatternText">
+            <summary>
+            This string displays which Test Pattern is being used for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_L">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_R">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_LFE">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_C">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_Lr">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_Rr">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_Ls">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioPresense_Rs">
+            <summary>
+            This integer displays if there is audio present on this specific channel in the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioThreshold">
+            <summary>
+            This double indicates the threshold to be met for the AV Input block to show signal presence for embedded audio channels in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.EmbeddedAudioThresholdText">
+            <summary>
+            This string indicates the threshold to be met for the AV Input block to show signal presence for embedded audio channels in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.BandwidthMaxResolution">
+            <summary>
+            This integer indicates the Max Resolution of stream in Bandwidth Configuration for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.BandwidthMaxResolutionText">
+            <summary>
+            This string displays the Max Resolution of stream in Bandwidth Configuration for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.BandwidthMinFrameRate">
+            <summary>
+            This integer indicates the Min Resolution of stream in Bandwidth Configuration for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.AVInputState.BandwidthMinFrameRateText">
+            <summary>
+            This string displays the the Min Resolution of stream in Bandwidth Configuration for the AV Input block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.MessageBundle">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.DialerComponent">
+            <summary>
+            This class was designed to control the Dialer(Telco) block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Configure(System.UInt16,System.String,System.String)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+            <param name="DialerInstanceID">This parameter is where you associate this component with the "TI Dialer" block's Instance Tag in your Tesira configuration.</param>
+            <param name="ControlStatusInstanceID">This parameter is where you associate this component with the "TI Control/Status" block's Instance Tag in your Tesira configuration.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.OnHook">
+            <summary>
+            This method is used to set the TI Dialer block to "On Hook" in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.OffHook">
+            <summary>
+            This method is used to set the TI Dialer block to "Off Hook" in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.ToggleHook">
+            <summary>
+            This method is used to toggle the hook state of the TI Dialer block between "On Hook" and "Off Hook" in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Answer">
+            <summary>
+            This method is used to utilize the "Answer" function of the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Flash">
+            <summary>
+            This method is used to utilize the "Flash" function of the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Redial">
+            <summary>
+            This method is used to redial the last number called in the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.End">
+            <summary>
+            This method is used to end the current call in your TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.AutoAnswer(System.UInt16)">
+            <summary>
+            This method is used to set the state of the Auto Answer function in the TI Dialer block in your Tesira configuration.
+            </summary>
+            <param name="state">The options are as follows:
+            <para>- "True" (Auto Answer On)</para>
+            <para>- "False" (Auto Answer Off)</para>
+            </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.AutoAnswerToggle">
+            <summary>
+            This method is used to toggle the state of the Auto Answer function of the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.GetBasicCallerID">
+            <summary>
+            This method is used to get the "Basic Caller ID" when there is an incoming call on the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.GetFullCallerID">
+            <summary>
+            This method is used to get the "Full Caller ID" when there is an incoming call on the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.DialDigit(System.String)">
+            <summary>
+            This method is used to dial a specific digit with the TI Dialer block in your Tesira configuration. (Will send DTMF if call is active)
+            </summary>
+            <param name="Digit">Available digits are: (( 0 - 9, # , * ))</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.DialKeypadText">
+            <summary>
+            This method is used to dial the string that was entered from the keypad in the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.DialNumber(System.String)">
+            <summary>
+            This method is used to create a dial string that can be called in the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.ClearKeypadText">
+            <summary>
+            This method clears the "KeypadText" string of this component.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.BackspaceKeypadText">
+            <summary>
+            This method is used as the backspace function to delete the most recently added character of the "KeypadText" string of this component.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.SelectSpeedDialEntry(System.UInt16)">
+            <summary>
+            This method is used to select a speed dial entry of the TI Dialer block in your Tesira configuration.
+            </summary>
+            <param name="ID">Valid integers are: " 1 - 16 "</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.DialSpeedDialEntry">
+            <summary>
+            This method is used to dial the number of the selected speed dial entry of the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.SaveSpeedDialEntry(System.UInt16,System.String,System.String)">
+            <summary>
+            This method is used to save a speed dial entry in the TI Dialer block in your Tesira configuration.
+            </summary>
+            <param name="ID">This parameter determines the entry ID of the speed dial entry. Valid integers: " 1 - 16 ".</param>
+            <param name="Name">This parameter determines the name you would like the speed dial entry to have.</param>
+            <param name="Number">This parameter determines the number you would the speed dial entry to have.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Poll">
+            <summary>
+            This method is used to poll the states of the attributes of the TI Dialer block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.IsInitialized">
+             <summary>
+             This boolean is used to indicate the initialization status of this component and the desired Command Processor. 
+             </summary>
+             <returns>
+            <para>- "True" (Is initialized)</para>
+            <para>- "False" (Is not initialized)</para>
+             </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnSendDebug">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnStateChange">
+            <summary>
+            This event is used to indicate a state change in attribute(s) of the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnKeypadTextChange">
+            <summary>
+            This event is used to indicate a change in keypad text in the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnCallerIDResponse">
+            <summary>
+            This event is used to indicate a change in keypad text in the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnSpeedDialItemChange">
+            <summary>
+            This event is used to indicate a change in a Speed Dial item in the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.DialerComponent.OnSpeedDialSeletion">
+            <summary>
+            This event is used to indicate a Speed Dial selection was made in the block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.DialerComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.DialerStatus">
+            <summary>
+            This class is designed to report feedback from the 'Dialer' block in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.DialerStatus.IsOffHook">
+             <summary>
+             This method is used to return the 'Hook State' value of the 'Dialer' block in your Tesira configuration.
+             </summary>
+             <returns>
+            <para>- 'True' (Dialer is On Hook)</para>
+            <para>- 'False' (Dialer is Off Hook)</para>
+             </returns>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.DialerStatus.HookState">
+            <summary>
+            This property is used to access the Hook State of the 'Dialer' block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.ResolutionParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.IClassCodeManager">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatusStateMap">
+            <summary>
+            This is a type-safe enumeration that reflects the current call status. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Tesira_Support.VoipCallStatusStateMap.Find(System.UInt16)">
+            <summary>
+            This method is designed to search the VoIPCallStatusStateMap list and return the integer of the current state.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Tesira_Support.VoipCallStatusStateMap.Find(System.String)">
+            <summary>
+            This method is designed to search the VoIPCallStatusStateMap list and return the string of the current state.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatusStateMap.Number">
+             <summary>
+             This property is used to access the integer of any VoipCallStatusStateMap list item.
+            <para>-  ‘1’ = "Init"</para>
+            <para>-  ‘2’ = "Fault"</para>
+            <para>-  ‘3’ = "Idle"</para>
+            <para>-  ‘4’ = "Dial Tone"</para>
+            <para>-  ‘5’ = "Silent"</para>
+            <para>-  ‘6’ = "Dialing"</para>
+            <para>-  ‘7’ = "Ringback"</para>
+            <para>-  ‘8’ = "Incoming Call"</para>
+            <para>-  ‘9’ = "Answering"</para>
+            <para>-  ‘10’ = "Busy"</para>
+            <para>-  ‘11’ = "Reject"</para>
+            <para>-  ‘12’ = "Invalid Number"</para>
+            <para>-  ‘13’ = "Active"</para>
+            <para>-  ‘14’ = "Active Muted"</para>
+            <para>-  ‘15’ = "On Hold"</para>
+            <para>-  ‘16’ = "Waiting Ring"</para>
+            <para>-  ‘17’ = "Conference Active"</para>
+            <para>-  ‘18’ = "Conference Hold"</para>
+            <para>-  ‘19’ = "Transfer Init"</para>
+            <para>-  ‘20’ = "Transfer Silent"</para>
+            <para>-  ‘21’ = "Transfer Request Dialing"</para>
+            <para>-  ‘25’ = "Transfer Ringback"</para>
+            <para>-  ‘24’ = "Transfer Active"</para>
+            <para>-  ‘29’ = "Transfer Wait"</para>
+            <para>-  ‘27’ = "Transfer Decision"</para>
+            <para>-  ‘28’ = "Transfer Init Error"</para>
+            <para>-  ‘26’ = "Transfer On Hold"</para>
+            <para>-  ‘23’ = "Transfer Replaces Process"</para>
+            <para>-  ‘22’ = "Transfer Process"</para>
+            <para>-  ‘255’ = "Unknown"</para>
+             </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatusStateMap.Name">
+             <summary>
+             This property is used to access the string of any VoipCallStatusStateMap list item.
+            <para>-  "Init” = ‘1’</para>
+            <para>-  "Fault” = ‘2’</para>
+            <para>-  "Idle” = ‘3’</para>
+            <para>-  "Dial Tone” = ‘4’</para>
+            <para>-  "Silent” = ‘5’</para>
+            <para>-  "Dialing” = ‘6’</para>
+            <para>-  "Ringback” = ‘7’</para>
+            <para>-  "Incoming Call” = ‘8’</para>
+            <para>-  "Answering” = ‘9’</para>
+            <para>-  "Busy” = ‘10’</para>
+            <para>-  "Reject” = ‘11’</para>
+            <para>-  "Invalid Number” = ‘12’</para>
+            <para>-  "Active” = ‘13’</para>
+            <para>-  "Active Muted” = ‘14’</para>
+            <para>-  "On Hold” = ‘15’</para>
+            <para>-  "Waiting Ring” = ‘16’</para>
+            <para>-  "Conference Active” = ‘17’</para>
+            <para>-  "Conference Hold” = ‘18’</para>
+            <para>-  "Transfer Init” = ‘19’</para>
+            <para>-  "Transfer Silent” = ‘20’</para>
+            <para>-  "Transfer Request Dialing” = ‘21’</para>
+            <para>-  "Transfer Ringback” = ‘25’</para>
+            <para>-  "Transfer Active” = ‘24’</para>
+            <para>-  "Transfer Wait” = ‘29’</para>
+            <para>-  "Transfer Decision” = ‘27’</para>
+            <para>-  "Transfer Init Error” = ‘28’</para>
+            <para>-  "Transfer On Hold” = ‘26’</para>
+            <para>-  "Transfer Replaces Process” = ‘23’</para>
+            <para>-  "Transfer Process” = ‘22’</para>
+            <para>-  "Unknown” = ‘255’</para>
+             </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.DialerStatusEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting ‘DialerStatus’.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.DialerStatusEventArgs">
+            <summary>
+            This class is used to define the property ‘Payload’ as a ‘DialerStatus’ object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.IRS232Listener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.TesiraLevelAttributeMap">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.StateConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the StateComponent to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.DeviceConnectedEnumParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.GenericConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the GenericComponent to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.RouterComponent">
+            <summary>
+            This class was designed to control Router blocks and Source Selector blocks in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.Configure(System.UInt16,System.String,System.String,System.UInt16)">
+             <summary>
+             This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+             </summary>
+             <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+             <param name="InstanceTag">This parameter is where you associate this component with the "TI Dialer" block's Instance Tag in your Tesira configuration.</param>
+             <param name="RouterType">This parameter will determine whether you wish to control a Source Selector block or a Router block. The options are as follows:
+            <para>- "input" (Using a Router block)</para>
+            <para>- "sourceSelection" (Using a Source Selector block)</para>
+             </param>
+             <param name="Output">If you are controlling a Router block, this parameter will determine which output of the Router block you wish to control.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.UnRegister">
+            <summary>
+            This method unregisters this component from the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.RouteInput(System.UInt16)">
+            <summary>
+            This method is used to route the value of "Input" to the output set in the configuration of this component.
+            </summary>
+            <param name="Input">Unsigned 16-bit value of the Router/Source Selector's input</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.DerouteInput(System.UInt16)">
+            <summary>
+            This method is used to unroute an input on the Router/Source Selector block from the output set in the configuration of this component.
+            </summary>
+            <param name="Input">Unsigned 16-bit value of the Router/Source Selector's input</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.ToggleInput(System.UInt16)">
+            <summary>
+            This method is used to toggle the state of a Router/Source Selector's input route to the output set in the configuration of this component.
+            </summary>
+            <param name="Input">Unsigned 16-bit value of the Router/Source Selector's input</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.PollRouter">
+            <summary>
+            This method is used to poll the routing state of the Router/Source Selector in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.GetClassCode(System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.AddClassCode(System.String,System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.Poll">
+            <summary>
+            /// <summary>
+            This method is used to poll the routing state of the Router/Source Selector in your Tesira configuration.
+            </summary>
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.IsInitialized">
+             <summary>
+             This boolean is used to indicate the initialization status of this component and the desired Command Processor. 
+             </summary>
+             <returns>
+            <para>- "True" (Is initialized)</para>
+            <para>- "False" (Is not initialized)</para>
+             </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.RouterComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.RouterComponent.OnSendDebug">
+            <summary>
+            This event is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.RouterComponent.OnInitializeChange">
+            <summary>
+            This event indicates that there was a change in the state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.RouterComponent.OnOutputRoutedChange">
+            <summary>
+            This event indicates that the Output routed has changed.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.RouterComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.IRS232Transport">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.SpeedDialItem">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.DoubleParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.CallerID">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatusPromptMap">
+            <summary>
+            This is a type-safe enumeration that reflects the current call prompt. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Tesira_Support.VoipCallStatusPromptMap.Find(System.Int32)">
+            <summary>
+            This method is designed to search the VoIPCallStatusPromptMap list and return the integer of the current status prompt. 
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Tesira_Support.VoipCallStatusPromptMap.Find(System.String)">
+            <summary>
+            This method is designed to search the VoIPCallStatusPromptMap list and return the string of the current status prompt.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatusPromptMap.Number">
+             <summary>
+             This property is used to access the integer of any VoipCallStatusPromptMap list item.
+            <para>- ‘1’ = "None"</para>
+            <para>- ‘2’ = "Starting"</para>
+            <para>- ‘3’ = "Registering"</para>
+            <para>- ‘6’ = "SIP User Not Configured"</para>
+            <para>- ‘7’ = "Enter Number"</para>
+            <para>- ‘8’ = "Connecting"</para>
+            <para>- ‘9’ = "Incoming Call"</para>
+            <para>- ‘10’ = "Peer Busy"</para>
+            <para>- ‘11’ = "Call Cannont Be Completed"</para>
+            <para>- ‘12’ = "On Hold"</para>
+            <para>- ‘13’ = "On Held"</para>
+            <para>- ‘14’ = "Conference"</para>
+            <para>- ‘15’ = "Conference On Hold"</para>
+            <para>- ‘16’ = "Connected"</para>
+            <para>- ‘17’ = "Connected Muted"</para>
+            <para>- ‘18’ = "Auth Failure"</para>
+            <para>- ‘19’ = "Proxy Not Configured"</para>
+            <para>- ‘20’ = "Network Init"</para>
+            <para>- ‘21’ = "DHCP In Progress"</para>
+            <para>- ‘22’ = "Network Link Down"</para>
+            <para>- ‘23’ = "Network Link Up"</para>
+            <para>- ‘24’ = "IP Address Conflict"</para>
+            <para>- ‘25’ = "Network Configured"</para>
+            <para>- ‘26’ = "CODEC Negotiation Failure"</para>
+            <para>- ‘27’ = "Unexpected Error"</para>
+            <para>- ‘28’ = "Auth User Not Configured"</para>
+            <para>- ‘29’ = "Auth Password Not Configured"</para>
+            <para>- ‘30’ = "Do Not Disturb"</para>
+            <para>- ‘31’ = "Invalid Dialed Number"</para>
+            <para>- ‘32’ = "Temporary Not Available"</para>
+            <para>- ‘33’ = "Call is Declined"</para>
+            <para>- ‘34’ = "Service Unavailable"</para>
+            <para>- ‘35’ = "Call Forbidden"</para>
+            <para>- ‘36’ = "Call is Being Transfer to"</para>
+            <para>- ‘37’ = "Transfer in Process"</para>
+            <para>- ‘38’ = "Transfer Timeout"</para>
+            <para>- ‘39’ = "Proxy Unavailable"</para>
+            <para>- ‘255’ = "Unknown"</para>
+             </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatusPromptMap.Name">
+             <summary>
+             This property is used to access the string of any VoipCallStatusPromptMap item.
+            <para>- "None” = ‘1’ </para>
+            <para>- "Starting” = ‘2’ </para>
+            <para>- "Registering” = ‘3’</para>
+            <para>- "SIP User Not Configured” = ‘6’</para>
+            <para>- "Enter Number” = ‘7’</para>
+            <para>- "Connecting” = ‘8’</para>
+            <para>- "Incoming Call” = ‘9’</para>
+            <para>- "Peer Busy” = ‘10’</para>
+            <para>- "Call Cannont Be Completed” = ‘11’</para>
+            <para>- "On Hold” = ‘12’</para>
+            <para>- "On Held” = ‘13’</para>
+            <para>- "Conference” = ‘14’</para>
+            <para>- "Conference On Hold” = ‘15’</para>
+            <para>- "Connected” = ‘16’</para>
+            <para>- "Connected Muted” = ‘17’</para>
+            <para>- "Auth Failure” = ‘18’</para>
+            <para>- "Proxy Not Configured” = ‘19’</para>
+            <para>- "Network Init” = ‘20’</para>
+            <para>- "DHCP In Progress” = ‘21’</para>
+            <para>- "Network Link Down” = ‘22’</para>
+            <para>- "Network Link Up” = ‘23’</para>
+            <para>- "IP Address Conflict” = ‘24’</para>
+            <para>- "Network Configured” = ‘25’</para>
+            <para>- "CODEC Negotiation Failure” = ‘26’</para>
+            <para>- "Unexpected Error” = ‘27’</para>
+            <para>- "Auth User Not Configured” = ‘28’</para>
+            <para>- "Auth Password Not Configured” = ‘29’</para>
+            <para>- "Do Not Disturb” = ‘30’</para>
+            <para>- "Invalid Dialed Number” = ‘31’</para>
+            <para>- "Temporary Not Available” = ‘32’</para>
+            <para>- "Call is Declined” = ‘33’</para>
+            <para>- "Service Unavailable” = ‘34’</para>
+            <para>- "Call Forbidden” = ‘35’</para>
+            <para>- "Call is Being Transfer to” = ‘36’</para>
+            <para>- "Transfer in Process” = ‘37’</para>
+            <para>- "Transfer Timeout” = ‘38’</para>
+            <para>- "Proxy Unavailable” = ‘39’</para>
+            <para>- "Unknown” = ‘255’</para>
+             </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.ISubscriptionManagerListener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.StringEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting 'String'.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.SimplSharpStringEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting 'SimplSharpString'.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.StringEventArgs">
+            <summary>
+            This class is used to define the property ‘Payload’ as a ‘String’ object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.SimplSharpStringEventArgs">
+            /// <summary>
+            This class is used to define the property ‘Payload’ as a ‘SimplSharpString’ object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.PresetComponent">
+            <summary>
+            This class was designed to control Presets functions in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.Configure(System.UInt16)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a Presets in your Tesira configuration.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.RecallPreset(System.String)">
+            <summary>
+            This method is used to recall a preset in your Tesira configuration.
+            </summary>
+            <param name="preset">You can recall a preset by its unique name or by its unique number. This can be found in your Tesira configuration.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.Poll">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.IsInitialized">
+             <summary>
+             This boolean is used to indicate the initialization status of this component and the desired Command Processor. 
+             </summary>
+             <returns>
+            <para>- "True" (Is initialized)</para>
+            <para>- "False" (Is not initialized)</para>
+             </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PresetComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.PresetComponent.OnSendDebug">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.PresetComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in initialization between this component and the Command Processor.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.SystemInstanceTags">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.PassThruComponent">
+            <summary>
+            This class was designed to allow a user to insert commands for functions that are not included in the main components.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.Configure(System.UInt16)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.PollMsg(System.String)">
+            <summary>
+            This method is used to send serial strings to the Tesira device that include get, subscribe and unsubscribe command functions.
+            </summary>
+            <param name="msg">Get, Subscribe or Unsubscribe command functions.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.CommandMsg(System.String)">
+            <summary>
+            This method is used to send serial strings to the Tesira device that use the "set" command function.
+            </summary>
+            <param name="msg">"set" command functions</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.Poll">
+            <summary>
+            This method is used to retrieve the current states of this component. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.IsInitialized">
+             <summary>
+             This boolean is used to indicate the initialization status of this component and the desired Command Processor. 
+             </summary>
+             <returns>
+            <para>- "True" (Is initialized)</para>
+            <para>- "False" (Is not initialized)</para>
+             </returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.PassThruComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.PassThruComponent.OnSendDebug">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.PassThruComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.PassThruComponent.OnResponseChange">
+            <summary>
+            This event is used to indicate there was a change in response from the Tesira device.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.PassThruComponent.OnSubscribedResponseChange">
+            <summary>
+            This event is used to indicate there was a change in response from a subscribed attribute in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.ComponentUtil">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.TesiraProtocolInfo">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.SubscribedResponse">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.ITransportListener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.TesiraStateAttributes">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.SpeedDialList">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.UInt16Parser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.TransitionEnumParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.SpeedDialItemEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting 'SpeedDialItem'.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.SpeedDialItemEventArgs">
+            <summary>
+            This class is used to define the property 'Payload' as a 'SpeedDialItem' object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.SSHTransportComm">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.ITCPTransportListener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.BiampTesira">
+            <summary>
+            The BiampTesira class is used to instantiate a Command Processor. 
+            BiampTesira is the class responsible for establishing communication between your program and the Tesira device,
+            as well as registering components to the Command Processor.
+            This class is required in order to utilize other components.
+            <para>-</para>
+            Along with Command processor, you need to instantiate one or more of the following components:
+            <para>-------------------------------</para>
+            <para>AVInputComponent</para>
+            <para>AVOutputComponent</para>
+            <para>DialerComponent</para>
+            <para>GenericComponent</para>
+            <para>LevelComponent</para>
+            <para>PassThruComponent</para>
+            <para>PresetComponent</para>
+            <para>RouterComponent</para>
+            <para>StateComponent</para>
+            <para>VoipDialerComponent</para>
+            <para>--------------------------------</para>
+            In order to set up components, 'Configure' method must be called within each component. 
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.CCI_Support.IComponentListener">
+            <summary>
+            This interface is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Connect">
+            <summary>
+            Use this method to establish a connection between the Command Processor and the Tesira device over Telnet or SSH.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Disconnect">
+            <summary>
+            Use this method to close the established connection between the Command Processor and the Tesira device. (Only applies when connected over Telnet or SSH)
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Initialize(System.UInt16)">
+            <summary>
+            Use this method to register all components in your program to the Command Processor after a connection has been established. 
+            This is required before using any other components.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Configure(System.UInt16,System.UInt16,System.String,System.String,System.String)">
+            <summary>
+            This method must be called before the use of any other methods.
+            </summary>
+            <param name="Type">This parameter will determine the type of connectivity to the Tesira device. Select from the following options: 
+            <para>0 = Telnet</para>
+            <para>1 = SSH</para>
+            <para>2 = RS232</para>
+            </param>
+            <param name="CommandProcessorID">This parameter will determine which the instance of the Command Processor. There are 32 instances allowed in a program.</param>
+            <param name="IPAddress">This parameter determines the IP address of the Tesira device you wish to connect to. </param>
+            <param name="Username">If the Tesira unit is secured, enter the username of the system here. If the device is not secured, the default Username is: "default"</param>
+            <param name="Password">If the Tesira unit is secured, enter the password of the system here. If the device is not secured, enter a blank value: "".</param>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Reinit">
+            <summary>
+            Use this method to reinitialize components with the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.RS232Response(System.String)">
+            <summary>
+            This method is used to process the RS232 response from the Tesira device.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.ToDevice(System.String)">
+            <summary>
+            This method is used to process the RS232 string to the Tesira device.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.GetHeartbeatTime">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.GetResponseTime">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.IsInitialized">
+            <summary>
+            This boolean indicates whether the components associated with Command Processor are initialized or not initialized.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Reconnect">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.SendHeartbeat">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.SendMessage(System.Object)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.FailedResponse">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Strikeout">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.sendTrace(System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Enqueue(BiampTesiraLib3.CCI_Support.IMainProcessListener,CCI_Library.ByteBuffer)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Enqueue(BiampTesiraLib3.CCI_Support.IMainProcessListener,CCI_Library.ByteBuffer,System.Boolean)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.BiampTesiraLib3#CCI_Support#IComponentListener#Debug(System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.BiampTesiraLib3#CCI_Support#IComponentListener#OnRegistrationChange(System.Collections.Generic.List{BiampTesiraLib3.CCI_Support.Component})">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.DataReceived(System.Byte[],System.Int32)">
+            <summary>
+            This method is used to process data received from the Tesira device via IP protocol.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.ConnectStatusChange(System.Boolean)">
+            <summary>
+            This method is used to determine if there was a change in the connection between the Command Processor and the Tesira Device.
+            </summary>
+            <param name="State"></param>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Error(System.String)">
+            <summary>
+            This method is used to process the Error string received from the Tesira device.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.BiampTesira.Dispose">
+            <summary>
+            Use this method reset the instance of the Command Processor and all of its configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnSendDebug">
+            <summary>
+            This event indicates that there was a change in the 'Debug' functionality of the Command Processor. 
+            </summary> 
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnClientSocketStatus">
+            <summary>
+            This event is for internal processes only and is not designed to be used externally. 
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnInitializeChange">
+            <summary>
+            This event indicates that was a change in the status of initializtion between the Command Processor and its associated components.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnCommunicatingChange">
+            <summary>
+            This event indicates that there was a change in communication status between the Command Processor and Tesira device.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnRegisteredComponentCountChange">
+            <summary>
+            This event indicates that there was change in the count of components registered to their associated Command Processor.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnQuarantinedComponentCountChange">
+            <summary>
+            This event indicates that there was a change in the count of components quarantied from establishing registration with its associated Command Processor.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.BiampTesira.OnRS232Transmit">
+            <summary>
+            This event indicates that there was a change in the RS232 signal from the Tesira Device to the Command Processor.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.BiampTesira.ConfigInfo">
+            <summary>
+            This method can be used to access information regarding the configuration of the Command Processor.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.BiampTesira.ComponentListenerID">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.RequestResponse">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.ParserUtil">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.VideoFormatParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.VoipDialerStatusEventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting 'VoipDialerStatus'.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.VoipDialerStatusEventArgs">
+            <summary>
+            This class is used to define the property 'Payload' as a 'VoipDialerStatus' object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.Int16EventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting ‘Int16’ data types.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.Int16EventArgs">
+            <summary>
+            This class is used to define the property ‘Payload’ as a ‘Int16’ data type object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.VoIPDialerConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the VoipDialerComponent to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatus">
+            <summary>
+            This class is used to report the status of the 'VoIP Control/Status' block in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.ID">
+            <summary>
+            This property indicates the current call instance that is selected in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.State">
+            <summary>
+            This property indicates the current state of the selected call instance in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.Prompt">
+            <summary>
+            This property indicates possible next step for users or information on issue. 
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.CidName">
+            <summary>
+            This property indicates the incoming Caller ID Name of the selected call in your Tesira Configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.CidNumber">
+            <summary>
+            This property indicates the incoming Caller ID Number of the selected call in your Tesira Configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.LedStatus">
+            <summary>
+            This property indicates the current status of the LED associated with a specific call in your Tesira configuration.
+            <para>-  '0' (Gray)(Status: INIT, IDLE, or REJECT)</para>
+            <para>-  '1' (Green)(Status: default)</para>
+            <para>-  '2' (Red)(Status: FAULT, ACTIVE_MUTED, CONF_HOLD, ON_HOLD, XFER_InitError, XFER_OnHold, XFER_ReplacesProcess, or XFER_Process)</para>
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.DefaultCidName">
+            <summary>
+            This property indicates the default Caller ID Name in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Tesira_Support.VoipCallStatus.DefaultCidNumber">
+            <summary>
+            This property indicates the default Caller ID Number in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatus.status">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatus.LedColor">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.VideoSourceEnumParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.FrameRateEnumParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.UInt16EventHandler">
+            <summary>
+            This delegate is used for the purposes of reporting 'UInt16' data type.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Events.UInt16EventArgs">
+            <summary>
+            This class is used to define the property 'Payload' as a 'UInt16' object.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.LevelConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the LevelComponent to use externally.  
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.#ctor(System.UInt16,System.String,System.String,System.UInt16,System.UInt16,System.UInt16)">
+            <summary>
+            This method is used to access all of the information associated with the configuration of this component.
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+            <param name="InstanceTag">This parameter is where you associate this component with a specific block's Instance Tag in your Tesira configuration.</param>
+            <param></param>
+            <param name="LevelType">This parameter determines the attribute code of the block your would like to control the level of. The options are as follows:
+            <para>-   "level" (Level Block)</para><br /><br />
+            <para>-   "inputLevel" (Input Block)</para>
+            <para>-   "crosspointLevel" (Matrix Mixer Crosspoint)</para>
+            <para>-   "channelLevel" (Specific channel of a block)</para>
+            <para>-   "sourceLevel" (Source Selector)</para>
+            <para>-   "levelOut" (Output of a Room Combiner Block)</para>
+            <para>-   "levelIn" (Input of a Room Combiner Block)</para>
+            <para>-   "levelSource" (Source level of a Room Combiner Block)</para>
+            <para>-   "hostMasterVol" (Host master level of a USB block)</para>
+            <para>-   "hostVol" (Host level of a USB Block</para>
+            <para>-   "auxLevel" (Auxilary level of a TesiraLux block)</para>
+            </param>
+            <param name="Index1">When this parameter is not required, set to 0. In most cases this parameter represents the input value of a block.
+                                 If controlling a single-channel block, set to 1. If controlling a multi-channel Level Block, use Index1 to determine channel #</param>
+            <param name="Index2">When this parameter is not required, set to 0. In most cases this parameter represents the output value of a block.
+                                 If controlling a single-channel block or a multi-channel Level Block, set to 0.</param>
+            <param name="LevelStep">This parameter determines the dB offset for incrementing or decrementing level. Valid values: 1 through 6.</param>
+        </member>
+        <member name="P:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.CommandProcessorID">
+            <summary>
+            This method determines which Command Processor you would like to associate this component with in your program.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.InstanceTag">
+            <summary>
+            This method is where you get the associated Instance tag of this component.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.LevelType">
+            <summary>
+            This method is used to get the attribute code of the block your would like to control the level of. The options are as follows:
+            <para>-   "level" (Level Block)</para><br /><br />
+            <para>-   "inputLevel" (Input Block)</para>
+            <para>-   "crosspointLevel" (Matrix Mixer Crosspoint)</para>
+            <para>-   "channelLevel" (Specific channel of a block)</para>
+            <para>-   "sourceLevel" (Source Selector)</para>
+            <para>-   "levelOut" (Output of a Room Combiner Block)</para>
+            <para>-   "levelIn" (Input of a Room Combiner Block)</para>
+            <para>-   "levelSource" (Source level of a Room Combiner Block)</para>
+            <para>-   "hostMasterVol" (Host master level of a USB block)</para>
+            <para>-   "hostVol" (Host level of a USB Block</para>
+            <para>-   "auxLevel" (Auxilary level of a TesiraLux block)</para>
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.Index1">
+            <summary>
+            This method is used to get the value of Index1 that is associated with this component.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.Index2">
+            <summary>
+            This method is used to get the value of Index2 that is associated with this component.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.ConfigInfo.LevelConfigInfo.LevelStep">
+            <summary>
+            This method is used to get the specified level step of when you raise or lower the level attribute of the desired block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.TestPatternEnumParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.RouterConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the RouterComponent to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.BiampTesiraConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the BiampTesira class to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.GenericComponent">
+            <summary>
+            This class is designed control a certain block or attribute in your Tesira configuration that there isn't a standard component for.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.Configure(System.UInt16,System.String,System.String,System.UInt16,System.UInt16,System.UInt16,System.UInt16)">
+             <summary>
+             This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration.
+             </summary>
+             <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+             <param name="InstanceTag">This parameter is where you associate this component with a specific block's Instance Tag in your Tesira configuration.</param>
+             <param name="AttributeCode">This parameter is where you enter the desired Attribute Code of the attribute you want to control. Refer to the Tesira software's help file for attribute codes.</param>
+             <param name="Index1"> When this parameter is not required, set to 0. In most cases this parameter represents the input value of a block.  
+                                   If controlling a single-channel block, set to 1. If controlling a multi-channel Block, use Index1 to determine channel #</param>
+             <param name="Index2">When this parameter is not required, set to 0. In most cases this parameter represents the output value of a block.  
+                                  If controlling a single-channel block or a multi-channel Block, set to 0.</param>
+             <param name="SignalType">This parameter determines the type of signals you would like to use with his component. The values are follows:
+            <para>- "0" (Set to Digital)</para>
+            <para>- "1" (Set to Analog)</para>
+             <para>- "2" (Set to Serial)</para>
+             </param>
+             <param name="HasSubscription">This parameter indicates whether the block you are controlling has subscription capabilities. 
+                                            If set to Yes, this component will attempt to subscribe to supported state changes.
+            <para>- "0" (No)</para>                                
+            <para>- "1" (Yes)</para> 
+             </param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.SetDigital(System.UInt16)">
+            <summary>
+            This method is used to set the digital state of the attribute you wish to control. This method only works if the parameter "SignalType" is set to "Digital".
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.ToggleDigital">
+            <summary>
+            This method is used to toggle the digital state of the attribute you wish to control. This method only works if the parameter "SignalType" is set to "Digital". 
+            </summary>               
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.SetAnalog(System.Int16)">
+            <summary>
+            This method is used to send the 16-bit "value" parameter to the attribute you wish to control. This method only works if the parameter "SignalType" is set to "Analog".
+            </summary>
+            <param name="value">16-bit value you would like to send to the block in your Tesira configuration.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.SetSerial(System.String)">
+            <summary>
+            This method is used to send the string "value" parameter to the attribute you wish to control. This method only works if the parameter "SignalType" is set to "Serial".
+            </summary>
+            <param name="value">String value you would like to send to the block in your Tesira configuration.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.PollState">
+            <summary>
+            This method recalls the 'Poll' method. Propogates the state of desired attribute.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.Poll">
+            <summary>
+            This method is used to retrieve the current state of the desired block attribute in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.GetInitialized(System.String)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.IsInitialized">
+            <summary>
+            Use this method to show if the current component is initialized with the Command Processor.
+            </summary>
+            <returns>True or False</returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.GenericComponent.GetSubscriptionMessage">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.GenericComponent.OnSendDebug">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.GenericComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.GenericComponent.OnDigitalChange">
+            <summary>
+            This event is used to indicate there was a change in value for a digitial signal in this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.GenericComponent.OnAnalogChangeSigned">
+            <summary>
+            This event is used to indicate there was a change in value for a signed analog signal in this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.GenericComponent.OnSerialChange">
+            <summary>
+            This event is used to indicate there was a change in value for a serial signal in this component.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.GenericComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.GenericComponent.SignalTypes">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.VoipCallStatuses">
+            <summary>
+            This is class is designed to create a list of all call instances in your Tesira configuration. 
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.OSDDurationParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.RS232TransportComm">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.ProtocolUtil">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.SubscriptionManager">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.SubscriptionWatchdogPayload">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.MaxResolutionEnumParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Parser.BoolArrayParser">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.VideoSource">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.FrameRate">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.MaxResolution">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.DeviceConnected">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.TestPattern">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.Transition">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.OSDDuration">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.AVCommonEnums.VideoFormat">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.LevelComponent">
+            <summary>
+            This class is designed to control the level attribute of a block in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Configure(System.UInt16,System.String,System.String,System.UInt16,System.UInt16,System.UInt16)">
+            <summary>
+            This method is used for intial configuration of the component and must be set prior to controlling a specific block in your Tesira configuration. 
+            </summary>
+            <param name="CommandProcessorID">This parameter determines which Command Processor you would like to associate this component with in your program.</param>
+            <param name="InstanceTag">This parameter is where you associate this component with a specific block's Instance Tag in your Tesira configuration.</param>
+            <param></param>
+            <param name="LevelType">This parameter determines the attribute code of the block your would like to control the level of. The options are as follows:
+            <para>-   "level" (Level Block)</para><br /><br />
+            <para>-   "inputLevel" (Input Block)</para>
+            <para>-   "crosspointLevel" (Matrix Mixer Crosspoint)</para>
+            <para>-   "channelLevel" (Specific channel of a block)</para>
+            <para>-   "sourceLevel" (Source Selector)</para>
+            <para>-   "levelOut" (Output of a Room Combiner Block)</para>
+            <para>-   "levelIn" (Input of a Room Combiner Block)</para>
+            <para>-   "levelSource" (Source level of a Room Combiner Block)</para>
+            <para>-   "hostMasterVol" (Host master level of a USB block)</para>
+            <para>-   "hostVol" (Host level of a USB Block</para>
+            <para>-   "auxLevel" (Auxilary level of a TesiraLux block)</para>
+            </param>
+            <param name="Index1">When this parameter is not required, set to 0. In most cases this parameter represents the input value of a block.
+                                 If controlling a single-channel block, set to 1. If controlling a multi-channel Level Block, use Index1 to determine channel #</param>
+            <param name="Index2">When this parameter is not required, set to 0. In most cases this parameter represents the output value of a block.
+                                 If controlling a single-channel block or a multi-channel Level Block, set to 0.</param>
+            <param name="LevelStep">This parameter determines the dB offset for incrementing or decrementing level. Valid values: 1 through 6.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.UnRegister">
+            <summary>
+            This method will unregister this component from the Command Processor it is associated with.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Raise">
+            <summary>
+            This method raises the level of desired level attribute using the set step value. Call method 'Stop' when complete.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Lower">
+            <summary>
+            This method lowers the level of desired level attribute using the set step value. Call method 'Stop' when complete.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Stop">
+            <summary>
+            This method stops the ramp of a level attribute. Typically used when button is released.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.SetLevel(System.Int16)">
+            <summary>
+            This method is used to push the value of the parameter "level" to the desired attribute in your Tesira configuration.
+            </summary>
+            <param name="level">This parameter is where to set the desired level of an attribute in dB. 
+                                If the chosen dB level is outside of the min/max range of your level block, there will be no change</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.SetPercent(System.UInt16)">
+            <summary>
+            This method is used to push the value of the parameter "percent" to the desired attribute in your Tesira configuration.
+            </summary>
+            <param name="percent">This parameter is where to determine the desired level percentage relative to your Tesira configuration block's minimum and maximum level.</param>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.GetLevel">
+            <summary>
+            This method is used to get the current level in decibals from the desired level attribute.
+            </summary>
+            <returns>If the current level is out of range, it will return the minimum limit of the level block in your Tesira program.</returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.PollState">
+            <summary>
+            This method recalls the 'Poll' method. Propogates the state of desired attribute. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.RegisterComponentListener(BiampTesiraLib3.CCI_Support.IComponentListener)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally. 
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.ProcessSubscription(BiampTesiraLib3.Tesira_Support.SubscribedResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Poll">
+            <summary>
+            This method is used to retrieve the current state of the desired level attribute in your Tesira configuration.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Reinitialize">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Refresh">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.Dispose">
+            <summary>
+            This method is used to completely discard any registration of this component to the Command Processor.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.GetInitialized">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.IsInitialized">
+            <summary>
+            Use this method to show if the current component is initialized with the Command Processor.
+            </summary>
+            <returns>Returns the current level and min/max limits of desired level attribute.</returns>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.ProcessResponse(BiampTesiraLib3.Tesira_Support.RequestMsg,BiampTesiraLib3.Tesira_Support.RequestResponse)">
+            <summary>
+            This method is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="M:BiampTesiraLib3.Components.LevelComponent.GetSubscriptionMessage">
+            <summary>
+            Use this method to view the subscription message from the Tesira device regarding this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.LevelComponent.OnSendDebug">
+            <summary>
+            This event is for internal processes only and is not designed to be used externally. 
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.LevelComponent.OnInitializeChange">
+            <summary>
+            This event is used to indicate there was a change in state of initialization between the Command Processor and this component.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.LevelComponent.OnLevelChangeSignedUnscaled">
+            <summary>
+            This event is used to indicate there was a change in value (decibals) of the level attribute in the Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.LevelComponent.OnLevelChangePercent">
+            <summary>
+            This event is used to indicate there was a change in value (percentage) of the level attribute in the Tesira configuration.
+            </summary>
+        </member>
+        <member name="E:BiampTesiraLib3.Components.LevelComponent.OnLevelTextChange">
+            <summary>
+            This event is used to indicate there was a change in the text feedback of the level attribute in the Tesira configuration.
+            </summary>
+        </member>
+        <member name="P:BiampTesiraLib3.Components.LevelComponent.ConfigInfo">
+            <summary>
+            This property is used to access configuration information regarding this component.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Components.LevelComponent.RampTypes">
+            <summary>
+            This enumeration is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Comm.TelnetTransportComm">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Tesira_Support.TesiraRouterAttributes">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.Model.SpeedDialDirectory">
+            <summary>
+            This class is for internal processes only and is not designed to be used externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.DialerConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the DialerComponent to use externally.
+            </summary>
+        </member>
+        <member name="T:BiampTesiraLib3.ConfigInfo.AVOutputConfigInfo">
+            <summary>
+            This class contains all of the information from 'ConfigInfo' in the AVOutputComponent to use externally.
+            </summary>
+        </member>
+    </members>
+</doc>

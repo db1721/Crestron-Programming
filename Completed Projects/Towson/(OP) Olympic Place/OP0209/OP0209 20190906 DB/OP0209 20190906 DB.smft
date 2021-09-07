@@ -1,0 +1,11 @@
+<Device Model="AV2" Name="AV2 With Card Cage">
+   <Network Type="Ethernet" Id="08">
+      <Device Model="TPMC-V12" DeviceId="03" Name="TPMC-V12 (Ethernet)"/>
+      <Device Model="DM-MD16x16" DeviceId="04"/>
+      <Device Model="Fusion Room" DeviceId="0B"/>
+   </Network>
+   <Network Type="Cresnet" Id="09">
+      <Device Model="15" DeviceId="None" Name="CNPWS-75"/>
+      <Device Model="QM-AMP3x80" DeviceId="09"/>
+   </Network>
+</Device>

@@ -114,8 +114,7 @@
   SymJam=NonExclusive
   FileName=Biamp Tesira Comm v3.0.ush
   SIMPLPlusModuleEncoding=0
-  clz1=SSFileOps
-  clz2=BiampTesiraLib3
+  clz1=BiampTesiraLib3
 [END]
 [BEGIN]
   ObjTp=Dp

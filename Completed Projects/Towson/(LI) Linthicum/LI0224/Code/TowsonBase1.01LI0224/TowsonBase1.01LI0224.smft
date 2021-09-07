@@ -1,0 +1,24 @@
+<Device Model="CP3N">
+   <Network Type="Cresnet" Id="01"/>
+   <Network Type="Ethernet" Id="02">
+      <Device Model="DM-MD8X1-4K-C" DeviceId="03" Name="DM-MD8x1-4K-C"/>
+      <Device Model="Fusion Room" DeviceId="06"/>
+      <Device Model="DM-NVX-E30C" DeviceId="21"/>
+      <Device Model="DM-NVX-E30C" DeviceId="22"/>
+      <Device Model="DM-NVX-E30C" DeviceId="23"/>
+      <Device Model="DM-NVX-E30C" DeviceId="24"/>
+      <Device Model="DM-NVX-E30C" DeviceId="25"/>
+      <Device Model="DM-NVX-E30C" DeviceId="26"/>
+      <Device Model="DM-NVX-E30C" DeviceId="27"/>
+      <Device Model="DM-NVX-D30" DeviceId="31"/>
+      <Device Model="DM-NVX-D30" DeviceId="32"/>
+      <Device Model="DM-NVX-D30" DeviceId="33"/>
+      <Device Model="DM-NVX-D30" DeviceId="34"/>
+      <Device Model="DM-NVX-D30" DeviceId="35"/>
+      <Device Model="DM-NVX-D30" DeviceId="36"/>
+      <Device Model="DM-NVX-D30" DeviceId="37"/>
+      <Device Model="DM-NVX-D30" DeviceId="38" Name="DM-NVX-D30C"/>
+      <Device Model="TSW-760" DeviceId="40"/>
+      <Device Model="Core3 UI XPanel" DeviceId="42" Name="XPanel 2.0 Smart Graphics"/>
+   </Network>
+</Device>

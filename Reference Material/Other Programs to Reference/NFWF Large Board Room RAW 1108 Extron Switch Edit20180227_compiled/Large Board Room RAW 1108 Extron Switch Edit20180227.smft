@@ -1,0 +1,20 @@
+<Device Model="PRO3" Name="PRO3.">
+   <Network Type="Cresnet" Id="04">
+      <Device Model="DIN-AO8" DeviceId="03"/>
+      <Device Model="CHV-TSTATA,CHV-THSTATA," DeviceId="2A" Name="Crestron CHV-THSTAT"/>
+      <Device Model="GLS-SIM" DeviceId="92"/>
+      <Device Model="GLS-ODT-C-CN" DeviceId="97"/>
+      <Device Model="GLS-ODT-C-CN" DeviceId="98"/>
+      <Device Model="GLS-ODT-C-CN" DeviceId="99"/>
+   </Network>
+   <Network Type="Ethernet" Id="05">
+      <Device Model="CEN-GWEXER" DeviceId="03">
+         <Network Type="RF">
+            <Device Model="TST-902" DeviceId="03" Name="TST-902 (EX)"/>
+         </Network>
+      </Device>
+      <Device Model="TSW-560" DeviceId="04"/>
+      <Device Model="TSW-760" DeviceId="05" Name="Samll Room"/>
+      <Device Model="Core3 UI XPanel" DeviceId="07" Name="TST-902 - XPanel 2.0 Simulator"/>
+   </Network>
+</Device>

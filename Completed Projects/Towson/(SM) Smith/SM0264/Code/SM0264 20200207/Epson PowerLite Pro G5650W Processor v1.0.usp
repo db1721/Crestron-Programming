@@ -1,0 +1,153 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: CRESTRON
+System Name:
+System Number:
+Programmer: SNP
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "Epson PowerLite Pro G5650W Processor v1.0"
+// #HINT ""
+// #DEFINE_CONSTANT
+#CATEGORY "24" 
+#DEFAULT_VOLATILE
+// #DEFAULT_NONVOLATILE
+
+#HELP_BEGIN
+This SMPL+ module is only to be used in conjuction
+with the Epson PowerLite Pro G5650W v1.0 module.
+#HELP_END
+
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional librarys as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+//DIGITAL_INPUT 
+//ANALOG_INPUT 
+//STRING_INPUT 
+BUFFER_INPUT FROM_DEVICE$[100];
+//DIGITAL_OUTPUT 
+//STRING_OUTPUT 
+ANALOG_OUTPUT Contrast, Brightness, Color, Tint, Sharpness, Volume, Lamp;
+               
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+*******************************************************************************************/
+INTEGER SEMAPHORE;
+STRING TEMP$[50];
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+//Function 
+
+
+/*
+Integer_Function MyIntFunction1()
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+
+    Return (0);
+}
+*/
+
+/*
+String_Function MyStrFunction1()
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+
+    Return ("");
+}
+*/
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+CHANGE FROM_DEVICE$
+{
+	
+	IF (SEMAPHORE=0)
+    	{    
+     	SEMAPHORE=1;
+     	WHILE(FIND("\x0D",FROM_DEVICE$) > 0)
+		 
+     		{
+      			IF(FIND("=", FROM_DEVICE$) > 0)
+     				{
+        				Temp$=Remove("\x0D", From_Device$);
+                        IF(FIND("CONTRAST", Temp$) > 0)
+							{
+								CONTRAST = ATOI(Temp$);
+							}
+						ELSE IF(FIND("BRIGHT", Temp$) > 0)
+				 			{
+								BRIGHTNESS = ATOI(Temp$);
+							}
+						ELSE IF(FIND("DENSITY", Temp$) > 0)
+				 			{
+								COLOR = ATOI(Temp$);
+							}
+						ELSE IF(FIND("TINT", Temp$) > 0)
+				 			{
+								TINT = ATOI(Temp$);
+							}
+						ELSE IF(FIND("SHARP", Temp$) > 0)
+				 			{
+								SHARPNESS = ATOI(Temp$);
+							}
+						ELSE IF(FIND("VOL", Temp$) > 0)
+				 			{
+								VOLUME = ATOI(Temp$);
+							}
+						ELSE IF(FIND("LAMP", Temp$) > 0)
+				 			{
+								Lamp = ATOI(Temp$);
+							}
+						CLEARBUFFER(Temp$);													
+					}
+			}
+					     
+			SEMAPHORE=0;
+		}
+}
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+    SEMAPHORE=0;
+    CLEARBUFFER(FROM_DEVICE$);
+    	
+}
+
+
+ 

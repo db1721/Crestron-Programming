@@ -1,0 +1,34 @@
+<Device Model="CP3N">
+   <Network Type="Cresnet" Id="01"/>
+   <Network Type="Ethernet" Id="02">
+      <Device Model="DM-MD8X1-4K-C" DeviceId="03" Name="DM-MD8x1-4K-C"/>
+      <Device Model="Fusion Room" DeviceId="06"/>
+      <Device Model="DM-NVX-E30C" DeviceId="20" Name="Computer"/>
+      <Device Model="DM-NVX-E30C" DeviceId="21" Name="Doc Cam"/>
+      <Device Model="DM-NVX-E30C" DeviceId="22" Name="AUX HDMI"/>
+      <Device Model="DM-NVX-E30C" DeviceId="23" Name="Skip"/>
+      <Device Model="DM-NVX-E30C" DeviceId="24" Name="Mersive Main"/>
+      <Device Model="DM-NVX-E30C" DeviceId="25" Name="Mersive Huddle 1"/>
+      <Device Model="DM-NVX-E30C" DeviceId="26" Name="Mersive Huddle 2"/>
+      <Device Model="DM-NVX-E30C" DeviceId="27" Name="Mersive Huddle 3"/>
+      <Device Model="DM-NVX-E30C" DeviceId="28" Name="Mersive Huddle 4"/>
+      <Device Model="DM-NVX-E30C" DeviceId="29" Name="Mersive Huddle 6"/>
+      <Device Model="DM-NVX-E30C" DeviceId="30" Name="Mersive Huddle 7"/>
+      <Device Model="DM-NVX-D30" DeviceId="31" Name="Cleartouch"/>
+      <Device Model="DM-NVX-D30" DeviceId="32" Name="Huddle 1"/>
+      <Device Model="DM-NVX-D30" DeviceId="33" Name="Huddle 2"/>
+      <Device Model="DM-NVX-D30" DeviceId="34" Name="Huddle 3"/>
+      <Device Model="DM-NVX-D30" DeviceId="35" Name="Huddle 4"/>
+      <Device Model="DM-NVX-D30" DeviceId="36" Name="Huddle 5"/>
+      <Device Model="DM-NVX-D30" DeviceId="37" Name="Huddle 6"/>
+      <Device Model="DM-NVX-D30" DeviceId="38" Name="Audio Out"/>
+      <Device Model="TSW-760" DeviceId="40" Name="Main"/>
+      <Device Model="TSW-560P" DeviceId="41" Name="Huddle 1"/>
+      <Device Model="TSW-560P" DeviceId="42" Name="Huddle 2"/>
+      <Device Model="TSW-560P" DeviceId="43" Name="Huddle 3"/>
+      <Device Model="TSW-560P" DeviceId="44" Name="Huddle 4"/>
+      <Device Model="TSW-560P" DeviceId="45" Name="Huddle 5"/>
+      <Device Model="TSW-560P" DeviceId="46" Name="Huddle 6"/>
+      <Device Model="Core3 UI XPanel" DeviceId="4A" Name="XPanel 2.0 Smart Graphics"/>
+   </Network>
+</Device>

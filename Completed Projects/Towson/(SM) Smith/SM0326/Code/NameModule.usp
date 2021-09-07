@@ -1,0 +1,70 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+// #SYMBOL_NAME ""
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+#ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+digital_input confirm;
+string_input name$[40];
+
+string_output string$;
+
+push confirm
+{
+ makestring(string$, "xCommand Dial Number:%s@video.towson.edu Protocol:Sip CallRate:4000\x0D\x0A",name$);
+}
+
+
+//"xCommand Dial Number:netid@video.towson.edu
+//xCommand Dial Number:74.199.182.102 Protocol:Sip CallRate:4000\x0D\x0A
+//xCommand Dial Number:74.199.182.102 Protocol:H323 CallRate:4000\x0D\x0A
+ 
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+/*
+Function Main()
+{
+    // TODO:  Add code here
+    // Initialize declared global and local variables/arrays as needed.
+
+    // WaitForInitializationComplete();
+    // If you are reading any Input or Output variables, uncomment
+    //   the WaitForInitializationComplete statement above and read
+    //   them afterwards.  Input/Output variables will not have
+    //   their correct values set until after the logic processor
+    //   runs and propagates the values to them.
+}
+*/
+

@@ -1,0 +1,291 @@
+[Toolbox Install Info]
+
+  Install Path: C:\Program Files (x86)\Crestron\Toolbox
+
+  Data:
+                             Devices.rzinis:  160127         C:\Program Files (x86)\Crestron\Cresdb\Toolbox\Devices.rzinis
+                             Devices.rzinis:  190626         C:\Program Files (x86)\Crestron\Toolbox\Data\Devices.rzinis
+
+
+  Crestron Software:
+
+        Crestron Core 3 UI Controls........:  2.15.04.00     C:\Program Files (x86)\Crestron\Cresdb
+        Crestron Database..................:  79.00.003.00   C:\Program Files (x86)\Crestron\Cresdb
+        Crestron MasterInstaller...........:  3.03.00.01     C:\Program Files (x86)\Crestron\MasterInstaller
+        Crestron Studio....................:  1.76.200.00    C:\Program Files (x86)\Crestron\Crestron Studio
+
+        Crestron Toolbox...................:  3.03.236.00    C:\Program Files (x86)\Crestron\Toolbox
+            +BPC8 Tool                     :  2.03.148       C:\Program Files (x86)\Crestron\Toolbox
+            +Complete Shell                :  2.03.236       Unavailable
+            +DMTools                       :  2.03.236       Unavailable
+            +DSP128Shell                   :  2.03.236       C:\Program Files (x86)\Crestron\Toolbox
+            +DSP128Stand                   :  2.03.236       C:\Program Files (x86)\Crestron\Toolbox
+            +Front End                     :  2.03.236       Unavailable
+            +Minimal Shell                 :  2.03.236       Unavailable
+            +Procise Tools                 :  2.03.148       C:\Program Files (x86)\Crestron\Toolbox
+            +Server                        :  2.03.236       C:\Program Files (x86)\Crestron\Toolbox
+
+        Device Database....................:  105.00.001.00  Unavailable
+        SIMPL Windows......................:  4.11.06.01     Unavailable
+        SIMPL Windows Library..............:  508            Unavailable
+        SIMPL+ Cross Compiler..............:  1.3            Unavailable
+        VisionTools Pro-e..................:  6.2.00.03      C:\Program Files (x86)\Crestron\VtPro-e
+
+
+  Operating System:
+
+             Windows Version:  Microsoft Windows 10 Pro
+                  IE Version:  9.11.17134
+                         CPU:  Intel(R) Core(TM) i7-8850H CPU @ 2.60GHz (x12) @ 2592 MHz
+             Physical Memory:  9078 MB / 16144 MB
+              Virtual Memory:  1288 MB / 2047 MB
+                Admin Rights:  Yes
+                         DPI:  X:96 Y:96
+              Scaling Factor:  100
+                 UAC Enabled:  True
+      Virtualization Enabled:  True
+
+[Product Info]
+DeviceName=DMPS-300-C
+DeviceCategory=Control System
+DeviceVersion=4.007.0032
+SerialNumber=8314809
+
+[Program]
+          MinimumCUZ : 
+          TargetRack : DMPS-300-C. (old v1.2)
+      ProgramBootDir : \SIMPL\
+          SourceFile : C:\Users\jcuevas\Desktop\LI0105\Towson DMPS-300 2014-1-30 ETC_archive\Towson DMPS-300 2014-1-30 ETC
+         ProgramFile : Towson DMPS-300 2014-1-30 ETC.smw
+          SystemName : Towson DMPS System
+          Programmer : BDT
+          CompiledOn : 11/10/2017 2:15 PM
+         CompilerRev : 3.03
+           SYMLIBRev : 1035
+            IOLIBRev : 1035
+           IOPCFGRev : 2.1.176
+       CrestronDBRev : 63.05.007.00
+   SourceEnvironment : SIMPL Windows v4.07.03
+                Type : User
+      ProgramVersion : 
+        ProgramIDTag : Towson DMPS System
+
+[Ethernet]
+NumberOfPorts=1
+LanA.IPAddress=192.168.001.100
+LanA.MACAddress=00.10.7f.29.5c.f6
+LanA.IPMask=255.000.000.000
+LanA.NegotiationSpeed=0
+LanA.NegotiationDuplex=FALSE
+LanA.Link=TRUE
+DefaultRouter=192.168.001.001
+Hostname=CRESTRON-LI0105-DMPS300
+Domain=
+DHCPEnabled=FALSE
+SSLEnabled=FALSE
+SSLCASigned=FALSE
+CIPEnable=FALSE
+PrimaryDNS=
+
+[Cresnet Devices]
+
+03:    TPS-6L [v3.001.0072,#00496C4E]   
+
+[Error Log]
+
+System log:
+
+  1. Notice: System startup: DMPS-300-C Cntrl Eng [v4.007.0032 (Oct 16 2013), #007EDFB9]
+     TimeStamp: 23:31:29  7-21-19   UpTime: 0 days 00:00:04.66  Task: IdleTask
+  2. Notice: Previous Reboot: Power Cycle/HW-R Button
+     TimeStamp: 23:31:29  7-21-19   UpTime: 0 days 00:00:04.67  Task: IdleTask
+  3. Error: USER SPECIFIED: Slot-07.IP-id-30_online_=_ONLINE
+     TimeStamp: 23:31:40  7-21-19   UpTime: 0 days 00:00:16.57  Task: LogicPro
+  4. Error: USER SPECIFIED: Slot-07.IP-id-40_online_=_ONLINE
+     TimeStamp: 23:31:40  7-21-19   UpTime: 0 days 00:00:16.57  Task: LogicPro
+  5. Error: USER SPECIFIED: Slot-07.IP-id-30_Offline_=_OFFLINE
+     TimeStamp: 23:31:42  7-21-19   UpTime: 0 days 00:00:18.56  Task: LogicPro
+  6. Error: USER SPECIFIED: Slot-07.IP-id-40_Offline_=_OFFLINE
+     TimeStamp: 23:31:42  7-21-19   UpTime: 0 days 00:00:18.56  Task: LogicPro
+  7. Error: Unable to detect Gateway ... defaulting Hostname Resolution to DNS
+     TimeStamp: 23:31:47  7-21-19   UpTime: 0 days 00:00:22.91  Task: UDP_Serv
+  8. Error: USER SPECIFIED: Slot-07.IP-id-30_online_=_ONLINE
+     TimeStamp: 23:32:05  7-21-19   UpTime: 0 days 00:00:41.53  Task: LogicPro
+  9. Notice: SIMPL+ UDP Socket __NTPSERVER from module S-2.6:S-7: Could not resolve name us.pool.ntp.org.
+     TimeStamp: 23:32:12  7-21-19   UpTime: 0 days 00:00:47.39  Task: D05d002
+Total Errors Logged = 9
+End of System log
+
+[Internal Memory Usage]
+InternalMem.Program=1104689
+InternalMem.SPLUS=525104
+InternalMem.Free=6893716
+InternalMem.Used=1630636
+InternalMem.Reclaimable=3009984
+InternalMem.Free_Hi=0
+InternalMem.Used_Hi=0
+InternalMem.Reclaimable_Hi=0
+InternalMem.DisplayList=-1
+InternalMem.WebPages=0
+
+[NVRAM Usage]
+NVRAMDiskSize=64
+NVRAMDiskFree=47420
+NVRAMDiskUsed=580
+NVRAMDiskReclaimable=17280
+NVRAMAvailableForProgram=196864
+NVRAMUsedByProgram=830
+
+[System Clock]
+TimeDate=12:17:44 7-22-2019
+SystemUpTime.Days=0
+SystemUpTime.HundredthsSecs=4597771
+ProgramUpTime.Days=0
+ProgramUpTime.HundredthsSecs=4595935
+
+[IP Table]
+IP ID   Address             Entry Type  Dev ID  Port    Connection Type     Status      Fixed   Model Name          Description
+03      127.000.000.001     slave       00      41794   gway                offline                                 
+04      127.000.000.001     slave       00      41794   gway                online                                  
+07      192.168.001.071     slave       00      50915   client              unknown                                 
+30      127.000.000.001     slave       00      41794   gway                online                                  
+40      127.000.000.001     slave       00      41794   gway                offline                                 
+60      127.000.000.001     slave       00      41794   gway                online                                  
+70      127.000.000.001     slave       00      41794   gway                offline                                 
+
+[Firmware Capabilities]
+  Category:          Control System
+  SIMPL:             Level 1
+  SIMPL+:            Level 1
+  DisplayList:       NOT SUPPORTED
+  Web Server:        Enabled: Level 1
+  FTP Transfers:     NOT SUPPORTED
+  Ethernet Ports:    1: 1
+  Ethernet Active:   Yes
+  IP Table:          Yes
+  IP Table Format:   DIP: Level 2
+  IP Masters:        0
+  Max IP Entries:    252
+  Curr IP Entries:   14
+  DHCP Support:      Yes
+  Password:          Yes
+  LCD Front Panel:   Yes
+  Front Panel Slot:  10
+  NVRAM Size:        196864
+  NVRAM Used (Prog): 830
+  Max SIMPL+ Code:   1048576
+  Compact Flash:     NOT SUPPORTED
+  MMC:               NOT SUPPORTED
+  FirmwarePrefix:    MPS
+  Program Retrieve:  Yes
+  Boot mode:         MASTER
+  PnP Address/TSID:  007EDFB9
+  PnP support:       Level 1
+  Dynamic Prot area: Level 1
+  SSL support:       SUPPORTED: Level 1
+  RConsole support:  SUPPORTED: Level 3
+  Network Analyzer:  NOT SUPPORTED
+  NPA Support:       NOT SUPPORTED
+  System Monitor:    SUPPORTED: Level 0
+  USB support:       Level 2
+  TJI support:       Level 6
+ RTJI support:       Level 2
+  MDBGSIGNAL:        SUPPORTED: Level 2
+  STACKTRACE:        SUPPORTED: Level 2
+
+[Hardware Info]
+Current Hardware Configuration
+  Processor Type:    DMPS-300-C
+  Compact Flash:     NOT SUPPORTED
+  Num YBus Slots:    3
+  Num ZBus Slots:    0
+   1: C2I-DMPS-COM2-232 Build-in 2 RS232 Ports
+   2: C2I-DMPS-IR 4 Port IR/1-Way RS232 Card
+   3: C2I-DMPS-DI4 Build-in Digital Input Card
+   4: C2I-DMPS-RY4 Build-in 4 Low Voltage Relays
+   5: C2I-DMPS-IR-INPUT
+   6: Cresnet
+   7: C2I-ADGENET-1
+   8: C2I-DMPS-300-AUDIO [v1.1842.00026, #087EDFB9] Stream:fd.0 
+   9: C2I-DMPS-300-VIDEO Cntrl Eng [v4.102.214300049 (Feb 19 2014), #107EDFB9]
+  10: C2I-DMPS-FPANEL Front Panel [v1.001.0004]
+  33: C2I-NVMEM
+  FLASH Mfg / Type:  20 / 1
+  FLASH Total Size:  16 MB
+  FLASH Num Banks:   2
+  DRAM Total Size:   32 MB
+
+[Card Info]
+
+   1: C2I-DMPS-COM2-232 Build-in 2 RS232 Ports
+   2: C2I-DMPS-IR 4 Port IR/1-Way RS232 Card
+   3: C2I-DMPS-DI4 Build-in Digital Input Card
+   4: C2I-DMPS-RY4 Build-in 4 Low Voltage Relays
+   5: C2I-DMPS-IR-INPUT
+   7: C2I-ADGENET-1
+   8: C2I-DMPS-300-AUDIO [v1.1842.00026, #087EDFB9] Stream:fd.0 
+   9: C2I-DMPS-300-VIDEO Cntrl Eng [v4.102.214300049 (Feb 19 2014), #107EDFB9]
+  10: C2I-DMPS-FPANEL Front Panel [v1.001.0004]
+  33: C2I-NVMEM
+
+[*ADV* Touch Settable Devices]
+00496C4E Y 03 Y TPS-6L [v3.001.0072,#00496C4E]   
+
+[ProgramCore.Program]
+          MinimumCUZ : 
+          TargetRack : DMPS-300-C. (old v1.2)
+      ProgramBootDir : \SIMPL\
+          SourceFile : C:\Users\jcuevas\Desktop\LI0105\Towson DMPS-300 2014-1-30 ETC_archive\Towson DMPS-300 2014-1-30 ETC
+         ProgramFile : Towson DMPS-300 2014-1-30 ETC.smw
+          SystemName : Towson DMPS System
+          Programmer : BDT
+          CompiledOn : 11/10/2017 2:15 PM
+         CompilerRev : 3.03
+           SYMLIBRev : 1035
+            IOLIBRev : 1035
+           IOPCFGRev : 2.1.176
+       CrestronDBRev : 63.05.007.00
+   SourceEnvironment : SIMPL Windows v4.07.03
+                Type : User
+      ProgramVersion : 
+        ProgramIDTag : Towson DMPS System
+
+[ProgramCore.IP Table]
+IP ID   Address             Entry Type  Dev ID  Port    Connection Type     Status      Fixed   Model Name          Description
+03      127.000.000.001     slave       00      41794   gway                offline                                 
+04      127.000.000.001     slave       00      41794   gway                online                                  
+07      192.168.001.071     slave       00      50915   client              unknown                                 
+30      127.000.000.001     slave       00      41794   gway                online                                  
+40      127.000.000.001     slave       00      41794   gway                offline                                 
+60      127.000.000.001     slave       00      41794   gway                online                                  
+70      127.000.000.001     slave       00      41794   gway                offline                                 
+
+[ProgramCore.Include4.Program]
+          MinimumCUZ : 
+          TargetRack : DMPS-300-C. (old v1.2)
+      ProgramBootDir : \SIMPL\
+          SourceFile : C:\Users\jcuevas\Desktop\LI0105\Towson DMPS-300 2014-1-30 ETC_archive\Towson DMPS-300 2014-1-30 ETC
+         ProgramFile : Towson DMPS-300 2014-1-30 ETC.smw
+          SystemName : Towson DMPS System
+          Programmer : BDT
+          CompiledOn : 11/10/2017 2:15 PM
+         CompilerRev : 3.03
+           SYMLIBRev : 1035
+            IOLIBRev : 1035
+           IOPCFGRev : 2.1.176
+       CrestronDBRev : 63.05.007.00
+   SourceEnvironment : SIMPL Windows v4.07.03
+                Type : User
+      ProgramVersion : 
+        ProgramIDTag : Towson DMPS System
+
+[ProgramCore.Include4.IP Table]
+IP ID   Address             Entry Type  Dev ID  Port    Connection Type     Status      Fixed   Model Name          Description
+03      127.000.000.001     slave       00      41794   gway                offline                                 
+04      127.000.000.001     slave       00      41794   gway                online                                  
+07      192.168.001.071     slave       00      50915   client              unknown                                 
+30      127.000.000.001     slave       00      41794   gway                online                                  
+40      127.000.000.001     slave       00      41794   gway                offline                                 
+60      127.000.000.001     slave       00      41794   gway                online                                  
+70      127.000.000.001     slave       00      41794   gway                offline                                 
+

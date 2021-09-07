@@ -1,0 +1,109 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.04.01
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=	Send to ONLY address '1' formatted as "A"\\	Only send in from the||1
+  Cmn2=OP  code top the Set Value.\\	The module will add everything else||1
+  Cmn3=including the STX and ETX.
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=5
+  Inclusions_CDS=6
+  Name=NEC Multisync Command Processor w Address
+  SmplCName=NEC Raw Command Processor w address.usp
+  Code=1
+  SysRev5=4.006
+  SMWRev=3.00.00
+  InputList2Cue1=SetVol
+  InputList2SigType1=Analog
+  InputList2Cue2=InParamSet
+  InputList2SigType2=Serial
+  InputList2Cue3=InCmdSet
+  InputList2SigType3=Serial
+  InputList2Cue4=InParamGet
+  InputList2SigType4=Serial
+  InputList2Cue5=InCmdGet
+  InputList2SigType5=Serial
+  OutputList2Cue1=out
+  OutputList2SigType1=Serial
+  ParamCue1=[Reference Name]
+  ParamCue2=[~UNUSED~]
+  ParamSigType2=Constant
+  ParamCue3=[~UNUSED~]
+  ParamSigType3=Constant
+  ParamCue4=[~UNUSED~]
+  ParamSigType4=Constant
+  ParamCue5=[~UNUSED~]
+  ParamSigType5=Constant
+  ParamCue6=[~UNUSED~]
+  ParamSigType6=Constant
+  ParamCue7=AddressParam01XXh
+  ParamSigType7=Constant
+  MinVariableInputs=0
+  MaxVariableInputs=0
+  MinVariableInputsList2=5
+  MaxVariableInputsList2=5
+  MinVariableOutputs=0
+  MaxVariableOutputs=0
+  MinVariableOutputsList2=1
+  MaxVariableOutputsList2=1
+  MinVariableParams=6
+  MaxVariableParams=6
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=32
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  Pp7=7
+  MPp=7
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_NEC_Raw_Command_Processor_w_address
+  SymJam=NonExclusive
+  FileName=NEC Raw Command Processor w address.ush
+  SIMPLPlusModuleEncoding=0
+  clz1=SSFileOps
+  clz2=BiampTesiraLib3
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=7
+  Tp=1
+  HD=False
+  Sgn=0
+  Lng=True
+  NF=63
+  NoS=True
+  DNF=1
+  VVS=0
+[END]

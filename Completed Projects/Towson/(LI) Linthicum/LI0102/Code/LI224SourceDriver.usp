@@ -1,0 +1,101 @@
+#SYMBOL_NAME "LI224 Source Driver"
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+
+DIGITAL_INPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, SetAll, ClearAll, SystemOnPress, MonitorPress[7], SourcePress[6];
+// ANALOG_INPUT 
+// STRING_INPUT 
+// BUFFER_INPUT 
+Analog_Output MasterSwValue;
+DIGITAL_OUTPUT  _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_,  _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, SourcePressed[7];
+ANALOG_OUTPUT MonitorVal[7];
+STRING_OUTPUT MonitorSource[7];
+
+String_Parameter SourceName[7][20];
+
+Integer X, iLoop, iSource, iSourceIn[7];
+
+Push SystemOnPress
+{
+	SetArray(SourcePressed, 0);
+	SourcePressed[X] = 1;
+	iSource = 2;
+	MonitorVal[1] = iSourceIn[iSource];
+	MonitorSource[1] = SourceName[iSource];
+	MasterSwValue = iSourceIn[iSource];
+}
+Push SourcePress
+{
+	X = GetLastModifiedArrayindex();
+	SetArray(SourcePressed, 0);
+	SourcePressed[X] = 1;
+	iSource = X;
+}
+Push MonitorPress
+{
+	X = GetLastModifiedArrayindex();
+	MonitorVal[X] = iSourceIn[iSource];
+	MonitorSource[X] = SourceName[iSource];
+	MasterSwValue = iSourceIn[iSource];
+/*	If (iSourceIn[iSource] < 99 && iSourceIn[iSource] > 0 )//Source Not Local Wireless, Not Clear, And Not to Main Monitor
+	{
+		If(MonitorVal[iLoop] > 0 && MonitorVal[iLoop] < 99)//If Display is on and not local wireless
+		{
+			MonitorVal[iLoop] = iSourceIn[iSource];
+			MonitorSource[iLoop] = SourceName[iSource];
+			Trace("IF1");
+		}
+	}
+		MasterSwValue = iSourceIn[iSource];
+	}
+	If(iSourceIn[iSource] = 0 || iSourceIn[iSource] = 99)// Is source is clear, local and monitor is not main
+	{
+		MonitorVal[X] = iSourceIn[iSource];
+		MonitorSource[X] = SourceName[iSource];
+		Trace("IF2");
+	}
+	If((Monitorval[X] = 0 || MonitorVal[X] = 99))// If Monitor is not already in Main pool and is not main display
+	{
+		MonitorVal[X] = iSourceIn[iSource];
+		MonitorSource[X] = SourceName[iSource];
+		Trace("IF3");
+	}
+	If( X = 1 && iSourceIn[iSource] < 99)// If monitor is main and source is not local wireless
+	{
+		MonitorVal[X] = iSourceIn[iSource];
+		MonitorSource[X] = SourceName[iSource];
+		Trace("IF4");
+	}*/
+}
+
+Push SetAll
+{
+	For(iLoop = 1 to 7)
+	{
+		MonitorVal[iLoop] = iSourceIn[iSource];
+		MonitorSource[iLoop] = SourceName[iSource];
+	}
+	MasterSwValue = iSourceIn[iSource];
+}
+
+Push ClearAll
+{
+    For(iLoop = 1 to 7)
+	{
+		MonitorVal[iLoop] = 0;
+		MonitorSource[iLoop] = "Off";
+	}
+	MasterSwValue = 0;
+}
+
+Function Main()
+{
+	iSourceIn[1] = 0;
+	iSourceIn[2] = 1;
+	iSourceIn[3] = 2;
+	iSourceIn[4] = 3;
+	iSourceIn[5] = 4;
+	iSourceIn[6] = 5;
+	iSourceIn[7] = 6;	
+}

@@ -1,0 +1,159 @@
+#ifndef __S2_CTI_2012_08_29TCP_IP_TIME_UPDATER_H__
+#define __S2_CTI_2012_08_29TCP_IP_TIME_UPDATER_H__
+
+
+
+
+/*
+* Constructor and Destructor
+*/
+
+/*
+* DIGITAL_INPUT
+*/
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_GET_TIME_DIG_INPUT 0
+
+
+/*
+* ANALOG_INPUT
+*/
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_TIMEZONE_ANALOG_INPUT 0
+
+
+
+
+/*
+* DIGITAL_OUTPUT
+*/
+
+
+/*
+* ANALOG_OUTPUT
+*/
+
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_UNIVERSALTIME$_STRING_OUTPUT 0
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_EASTERNTIME$_STRING_OUTPUT 1
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_CENTRALTIME$_STRING_OUTPUT 2
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_MOUNTAINTIME$_STRING_OUTPUT 3
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_PACIFICTIME$_STRING_OUTPUT 4
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_ALASKATIME$_STRING_OUTPUT 5
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_HAWAIIALEUTIANTIME$_STRING_OUTPUT 6
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_UNIVERSALDATE$_STRING_OUTPUT 7
+
+
+/*
+* Direct Socket Variables
+*/
+
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_IPCLIENT_SOCKET 1
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_IPCLIENT_STRING_MAX_LEN 1200
+START_SOCKET_DEFINITION( S2_CTI_2012_08_29TCP_IP_Time_Updater, __IPCLIENT )
+{
+   int SocketStatus;
+   enum ESplusSocketType eSocketType;
+   int SocketID;
+   void *SocketPtr;
+CREATE_SOCKET_STRING( S2_CTI_2012_08_29TCP_IP_Time_Updater, SocketRxBuf, __S2_CTI_2012_08_29TCP_IP_Time_Updater_IPCLIENT_STRING_MAX_LEN );
+};
+
+
+
+/*
+* INTEGER_PARAMETER
+*/
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_PORT_INTEGER_PARAMETER 10
+/*
+* SIGNED_INTEGER_PARAMETER
+*/
+/*
+* LONG_INTEGER_PARAMETER
+*/
+/*
+* SIGNED_LONG_INTEGER_PARAMETER
+*/
+/*
+* INTEGER_PARAMETER
+*/
+/*
+* SIGNED_INTEGER_PARAMETER
+*/
+/*
+* LONG_INTEGER_PARAMETER
+*/
+/*
+* SIGNED_LONG_INTEGER_PARAMETER
+*/
+/*
+* STRING_PARAMETER
+*/
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_IPADDRESS$_STRING_PARAMETER 11
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_IPADDRESS$_PARAM_MAX_LEN 50
+CREATE_STRING_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater, __IPADDRESS$, __S2_CTI_2012_08_29TCP_IP_Time_Updater_IPADDRESS$_PARAM_MAX_LEN );
+
+
+/*
+* INTEGER
+*/
+
+
+/*
+* LONG_INTEGER
+*/
+
+
+/*
+* SIGNED_INTEGER
+*/
+
+
+/*
+* SIGNED_LONG_INTEGER
+*/
+
+
+/*
+* STRING
+*/
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_SCOMMAND$_STRING_MAX_LEN 80
+CREATE_STRING_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater, __SCOMMAND$, __S2_CTI_2012_08_29TCP_IP_Time_Updater_SCOMMAND$_STRING_MAX_LEN );
+#define __S2_CTI_2012_08_29TCP_IP_Time_Updater_STEMP$_STRING_MAX_LEN 1200
+CREATE_STRING_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater, __STEMP$, __S2_CTI_2012_08_29TCP_IP_Time_Updater_STEMP$_STRING_MAX_LEN );
+
+/*
+* STRUCTURE
+*/
+
+START_GLOBAL_VAR_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater )
+{
+   void* InstancePtr;
+   struct GenericOutputString_s sGenericOutStr;
+   unsigned short LastModifiedArrayIndex;
+
+   unsigned short __IBUSY;
+   unsigned short __ILOC1;
+   unsigned short __ILOC2;
+   unsigned short __ILOC3;
+   unsigned short __ILOC4;
+   unsigned short __ILOC5;
+   unsigned short __ILOC6;
+   unsigned short __ILOC7;
+   unsigned short __ILOC8;
+   unsigned short __IHOURS;
+   unsigned short __IMINUTES;
+   unsigned short __ISECONDS;
+   short __SISTATUS;
+   short __SISENDSTATUS;
+   DECLARE_STRING_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater, __SCOMMAND$ );
+   DECLARE_STRING_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater, __STEMP$ );
+   DECLARE_SOCKET( S2_CTI_2012_08_29TCP_IP_Time_Updater, __IPCLIENT );
+   DECLARE_STRING_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater, __IPADDRESS$ );
+};
+
+START_NVRAM_VAR_STRUCT( S2_CTI_2012_08_29TCP_IP_Time_Updater )
+{
+};
+
+
+
+#endif //__S2_CTI_2012_08_29TCP_IP_TIME_UPDATER_H__
+

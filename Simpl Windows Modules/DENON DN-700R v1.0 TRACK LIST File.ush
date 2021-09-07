@@ -1,0 +1,97 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.02.20
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=6
+  Inclusions_CDS=5
+  Name=DENON DN-700R v1.0 TRACK LIST File
+  SmplCName=DENON DN-700R v1.0 TRACK LIST File.usp
+  Code=1
+  InputCue1=Poll_file_name
+  InputSigType1=Digital
+  InputCue2=file_Page_UP
+  InputSigType2=Digital
+  InputCue3=file_Page_Down
+  InputSigType3=Digital
+  InputCue4=Refresh_file_Number
+  InputSigType4=Digital
+  InputCue5=file_Select[#]
+  InputSigType5=Digital
+  OutputCue1=Root_Folder_fb
+  OutputSigType1=Digital
+  OutputCue2=Not_busy_fb
+  OutputSigType2=Digital
+  OutputCue3=file_Select_fb[#]
+  OutputSigType3=Digital
+  InputList2Cue1=file_Name$
+  InputList2SigType1=Serial
+  InputList2Cue2=file_SIZE$
+  InputList2SigType2=Serial
+  OutputList2Cue1=TX$
+  OutputList2SigType1=Serial
+  OutputList2Cue2=file_Number$
+  OutputList2SigType2=Serial
+  OutputList2Cue3=Folder$
+  OutputList2SigType3=Serial
+  OutputList2Cue4=Track_Name_FB$[1]
+  OutputList2SigType4=Serial
+  OutputList2Cue5=Track_Name_FB$[2]
+  OutputList2SigType5=Serial
+  OutputList2Cue6=Track_Name_FB$[3]
+  OutputList2SigType6=Serial
+  OutputList2Cue7=Track_Name_FB$[4]
+  OutputList2SigType7=Serial
+  OutputList2Cue8=Track_Size_FB$[#]
+  OutputList2SigType8=Serial
+  ParamCue1=[Reference Name]
+  MinVariableInputs=5
+  MaxVariableInputs=8
+  MinVariableInputsList2=2
+  MaxVariableInputsList2=2
+  MinVariableOutputs=3
+  MaxVariableOutputs=6
+  MinVariableOutputsList2=8
+  MaxVariableOutputsList2=11
+  MinVariableParams=0
+  MaxVariableParams=0
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=32
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  MPp=1
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_DENON_DN_700R_v1_0_TRACK_LIST_File
+  SymJam=NonExclusive
+  FileName=DENON DN-700R v1.0 TRACK LIST File.ush
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]

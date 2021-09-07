@@ -1,0 +1,58 @@
+/***********************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+***********************************************************************************/
+/*
+Dealer Name:	Crestron Electronics
+System Name:
+System Number:
+Programmer:		SS
+Comments:
+*/
+/***********************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+***********************************************************************************/
+#SYMBOL_NAME "Smart UX60 Feedback Processor"
+
+//#CATEGORY "" 
+#CATEGORY "24" // TV/Video Projector
+#DEFAULT_VOLATILE
+// #DEFAULT_NONVOLATILE
+#HELP_BEGIN
+  This module provides control and true feedback for the Smart UX60 projector.
+#HELP_END
+/***********************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+***********************************************************************************/
+BUFFER_INPUT	From_Device$[50];
+ANALOG_OUTPUT	Lamp_Hours;
+/***********************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+***********************************************************************************/
+STRING	sTemp1[50];
+/***********************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+***********************************************************************************/
+CHANGE From_Device$
+{
+	while(find("\x0Alamphrs=", From_Device$) > 0)
+	{
+		sTemp1 = remove("\x0Alamphrs=", From_Device$);
+		Lamp_Hours = atoi(sTemp1);
+	}
+}
+/***********************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+***********************************************************************************/
+Function Main()
+{
+
+}

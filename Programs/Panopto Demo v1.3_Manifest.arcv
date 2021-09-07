@@ -1,0 +1,54 @@
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=ArchiveManifest
+  RelVrs=4.09.04
+  IsProgram=1
+  TopLevelProgram=Panopto Demo v1.3.smw
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Panopto Demo v1.3.smw
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Panopto Demo v1.3.sig
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Panopto Demo v1.3.lpz
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Panopto Demo v1.3.smft
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Panopto Demo v1.3.lpz.hash
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Panopto_v1.3.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=PanoptoSimplPlus_v1.3.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=PanoptoSimpl.clz
+  Scope=1
+  Module=PanoptoSimplPlus_v1.3
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Crestron RAD Panopto Driver Help.pdf
+  Scope=1
+  Module=PanoptoSimplPlus_v1.3.ush
+[END]

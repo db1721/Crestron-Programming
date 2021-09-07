@@ -1,0 +1,182 @@
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=ArchiveManifest
+  RelVrs=4.08.15
+  IsProgram=1
+  TopLevelProgram=Large Board Room RAW 1108 Extron Switch Edit20180227.smw
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Large Board Room RAW 1108 Extron Switch Edit20180227.smw
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Large Board Room RAW 1108 Extron Switch Edit20180227.sig
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Large Board Room RAW 1108 Extron Switch Edit20180227.lpz
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Large Board Room RAW 1108 Extron Switch Edit20180227.smft
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Large Board Room RAW 1108 Extron Switch Edit20180227.lpz.hash
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Command Processor v1.7.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Command Processor v1.7.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v1.7.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v1.7.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Level Control v1.7.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v1.7.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v1.7.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Preset Control v1.7.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v1.7.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v1.7.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira State Control v1.7.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=TCP-IP Connection Manager TSP.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Preset Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Preset Control v1.7.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Level Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Level Control v1.7.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira State Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira State Control v1.7.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Dialer Control v1.7.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Dialer Control v1.7.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Dialer Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Dialer Control v1.7.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Password Logic with Backdoor.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Biamp Tesira Dialer Control v1.7 Help.pdf
+  Scope=1
+  Module=Biamp Tesira Dialer Control v1.7.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=AVWorkz Analog to Serial v1.0.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=CrestronHome Oscillators.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Integer Toggle.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Vaddio RoboSHOT 30 v1.0.umc
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Vaddio RoboSHOT 30 v1.0 Processor.ush
+  Scope=1
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Vaddio RoboSHOT 30 v1.0 Help.pdf
+  Scope=1
+  Module=Vaddio RoboSHOT 30 v1.0 Processor.ush
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=Vaddio RoboSHOT 30 v1.0 Help.pdf
+  Scope=1
+  Module=Vaddio RoboSHOT 30 v1.0.umc
+[END]
+[BEGIN]
+  ObjTp=ArchiveItem
+  File=String HeaderFooter.ush
+  Scope=1
+[END]

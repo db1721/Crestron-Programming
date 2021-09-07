@@ -3,7 +3,7 @@
 #ENABLE_STACK_CHECKING
 #ENABLE_TRACE
 
-DIGITAL_INPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, SetAll, ClearAll, SystemOnPress, MonitorPress[7], SourcePress[6];
+DIGITAL_INPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, SetAll, ClearAll, SystemOnPress, MonitorPress[7], SourcePress[7];
 // ANALOG_INPUT 
 // STRING_INPUT 
 // BUFFER_INPUT 
@@ -71,7 +71,7 @@ Push MonitorPress
 
 Push SetAll
 {
-	For(iLoop = 1 to 7)
+	For(iLoop = 1 to 8)
 	{
 		MonitorVal[iLoop] = iSourceIn[iSource];
 		MonitorSource[iLoop] = SourceName[iSource];
@@ -81,7 +81,7 @@ Push SetAll
 
 Push ClearAll
 {
-    For(iLoop = 1 to 7)
+    For(iLoop = 1 to 8)
 	{
 		MonitorVal[iLoop] = 0;
 		MonitorSource[iLoop] = "Off";

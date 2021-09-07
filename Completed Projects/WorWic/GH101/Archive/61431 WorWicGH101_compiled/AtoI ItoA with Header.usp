@@ -1,0 +1,53 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "StoA/AtoS"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+
+String_Parameter _SKIP_, _SKIP_, TXHeader[100], TXFooter[100], MatchHeader[10];
+
+Analog_Input Ain;
+String_Input Sin[500];
+Analog_Output Aout;
+String_Output Sout;
+
+Change Ain
+{
+	Sout = TXHeader + itoa(Ain) + TXFooter;
+}
+Change Sin
+{
+	If(find(MatchHeader, Sin))
+	{
+		Aout = atoi(Sin);
+	}
+}

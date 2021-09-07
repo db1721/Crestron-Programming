@@ -1,0 +1,15 @@
+<Device Model="DIN-AP3">
+   <Network Type="Cresnet" Id="01">
+      <Device Model="GLS-PART-CN" DeviceId="97"/>
+      <Device Model="GLS-PART-CN" DeviceId="98"/>
+   </Network>
+   <Network Type="Ethernet" Id="02">
+      <Device Model="TSW-560" DeviceId="20" Name="TP1_Room"/>
+      <Device Model="TSW-760" DeviceId="21"/>
+      <Device Model="TSW-760" DeviceId="22"/>
+      <Device Model="Fusion Room" DeviceId="40" Name="Room1"/>
+      <Device Model="Fusion Room" DeviceId="41"/>
+      <Device Model="Fusion Room" DeviceId="42"/>
+      <Device Model="DM-MD8x8-CPU3" DeviceId="50"/>
+   </Network>
+</Device>

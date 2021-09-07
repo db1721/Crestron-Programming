@@ -1,0 +1,243 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:	CrestronJapan
+System Name:
+System Number:
+Programmer:		Lim
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "DENON DN-700R v1.0 YEAR-MONTH-DAY"
+// #HINT ""
+#DEFINE_CONSTANT UPPER_LIMIT_MONTH	12
+#DEFINE_CONSTANT UPPER_LIMIT_DAY	31
+
+
+// #CATEGORY "" 
+//#CATEGORY "24" 
+// #DEFAULT_VOLATILE
+//#DEFAULT_NONVOLATILE
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+DIGITAL_INPUT YEAR_SELECT,MONTH_SELECT,DAY_SELECT;
+
+DIGITAL_INPUT	KEY_0, KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_6,KEY_7,KEY_8,KEY_9,KEY_STAR;
+DIGITAL_INPUT	KEY_BACKSPACE,KEY_CLEAR,KEY_ENTER, KEY_CLEAR_ALL;
+
+DIGITAL_OUTPUT YEAR_SELECT_FB,MONTH_SELECT_FB,DAY_SELECT_FB;
+
+STRING_OUTPUT	KEY_STRING;
+STRING_OUTPUT	TO_MODULE_STRING;
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+INTEGER i;
+STRING TEMP_YEAR$[3],TEMP_MONTH$[3],TEMP_DAY$[3];
+STRING ZERO_STRING$[2];
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+FUNCTION DISPLAY_string_out_f()
+{
+MAKESTRING (KEY_STRING, "20%s Year, %s Month, %s Day\r",TEMP_YEAR$, TEMP_MONTH$, TEMP_DAY$); 
+}
+
+
+
+FUNCTION STRING_OUT_F(STRING DIGI)
+{
+IF(YEAR_SELECT_FB)
+	{
+	
+	TEMP_YEAR$= TEMP_YEAR$ + DIGI;
+	IF (LEN(TEMP_YEAR$) > 2) 
+		{
+         KEY_STRING = "Out of Rang";
+		TEMP_YEAR$ = left(TEMP_YEAR$,len(TEMP_YEAR$)-1);
+		delay(100);
+		}
+	} 
+IF(MONTH_SELECT_FB)
+	{
+	TEMP_MONTH$= TEMP_MONTH$ + DIGI;
+	IF ((ATOI(TEMP_MONTH$) > UPPER_LIMIT_MONTH)|| (LEN(TEMP_MONTH$) > 2) )
+		{
+        KEY_STRING = "Out of Rang";
+		TEMP_MONTH$ = left(TEMP_MONTH$,len(TEMP_MONTH$)-1);
+		delay(100);
+		}
+	}
+IF(DAY_SELECT_FB)
+	{
+	TEMP_DAY$= TEMP_DAY$ + DIGI;
+	IF ((ATOI(TEMP_DAY$) > UPPER_LIMIT_DAY)|| (LEN(TEMP_DAY$) > 2) ) 
+		{
+        KEY_STRING = "Out of Rang";
+		TEMP_DAY$ = left(TEMP_DAY$,len(TEMP_DAY$)-1);
+		delay(100);
+		}
+	}
+DISPLAY_string_out_f();
+
+}
+
+/*******************************************************************************************/
+PUSH YEAR_SELECT
+{
+MONTH_SELECT_FB = OFF;
+DAY_SELECT_FB	= OFF;
+YEAR_SELECT_FB	= ON;
+} 
+
+PUSH MONTH_SELECT
+{
+DAY_SELECT_FB	= OFF;
+YEAR_SELECT_FB	= OFF;
+MONTH_SELECT_FB = ON;
+}
+PUSH DAY_SELECT
+{
+MONTH_SELECT_FB = OFF;
+YEAR_SELECT_FB	= OFF;
+DAY_SELECT_FB	= ON;
+}
+PUSH KEY_0
+{
+STRING_OUT_F("0");
+}
+
+PUSH KEY_1
+{
+STRING_OUT_F("1");
+}
+
+PUSH KEY_2
+{
+STRING_OUT_F("2");
+}
+
+PUSH KEY_3
+{
+STRING_OUT_F("3");
+}
+
+PUSH KEY_4
+{
+STRING_OUT_F("4");
+}
+
+PUSH KEY_5
+{
+STRING_OUT_F("5");
+}
+
+PUSH KEY_6
+{
+STRING_OUT_F("6");
+}
+
+PUSH KEY_7
+{
+STRING_OUT_F("7");
+}
+
+PUSH KEY_8
+{
+STRING_OUT_F("8");
+}
+
+PUSH KEY_9
+{
+STRING_OUT_F("9");
+}
+
+PUSH KEY_STAR
+{
+STRING_OUT_F("*");
+}
+
+PUSH KEY_BACKSPACE
+{
+IF(YEAR_SELECT_FB)
+	{
+	TEMP_YEAR$ = left(TEMP_YEAR$,len(TEMP_YEAR$)-1);
+	} 
+IF(MONTH_SELECT_FB)
+	{
+	TEMP_MONTH$ = left(TEMP_MONTH$,len(TEMP_MONTH$)-1);
+	}
+IF(DAY_SELECT_FB)
+	{
+	TEMP_DAY$ = left(TEMP_DAY$,len(TEMP_DAY$)-1);
+	}
+DISPLAY_string_out_f();
+}
+
+PUSH KEY_CLEAR
+{
+IF(YEAR_SELECT_FB)
+	{
+	clearbuffer(TEMP_YEAR$);
+	} 
+IF(MONTH_SELECT_FB)
+	{
+	clearbuffer(TEMP_MONTH$);
+	}
+IF(DAY_SELECT_FB)
+	{
+	clearbuffer(TEMP_DAY$);
+	}
+DISPLAY_string_out_f();
+}
+
+PUSH KEY_ENTER
+{
+MAKESTRING(TO_MODULE_STRING, "%s%s%s%s%s%s",RIGHT(ZERO_string$,2-len(TEMP_YEAR$)),TEMP_YEAR$,RIGHT(ZERO_string$,2-len(TEMP_MONTH$)),TEMP_MONTH$,RIGHT(ZERO_string$,2-len(TEMP_DAY$)),TEMP_DAY$);
+}
+
+PUSH KEY_CLEAR_ALL
+{
+clearbuffer(TEMP_YEAR$);
+clearbuffer(TEMP_MONTH$);
+clearbuffer(TEMP_DAY$);
+DISPLAY_string_out_f();
+
+}
+
+/******************************************************************************************* =
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+ Function Main()
+{
+ZERO_STRING$ = "00";
+clearbuffer(TEMP_YEAR$);
+clearbuffer(TEMP_MONTH$);
+clearbuffer(TEMP_DAY$);
+DISPLAY_string_out_f();
+
+
+}

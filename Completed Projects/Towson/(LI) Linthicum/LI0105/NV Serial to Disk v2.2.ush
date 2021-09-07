@@ -1,0 +1,137 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.02.20
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=*v2 - removed instance id input and made it a parameter.\\	Modified||1
+  Cmn2=fileopen operation to compile with both 2 and 3 series.\\\\This||1
+  Cmn3=module is designed to allow analog signals to remain\\non-volatile,||1
+  Cmn4=and recall their previous values on startup,\\and be irrespective||1
+  Cmn5=of the position of the module in the\\program tree.  This is achieved||1
+  Cmn6=by saving the values to\\NVRAM disk, and recalling them on system||1
+  Cmn7=startup.\\\\The inputs and outputs are to be tied to the same analog\\
+  Cmn8=analog signal, with the input being used to save values, and\\the||1
+  Cmn9=output used to recall values on startup.  After a period\\of time||1
+  Cmn10=with no changes on any signal, all the current values\\are written||1
+  Cmn11=to disk.  On system startup, the values are\\recalled from the disk.
+  Cmn12=\\\\If NVRAM is left as the file path, then NVRAM must be\\initialized||1
+  Cmn13=in the processor.  This module will also generate\\a user error||1
+  Cmn14=on startup if the file doesn't exist (i.e. the\\first time a program||1
+  Cmn15=is run using this module with a given\\instance ID).  This has been||1
+  Cmn16=done intentionally to notify\\the programmer if these files have||1
+  Cmn17=been lost or corrupted in\\later restarts.\\\\Use a make string||1
+  Cmn18=permanent.\\\\INPUTS:\\                            \\In[x]:||5
+  Cmn19=||3To be tied to serial signals for store/recall.\\||=
+  Cmn20=||1Must be the same signal as Out[x] of the same\\              index||1
+  Cmn21=for proper operation.\\              \\OUTPUTS:\\\\FileOp_Busy:||1
+  Cmn22=||1This signal goes high during the file save/recall\\||<
+  Cmn23=||2operation.  May be tied to an unused signal if\\||>
+  Cmn24=not needed.\\              \\Out[x]:       To be tied to serial||1
+  Cmn25=signals for store/recall.\\              Must be the same signal||1
+  Cmn26=as In[x] of the same\\              index for proper operation.\\
+  Cmn27=PARAMETER:\\\\Instance_ID:  This is an analog value that is used||1
+  Cmn28=to keep\\              one instance of this module separate from||1
+  Cmn29=other\\              instances.  In practice, the decimal equivalent\\
+  Cmn30=||>of this value is appended to the end of the \\||4
+  Cmn31=||:filename.  This value is only read on system\\||8
+  Cmn32=||6startup.\\\\              \\#DEFINE_CONSTANTS:\\\\IDLE_TIME||1
+  Cmn33=||4The period of time after the last change on any\\||;
+  Cmn34=||3input that the values are stored to disk.\\              \\STARTUP_TIME:
+  Cmn35=||1The time after program initialization when the values\\||8
+  Cmn36=||6are recalled from disk.\\              \\MAX_SIGNALS:  Sets||1
+  Cmn37=the maximum size of the input/output arrays, and\\||>
+  Cmn38=sets the sizes of the file recorded to disk.  All\\||=
+  Cmn39=||1unused inputs are set to zero for predictable\\              behavior||1
+  Cmn40=if inputs/outputs are added later.\\              \\FILE_PATH:||2
+  Cmn41=||2The path and filename to use for storing the values.\\||8
+  Cmn42=||6The Instance_ID and ".dat" will be appended.  Use\\||7
+  Cmn43=||7double backslash (\\) to express a backslash.
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=6
+  Inclusions_CDS=5
+  Name=Serial Non-Volatile to Disk v2.2
+  SmplCName=NV Serial to Disk v2.2.usp
+  Code=1
+  SysRev5=4.000
+  SMWRev=2.02.05
+  OutputCue1=[~UNUSED~]
+  OutputSigType1=Digital
+  OutputCue2=FileOp_Busy
+  OutputSigType2=Digital
+  InputList2Cue1=[~UNUSED~]
+  InputList2SigType1=Serial
+  InputList2Cue2=[~UNUSED~]
+  InputList2SigType2=Serial
+  InputList2Cue3=In[#]
+  InputList2SigType3=Serial
+  OutputList2Cue1=Out[#]
+  OutputList2SigType1=Serial
+  ParamCue1=[Reference Name]
+  ParamCue2=Instance_ID
+  ParamSigType2=Constant
+  MinVariableInputs=0
+  MaxVariableInputs=0
+  MinVariableInputsList2=3
+  MaxVariableInputsList2=52
+  MinVariableOutputs=2
+  MaxVariableOutputs=2
+  MinVariableOutputsList2=1
+  MaxVariableOutputsList2=50
+  MinVariableParams=1
+  MaxVariableParams=1
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=9
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  Pp2=2
+  MPp=2
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_NV_Serial_to_Disk_v2_2
+  SymJam=NonExclusive
+  FileName=NV Serial to Disk v2.2.ush
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=2
+  Tp=1
+  SD=instance id to be appended to end of file name
+  HD=False
+  Sgn=0
+  Lng=False
+  NF=1
+  NoS=True
+  DNF=1
+  VVS=0
+[END]

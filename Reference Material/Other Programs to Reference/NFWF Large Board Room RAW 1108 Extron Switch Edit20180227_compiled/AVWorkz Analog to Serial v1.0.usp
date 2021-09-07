@@ -1,0 +1,56 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:	AVWorkz	
+System Name:	
+System Number:	
+Programmer:		SP
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "AVWorkz Analog to Serial v1.0"
+#HINT "Simple module to convert analog to serial, equivalent to ITOA"
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+
+#HELP_BEGIN
+
+This module basically takes in an analog input and sends it out as string (ITOA). 
+
+
+Revision History
+================
+v1.0  Initial Release
+
+© Copyright 2007-2008 AVWorkz Inc. All Rights Reserved.	
+#HELP_END
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+ANALOG_INPUT input;
+STRING_OUTPUT output$;
+
+CHANGE input
+{
+    IF(input = 0) {
+		output$ = " ";
+	}
+    ELSE IF(input = 255) {
+		output$ = " ";
+	}		
+	ELSE IF(input >= 1 && input <= 16 ) {
+		output$ = ITOA(input);
+	}
+	ELSE {
+		output$ = "-";
+	}
+}
+

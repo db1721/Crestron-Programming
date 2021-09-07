@@ -1,0 +1,383 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+	<title>Crestron XPanel</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0">
+
+	<style>
+		body {
+			font-family: arial;
+		}
+
+		svg {
+			height: 85px;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		.wrapper {
+			width: 100%;
+			height: 90vh;
+			display: grid;
+			grid-template-rows: 25% 1fr;
+			grid-template-columns: 25vw 74vw;
+			grid-template-areas: 
+				"logoImg logoImgShadow"
+				". linkbtn"
+		}
+
+		.wrapper #Logo {
+			grid-area: logoImg;			
+		}
+
+		.wrapper #LogoShadow {
+			grid-area: logoImgShadow;			
+		}		
+
+		.wrapper #LinkButtons {
+			grid-area: linkbtn;		
+			margin-left: 5rem;	
+		}	
+	
+		h2 {
+			display: inline-block;
+			color: #42474F;
+			margin-left:3rem;
+		}	
+
+		.content {
+			color: #1A4B7C;
+			font-weight: bold;
+			font-size: 2rem;
+			border-right: 1px solid #00000029;
+		}
+
+		.content-text {
+			padding-top: 5rem;
+			padding-left: 20vw;
+			width: 50%;
+		}
+
+		.linkButtons-container {
+			background: #FFFFFF 0% 0% no-repeat padding-box;
+			box-shadow: 0px 0px 10px #00000029;
+			border-radius: 5px;
+			opacity: 1;
+			width: 45%;
+			padding-bottom: 2rem;
+			padding-right: 1rem;
+			margin-left: 3rem;
+		}
+
+		.linkButtons-container:hover {
+			box-shadow: 0px 0px 10px #3A89AE;
+		}
+
+		.linkButtons-container-item {
+			display: flex;
+			flex-direction: row;
+			padding-top: 2rem;
+		}
+
+		.linkButtons-container-item__icon {
+			padding-left: 1.2rem;
+			padding-top: .5rem;
+			width: 50px;
+			height: 50px;
+			color: #024B80;
+		}
+
+		.linkButtons-container-item__content {
+			padding-left: 1.2rem;
+			padding-top: .5rem;
+		}
+
+		.linkButtons-container-item__title {
+			color: #024B80;
+			font-weight: bold;
+			font-size: 1.1rem;
+			padding-bottom: .1rem;
+		}
+
+		.linkButtons-container-item__text {
+			color: #838789;
+			font-size: .7rem;
+			font-weight: bold;
+		}
+
+		.linkButton-item-download {
+			display: block;
+			position: absolute;
+			width: 33.5%;
+			height: 16%;
+			margin-top: -2rem;
+		}
+
+		.logo-img {
+			height:15vh;
+			width:25vw;
+		}
+
+		.logo-imgshadow {
+			height: 15vh;
+			width: 75vw;
+		}
+
+	</style>
+
+	<script type="text/javascript">
+
+		var ranOnce = false;
+		var enableSSL = 'false';
+		var ControlHostName = '';
+		var MacInstallerLink = 'https://www.crestron.com/MacOsXPanelDesktopInstaller';
+		var WindowsInstallerLink = 'https://www.crestron.com/WindowsXPanelDesktopInstaller';
+
+		function getURLParam(strParamName) {
+			var strReturn = "";
+			var strHref = window.location.href;
+			if (strHref.indexOf("?") > -1) {
+				var strQueryString = strHref.substr(strHref.indexOf("?"));
+				var aQueryString = strQueryString.split("&");
+				for (var iParam = 0; iParam < aQueryString.length; iParam++) {
+					if (aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1) {
+						var aParam = aQueryString[iParam].split("=");
+						strReturn = aParam[1];
+						break;
+					}
+				}
+			}
+			return unescape(strReturn);
+		}
+
+
+		function createParameters() {
+			// Determine Hostname, the priority is:
+			//  URL Parameter (overrideHost = true)
+			//  Assigned variable from Conversion Tool (ControlHostName) (overrideHost = true)
+			//  Value in environment.xml (if not 127.0.0.1) (overrideHost = false)
+			//  Website Hostname (overrideHost = false)
+			var host = getURLParam("host");
+			var overrideHost = true;
+			if (host == '') {
+				host = getURLParam("address");
+			}
+
+			if (host == '') {
+				//hostname from conversion tool
+				host = ControlHostName;
+			}
+
+			if (host == '') {
+				//local host name, do not override
+				overrideHost = false;
+				host = window.location.hostname;
+			}
+
+			var port = getURLParam("port");
+			var ipid = getURLParam("ipid");
+			var isCrestronHome = getURLParam("iscrestronhome");
+			enableSSL = getURLParam("enablessl");
+			var programInstanceId = getURLParam("programinstanceid");
+			if (programInstanceId == '') programInstanceId = getURLParam("roomid");
+
+			// For Virtual Control Systems Only:
+			//  If the URL matches the regex pattern below, we are on a VC system
+			//  The Room ID will be auto-extracted from the URL
+			//  SSL settings will be auto-extracted from the URL
+			//  URL Parameters will override the automatic information
+			var strHref = window.location.href; 
+			var patt = /^(http|https):.*\/VirtualControl\/Rooms\/(.*)\/XPanel\//ig;
+			var match = patt.exec(strHref);					
+			if (match)
+			{
+				if (programInstanceId == '') programInstanceId = match[2];
+				if (match[1].toUpperCase() === "HTTPS")
+				{
+					if (enableSSL == '') enableSSL = "true";
+					if (port == '') port = "41796";
+				}
+				else						
+				{
+					if (enableSSL == '') enableSSL = "false";
+					if (port == '') port = "41794";
+				}
+			}
+
+			var Parameters = "";
+			if (host != "") {
+				Parameters += " host=" + host;
+				
+				if (overrideHost === true){
+					Parameters += " overrideHost=true";
+				} else {
+					Parameters += " overrideHost=false";
+				}
+			}
+			if (ipid != "") {
+				Parameters += " ipid=" + ipid;
+			}
+			if (port != "") {
+				Parameters += " port=" + port;
+			}
+			if (enableSSL != "") {
+				Parameters += " enableSSL=" + enableSSL;
+			}
+			if (isCrestronHome != "") {
+				Parameters += " isCrestronHome=" + isCrestronHome;
+			}
+			if (programInstanceId != "") {
+				Parameters += " programInstanceId=" + programInstanceId;
+			}
+			Parameters += " SupportsSerialAppend=true";
+			Parameters += " bypasslogindialog=true";
+
+			return Parameters;
+		}
+
+
+		function getOS() {
+			var userAgent = window.navigator.userAgent,
+				platform = window.navigator.platform,
+				macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+				windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+				iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+				os = null;
+
+			if (macosPlatforms.indexOf(platform) !== -1) {
+				os = 'Mac OS';
+			} else if (iosPlatforms.indexOf(platform) !== -1) {
+				os = 'iOS';
+			} else if (windowsPlatforms.indexOf(platform) !== -1) {
+				os = 'Windows';
+			} else if (/Android/.test(userAgent)) {
+				os = 'Android';
+			} else if (!os && /Linux/.test(platform)) {
+				os = 'Linux';
+			}
+
+			return os;
+		}
+
+		function updateDownloadLink(address) {
+
+			if (address == '')
+
+				return;
+
+			document.getElementById("downloadContainer").style.display = "block";
+
+			var downloadDiv = document.getElementById("download");
+			downloadDiv.innerHTML = '';
+			var a = document.createElement('a');
+			a.classList.add("linkButton-item-download");
+
+			a.href = address;
+			downloadDiv.appendChild(a);
+		}
+
+		function setupPage() {
+			if (ranOnce) return;
+			ranOnce = true;
+			var os = getOS();
+			var parameters = createParameters();
+			var pageHref = window.location.href;
+			var pageRoot = pageHref.substr(0, pageHref.lastIndexOf("/"));
+
+			if (os == "Mac OS") {
+				updateDownloadLink(MacInstallerLink);
+			}
+			else if (os == "Windows") {
+				updateDownloadLink(WindowsInstallerLink);
+			}
+
+			var launchLink = document.getElementById("launch");
+			var invokeString = "CrestronDesktop:" + pageRoot;
+			invokeString += "/Core3Xpanel.c3p -- " + parameters;
+			launchLink.href = invokeString;
+			var isSafari = navigator.vendor !=null && navigator.vendor.indexOf('Apple') > -1 &&
+			   navigator.userAgent &&
+			   navigator.userAgent.indexOf('CriOS') == -1 &&
+			   navigator.userAgent.indexOf('FxiOS') == -1;
+			if (!isSafari)
+			{
+				//auto launch Xpanel
+				window.location.href = invokeString;
+			}
+		}
+
+		//our on dom loaded code for cross browser
+		(function (i) {
+			var u = navigator.userAgent; var e =/*@cc_on!@*/false; var st =
+				setTimeout; if (/webkit/i.test(u)) {
+					st(function () {
+						var dr = document.readyState;
+						if (dr == "loaded" || dr == "complete") { i() } else { st(arguments.callee, 10); }
+					}, 10);
+				}
+			else if ((/mozilla/i.test(u) && !/(compati)/.test(u)) || (/opera/i.test(u))) {
+				document.addEventListener("DOMContentLoaded", i, false);
+			} else if (e) {
+				(
+					function () {
+						var t = document.createElement('doc:rdy'); try {
+							t.doScroll('left');
+							i(); t = null;
+						} catch (e) { st(arguments.callee, 0); }
+					})();
+			} else { window.onload = i; }
+		})(setupPage);
+	</script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="logo" id="Logo"><img src="./crestron_logo.png" class="logo-img"></div>
+		<div class="logo-shadow" id="LogoShadow"><img src="./shadow.png" class="logo-imgshadow"></div>
+
+		<div class="linkButtons" id="LinkButtons">
+			<h2>Open User Interface:</h2>
+
+			<div id="downloadContainer" class="linkButtons-container" style="display:none; margin-top: 2rem;">
+				<div class="linkButtons-container-item">
+					<span id="download">&nbsp;</span>
+					<div class="linkButtons-container-item__icon">
+						<!-- Download svg Icon -->
+						<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="download" class="svg-inline--fa fa-download fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 1024 1024">
+							<path fill="currentColor" d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z">
+							</path>
+						</svg>
+					</div>
+					<div class="linkButtons-container-item__content">
+						<div class="linkButtons-container-item__title">Install</div>
+						<div class="linkButtons-container-item__text">Download and Install the Crestron XPanel Application.<br><small>This is not required if the application is already installed.</small></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="linkButtons-container" style="margin-top: 1rem;">
+				<a id="launch" href="CrestronDesktop:">
+					<div class="linkButtons-container-item">
+						<div class="linkButtons-container-item__icon">
+							<!-- Launch svg Icon -->
+							<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="rocket" class="svg-inline--fa fa-rocket fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 1024 1024">
+								<path fill="currentColor" d="M505.12019,19.09375c-1.18945-5.53125-6.65819-11-12.207-12.1875C460.716,0,435.507,0,410.40747,0,307.17523,0,245.26909,55.20312,199.05238,128H94.83772c-16.34763.01562-35.55658,11.875-42.88664,26.48438L2.51562,253.29688A28.4,28.4,0,0,0,0,264a24.00867,24.00867,0,0,0,24.00582,24H127.81618l-22.47457,22.46875c-11.36521,11.36133-12.99607,32.25781,0,45.25L156.24582,406.625c11.15623,11.1875,32.15619,13.15625,45.27726,0l22.47457-22.46875V488a24.00867,24.00867,0,0,0,24.00581,24,28.55934,28.55934,0,0,0,10.707-2.51562l98.72834-49.39063c14.62888-7.29687,26.50776-26.5,26.50776-42.85937V312.79688c72.59753-46.3125,128.03493-108.40626,128.03493-211.09376C512.07526,76.5,512.07526,51.29688,505.12019,19.09375ZM384.04033,168A40,40,0,1,1,424.05,128,40.02322,40.02322,0,0,1,384.04033,168Z">
+								</path>
+							</svg>
+						</div>
+						<div class="linkButtons-container-item__content">
+							<div class="linkButtons-container-item__title">Launch</div>
+							<div class="linkButtons-container-item__text">Launch the User Interface in the Crestron XPanel Application.</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

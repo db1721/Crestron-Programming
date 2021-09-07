@@ -1,0 +1,204 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "TU Display Config Driver 1.0"
+// #HINT ""
+//#DEFINE_CONSTANT MaxIn 16
+#DEFINE_CONSTANT MaxOut 4
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+#HELP_BEGIN
+   
+//1.1)Display 1|MODEL#|1|xxx.xxx.xxx		The '1' indicates the presence of screen controls, 0 will hide screen controls
+//1.2)Display 2|MODEL#|0|xxx.xxx.xxx
+//2.1)1										This line is to enable/disable Dualvideo
+
+
+Models:
+1 = NEC CXXXQ 232
+2 = Panasonic PT-RZ 232
+101= NEC CXXXQ IP
+102 = Panasonic PT-RZ IP
+151 = RoomView Display TBD Implemented 1
+152 = RoomView Display TBD Implemented 2
+201 = CEC Type1
+202 = CEC Type2
+
+
+#HELP_END
+
+
+DIGITAL_INPUT SysReady, ReInit;
+// STRING_INPUT 
+// BUFFER_INPUT 
+               
+Digital_Output ProcessComplete, _SKIP_, DualVideoEnable, _SKIP_, DisplayHasScreen[MaxOut];               
+ANALOG_OUTPUT _SKIP_, DisplayModel[MaxOut];
+String_Output _SKIP_, DisplayName[MaxOut], _SKIP_, DisplayIP[MaxOut];
+
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+// STRING_PARAMETER
+
+//INTEGER VirtualMatrix[16][16], SourceInput[MaxIn], InputArray[MaxIn];
+// LONG_INTEGER
+// SIGNED_INTEGER
+// SIGNED_LONG_INTEGER
+STRING FileData[50000], Line[10000];
+String Temp[50];
+
+Function getItem()
+{
+	Temp = "";
+	If(Find("|", Line))
+	{
+		Temp = Remove("|", Line);		
+	}
+	Else If(Find("\r", Line))
+	{
+		Temp = Remove("\r", Line);		
+	}
+}
+
+String_Function GetASCII()
+{
+	getItem();
+	Return(Left(Temp, Len(Temp) - 1));
+}
+Integer_Function GetINTEGER()
+{
+	getItem();
+	Return(AtoI(Temp));
+}
+                         
+Function ProcessRead()
+{
+	Integer LineNum, ItemNum;
+//	SetArray(SourceVisible, 0);
+	While(Len(FileData) > 2)
+	{
+		Trace("File Process Loop, FileDataLen = %u  FileData = %s", Len(FileData), FileData);
+		Line = Remove("\x0d\x0a", FileData);
+		If(Left(Line, 2) != "//" && (Find(")", Line)))
+		{
+			LineNum = AtoI(Remove(".", Line));
+			ItemNum = AtoI(Remove(")", Line));
+			Trace("Processing Lineitem #%u.%u", LineNum, ItemNum);
+			Switch(LineNum)
+			{
+				Case(1)://Display1 Info
+				{
+					DisplayName[ItemNum] = GetASCII();
+					DisplayModel[ItemNum] = GetINTEGER();
+					DisplayHasScreen[ItemNum] = GetInteger();
+					If((DisplayModel[ItemNum] > 100) && (DisplayModel[ItemNum] < 200))
+					{
+						DisplayIP[ItemNum] = GetAscii();
+
+					}
+					Else
+					{
+						DisplayIP[ItemNum] = "";
+
+					}
+
+				}
+				Case(2)://Dual Video
+				{
+					DualVideoEnable = GetInteger();
+				}
+			}
+		
+		}
+	}
+}
+Function ReadMain()
+{
+	Signed_Integer handle, err;
+	Integer X;
+	err = startfileoperations();
+	If(err < 0)
+	{
+		Trace("Error Starting File Operations");
+	}
+	Else If(err >= 0)
+	{
+		handle = FileOpenshared("\\USER\\DisplayConfig.txt", _O_TEXT | _O_RDONLY);// Place File in NVRAM\AV\
+		IF(handle < 0)
+		{
+			Trace("Error Opening File");
+		}
+		Else If(Handle >= 0)
+		{
+			Trace("Reading File");
+			X = filelength(handle);
+			err = Fileread(handle, Filedata, X);
+			If(err < 0)
+			{
+				Trace("Error Reading File");
+			}
+			Trace("FileLength = %u", FileLength(handle));
+			Trace("FileData = %s", FileData);
+			Trace("FileData Length %u", Len(FileData));
+			Fileclose(Handle);	
+		}
+		endfileoperations();
+	}
+	If(X = 0)
+	{
+		trace("New File Read");
+		//newread();
+	}
+	Else If(X > 0)
+	{
+		ProcessRead();
+	}
+}
+
+Push ReInit
+{
+	ProcessComplete = 0;
+	ReadMain();
+	ProcessComplete = 1;
+}
+
+Function Main()
+{
+	While(SysReady = 0)
+	{
+		Delay(10);
+	}
+	WaitForInitializationComplete();
+	ReadMain();
+	ProcessComplete = 1;
+}      
+      
+      

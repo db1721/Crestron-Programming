@@ -1,0 +1,510 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x80000000         0x00500000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x00000000                __DYNAMIC=0x0
+                0x00400000                PROVIDE (__stack, 0x400000)
+                0x00000000                PROVIDE (hardware_init_hook, 0x0)
+                0x00000000                PROVIDE (_hardware_init_hook, 0x0)
+                0x00000000                PROVIDE (software_init_hook, 0x0)
+                0x00000000                PROVIDE (_software_init_hook, 0x0)
+
+.text           0x80000000    0x44840
+ *(.text)
+ .text          0x80000000      0x5ce S2_Keyboard_Text_Processor.o
+                0x800002fa                S2_Keyboard_Text_Processor_main
+                0x80000138                S2_Keyboard_Text_ProcessorEventHandler00002
+                0x80000000                S2_Keyboard_Text_ProcessorEventHandler00000
+                0x800004d2                S2_Keyboard_Text_ProcessorEventHandler00001
+                0x80000448                S2_Keyboard_Text_Processor_EventHandler
+ *fill*         0x800005ce        0x2
+ .text          0x800005d0      0x1fe S2_Serial_Append.o
+                0x80000734                S2_Serial_AppendEventHandler00000
+                0x800005d0                S2_Serial_Append_EventHandler
+                0x80000676                S2_Serial_Append_main
+ *fill*         0x800007ce        0x2
+ .text          0x800007d0     0xaf5a S2_PMI_Synergy_Room_Control_Routing_v3.o
+                0x800007d0                S2_PMI_Synergy_Room_Control_Routing_v3EventHandler00000
+                0x80006980                S2_PMI_Synergy_Room_Control_Routing_v3_EventHandler
+                0x80006712                S2_PMI_Synergy_Room_Control_Routing_v3__SPLS_TMPVAR__WAITLABEL_1__
+                0x80006a8e                S2_PMI_Synergy_Room_Control_Routing_v3_main
+                0x80006616                S2_PMI_Synergy_Room_Control_Routing_v3__SPLS_TMPVAR__WAITLABEL_0__
+ *fill*         0x8000b72a        0x2
+ .text          0x8000b72c     0x269e S2_Epson_ASCII_Proc.o
+                0x8000c3a0                S2_Epson_ASCII_ProcEventHandler00002
+                0x8000d8f8                S2_Epson_ASCII_Proc_EventHandler
+                0x8000b72c                S2_Epson_ASCII_ProcWTIMEOUT
+                0x8000dcb2                S2_Epson_ASCII_ProcEventHandler00000
+                0x8000c530                S2_Epson_ASCII_ProcEventHandler00003
+                0x8000c210                S2_Epson_ASCII_ProcEventHandler00001
+                0x8000d9da                S2_Epson_ASCII_Proc_main
+                0x8000d38e                S2_Epson_ASCII_ProcEventHandler00005
+                0x8000c80e                S2_Epson_ASCII_ProcEventHandler00004
+ *fill*         0x8000ddca        0x2
+ .text          0x8000ddcc      0xb0c S2_Sharp_LC_32D64U_Processor_v1_0.o
+                0x8000e758                S2_Sharp_LC_32D64U_Processor_v1_0_EventHandler
+                0x8000e81a                S2_Sharp_LC_32D64U_Processor_v1_0_main
+                0x8000ddcc                S2_Sharp_LC_32D64U_Processor_v1_0EventHandler00000
+ .text          0x8000e8d8     0xa4d4 S2_PMI_Synergy_Room_Control_Routing_v2.o
+                0x80014110                S2_PMI_Synergy_Room_Control_Routing_v2_main
+                0x80013c98                S2_PMI_Synergy_Room_Control_Routing_v2__SPLS_TMPVAR__WAITLABEL_0__
+                0x8000e8d8                S2_PMI_Synergy_Room_Control_Routing_v2EventHandler00000
+                0x80013d94                S2_PMI_Synergy_Room_Control_Routing_v2__SPLS_TMPVAR__WAITLABEL_1__
+                0x80014002                S2_PMI_Synergy_Room_Control_Routing_v2_EventHandler
+ .text          0x80018dac     0x2954 S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1.o
+                0x8001b5dc                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1EventHandler00001
+                0x8001ae84                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1_main
+                0x8001aa10                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1EventHandler00003
+                0x8001ad6a                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1_EventHandler
+                0x8001b4d4                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1_SENDCOMMANDWAIT
+                0x8001b512                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1EventHandler00000
+                0x8001a072                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1EventHandler00002
+ .text          0x8001b700     0x1bd0 S2_Biamp_On_Off_Processor_v7_5_1.o
+                0x8001d27e                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00003
+                0x8001caf8                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00006
+                0x8001c2d0                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00001
+                0x8001d22c                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00002
+                0x8001c996                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00005
+                0x8001ce34                S2_Biamp_On_Off_Processor_v7_5_1_EventHandler
+                0x8001cc5a                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00007
+                0x8001c4da                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00004
+                0x8001cf64                S2_Biamp_On_Off_Processor_v7_5_1_main
+                0x8001bf6a                S2_Biamp_On_Off_Processor_v7_5_1EventHandler00000
+ .text          0x8001d2d0     0x2f94 S2_Biamp_Level_Processor_v7_5_1.o
+                0x8001ec98                S2_Biamp_Level_Processor_v7_5_1EventHandler00007
+                0x80020212                S2_Biamp_Level_Processor_v7_5_1EventHandler00005
+                0x8001ff66                S2_Biamp_Level_Processor_v7_5_1EventHandler00000
+                0x8001ff10                S2_Biamp_Level_Processor_v7_5_1WRAMPWAIT
+                0x8001e7dc                S2_Biamp_Level_Processor_v7_5_1EventHandler00006
+                0x8001e5d2                S2_Biamp_Level_Processor_v7_5_1EventHandler00003
+                0x8001fa02                S2_Biamp_Level_Processor_v7_5_1_EventHandler
+                0x8001fad4                S2_Biamp_Level_Processor_v7_5_1_main
+                0x80020092                S2_Biamp_Level_Processor_v7_5_1EventHandler00001
+                0x8001f732                S2_Biamp_Level_Processor_v7_5_1EventHandler0000B
+                0x8001eeec                S2_Biamp_Level_Processor_v7_5_1EventHandler00008
+                0x8001f216                S2_Biamp_Level_Processor_v7_5_1EventHandler00009
+                0x800201c0                S2_Biamp_Level_Processor_v7_5_1EventHandler00004
+                0x8001e2b6                S2_Biamp_Level_Processor_v7_5_1EventHandler00002
+                0x8001f540                S2_Biamp_Level_Processor_v7_5_1EventHandler0000A
+ .text          0x80020264      0x5ce S2_KeyProA.o
+                0x8002039c                S2_KeyProAEventHandler00002
+                0x8002055e                S2_KeyProA_main
+                0x800206ac                S2_KeyProA_EventHandler
+                0x80020264                S2_KeyProAEventHandler00000
+                0x80020736                S2_KeyProAEventHandler00001
+ *fill*         0x80020832        0x2
+ .text          0x80020834     0x81a0 S2_Tandberg_C90___C60_Processor_v1_3.o
+                0x80028552                S2_Tandberg_C90___C60_Processor_v1_3_main
+                0x80028910                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00004
+                0x80023a8e                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00001
+                0x80028414                S2_Tandberg_C90___C60_Processor_v1_3_EventHandler
+                0x800276f8                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00002
+                0x800281d4                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00008
+                0x80027f7c                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00006
+                0x80027c72                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00005
+                0x800288c6                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00003
+                0x80028972                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00009
+                0x800287bc                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00000
+                0x800280a8                S2_Tandberg_C90___C60_Processor_v1_3EventHandler00007
+ .text          0x800289d4     0x5bc6 S2_Tandberg_C90___C60_Call_Control_v1_3.o
+                0x8002cc4a                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00007
+                0x8002ddf8                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00006
+                0x8002e2a2                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00011
+                0x8002d68c                S2_Tandberg_C90___C60_Call_Control_v1_3_EventHandler
+                0x8002e360                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00012
+                0x8002dede                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler0000C
+                0x8002dd60                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00005
+                0x8002dcc8                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00004
+                0x8002e1e4                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00010
+                0x8002d212                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler0000A
+                0x8002e068                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler0000E
+                0x8002c840                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00002
+                0x8002d806                S2_Tandberg_C90___C60_Call_Control_v1_3_main
+                0x8002d090                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00009
+                0x8002cf0e                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00008
+                0x8002dbde                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00003
+                0x8002dfaa                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler0000D
+                0x8002de90                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler0000B
+                0x8002db94                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00000
+                0x8002a7c0                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00001
+                0x8002e4dc                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00014
+                0x8002e41e                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler00013
+                0x8002e126                S2_Tandberg_C90___C60_Call_Control_v1_3EventHandler0000F
+ *fill*         0x8002e59a        0x2
+ .text          0x8002e59c     0x82bc S2_Sony_Zoom_Processor_3.o
+                0x80036724                S2_Sony_Zoom_Processor_3_EventHandler
+                0x8002e59c                S2_Sony_Zoom_Processor_3EventHandler00000
+                0x8003238c                S2_Sony_Zoom_Processor_3EventHandler00009
+                0x8003074e                S2_Sony_Zoom_Processor_3EventHandler00006
+                0x800367da                S2_Sony_Zoom_Processor_3EventHandler00005
+                0x80034e58                S2_Sony_Zoom_Processor_3EventHandler0000C
+                0x8002e71c                S2_Sony_Zoom_Processor_3EventHandler00001
+                0x8002fa14                S2_Sony_Zoom_Processor_3EventHandler00003
+                0x80031a06                S2_Sony_Zoom_Processor_3EventHandler00008
+                0x80032ed6                S2_Sony_Zoom_Processor_3EventHandler0000A
+                0x80030392                S2_Sony_Zoom_Processor_3EventHandler00004
+                0x8002f09c                S2_Sony_Zoom_Processor_3EventHandler00002
+                0x80033a40                S2_Sony_Zoom_Processor_3EventHandler0000B
+                0x8003109e                S2_Sony_Zoom_Processor_3EventHandler00007
+                0x8003645e                S2_Sony_Zoom_Processor_3_main
+ .text          0x80036858      0xfe8 S2_RVSE2_Device_Usage_Que_v1_1a_.o
+                0x800377da                S2_RVSE2_Device_Usage_Que_v1_1a_EventHandler00000
+                0x80036b32                S2_RVSE2_Device_Usage_Que_v1_1a_EventHandler00001
+                0x80037594                S2_RVSE2_Device_Usage_Que_v1_1a__main
+                0x800374b4                S2_RVSE2_Device_Usage_Que_v1_1a__EventHandler
+ .text          0x80037840      0xa6e S2_RVSE_Device_Usage_v2_1_.o
+                0x80038136                S2_RVSE_Device_Usage_v2_1_EventHandler00002
+                0x80037f56                S2_RVSE_Device_Usage_v2_1__main
+                0x80037c5c                S2_RVSE_Device_Usage_v2_1_EventHandler00000
+                0x8003809c                S2_RVSE_Device_Usage_v2_1_EventHandler00001
+                0x800381e0                S2_RVSE_Device_Usage_v2_1_EventHandler00003
+                0x80037e90                S2_RVSE_Device_Usage_v2_1__EventHandler
+ *fill*         0x800382ae        0x2
+ .text          0x800382b0     0x5836 library.o
+                0x8003c49c                RotateRightLong
+                0x8003caaa                IsSystem
+                0x8003c400                Seed
+                0x80039cf8                Remove
+                0x8003c07c                Ltoa
+                0x8003bda8                Atoi
+                0x8003b110                InitRampInfoArray
+                0x8003c856                Right
+                0x8003d886                LockInputSema
+                0x8003c32a                Mod
+                0x8003c512                Getc
+                0x8003c25e                SMuldiv
+                0x8003ca8c                IsHidden
+                0x8003c142                Min
+                0x8003d69a                hextosi
+                0x8003cc30                WriteIntegerArray
+                0x8003d1a6                GetSignedIntArrayElementPtr
+                0x8003baca                CheckStructArray
+                0x8003d6ae                hextosl
+                0x8003cdb6                WriteSignedIntegerArray
+                0x8003b792                InitStringParamArray
+                0x8003aa64                ReadSignedLongIntegerArray
+                0x80039986                GatherToDelimiter
+                0x8003b5b6                InitStringArray
+                0x8003c11c                Max
+                0x8003cae6                IsReadOnly
+                0x8003c226                SMax
+                0x80039b2a                GatherByLength
+                0x8003bfb6                Chr
+                0x8003cc08                ReadSignedLongInteger
+                0x8003c034                Itohex
+                0x8003ba3c                GetStructArrayElement
+                0x8003bd30                UNS_SetByte
+                0x8003c82a                ReverseFindi
+                0x8003af0c                ReadStringArray
+                0x8003cfb6                GetIntArrayElementPtr
+                0x8003c666                Lower
+                0x8003c41c                RotateLeft
+                0x8003d7ce                ResizeIfAutogrow
+                0x8003b23c                CheckInputArray
+                0x8003881e                ResizeStringArray
+                0x8003bf48                Atosl
+                0x8003bd70                High
+                0x8003c3cc                Rnd
+                0x8003c2ee                UMod
+                0x8003c472                RotateLeftLong
+                0x8003d8fa                FindNumericChar
+                0x8003d3fe                CheckIOArrayBounds2
+                0x8003ca44                MakeProgramFilename
+                0x8003c242                SMin
+                0x8003c59a                Left
+                0x8003c4dc                CheckBufferThreshold
+                0x8003cbc0                ReadSignedInteger
+                0x8003bd9a                LowWord
+                0x800382b0                Bit
+                0x8003cb70                ReadLongInteger
+                0x8003bbae                Byte
+                0x8003d0ae                GetLongArrayElementPtr
+                0x8003c7fc                ReverseFind
+                0x8003ca5a                GetSeries
+                0x8003d9c6                InitTcpServer
+                0x8003c64e                Len
+                0x8003d4ce                InitializeRampInfoInternal
+                0x8003c168                Divide
+                0x8003beb4                Atol
+                0x8003ca50                GetModelNumber
+                0x8003d396                CheckIOArrayBounds
+                0x8003b296                CheckStringInputArray
+                0x8003ce78                WriteSignedLongIntegerArray
+                0x8003b986                GetStringArrayElement
+                0x8003c0c0                Ltohex
+                0x8003bfec                Itoa
+                0x8003c446                RotateRight
+                0x80039fe6                InternalReverseFind
+                0x8003cb50                WriteLongInteger
+                0x8003b4ba                InitDynamicStringStruct
+                0x8003b3ac                SetStringArray
+                0x8003a842                ReadSignedIntegerArray
+                0x8003b2f0                SetOutputArray
+                0x8003cb00                WriteInteger
+                0x8003b91a                InitStructDynamicArray
+                0x8003a270                SetString
+                0x8003c366                Random
+                0x8003cb98                WriteSignedInteger
+                0x80038514                Find
+                0x8003ca64                GetProgramNumber
+                0x8003c73a                Mid
+                0x8003d938                InitTcpClient
+                0x80039402                ResizeStructArray
+                0x8003d29e                GetSignedLongArrayElementPtr
+                0x8003d6c0                hextol
+                0x8003ac86                ReadString
+                0x8003b64c                InitDynamicStringArray
+                0x8003d7a6                UpperChar
+                0x8003be44                Atosi
+                0x8003cb28                ReadInteger
+                0x8003c1da                Muldiv
+                0x8003b35e                SetStringOutputArray
+                0x8003cf3c                WriteString
+                0x80038e76                ResizeIntegerArray
+                0x8003b204                InitInOutArray
+                0x8003b85a                InitNvramStringArray
+                0x8003c104                Abs
+                0x8003c2aa                SDivide
+                0x8003a400                ReadIntegerArray
+                0x800383c0                CompareStrings
+                0x8003d77e                LowerChar
+                0x8003da56                InitUdpSocket
+                0x8003c4c4                ClearBuffer
+                0x8003c912                Upper
+                0x8003b8f6                InitStructArray
+                0x8003c9e8                MakeLower
+                0x8003cac8                IsVolume
+                0x80039e52                RemoveByLength
+                0x8003bb46                CheckStringOutputArrayIndex
+                0x8003ccf2                WriteLongIntegerArray
+                0x8003d57a                InitRampInfoStructArray
+                0x8003bd8c                HighWord
+                0x80038688                ResizeString
+                0x8003ca6e                IsDirectory
+                0x8003a620                ReadLongIntegerArray
+                0x8003bd7e                Low
+                0x8003982c                Gather
+                0x8003ca16                MakeUpper
+                0x8003b47c                InitStringStruct
+                0x8003d466                CheckStringArrayBounds
+                0x8003c1ac                CheckDenominator
+                0x8003d682                hextoi
+                0x8003ada4                WriteStringArray
+                0x8003bc6e                SetByte
+                0x8003d524                InitializeRampInfo
+                0x8003d8c0                UnLockInputSema
+                0x8003cbe8                WriteSignedLongInteger
+                0x8003b56e                InitNvramStringStruct
+ *fill*         0x8003dae6        0xa
+                0x8003daf0                .=ALIGN(0x10)
+ *(.eh_frame)
+                0x8003daf0                .=ALIGN(0x10)
+ *(.gnu.linkonce.t.*)
+                0x8003daf0                .=ALIGN(0x4)
+                0x8003daf0                __CTOR_LIST__=.
+                0x8003daf0                ___CTOR_LIST__=.
+                0x8003daf0        0x4 LONG 0x0 (((__CTOR_END__-__CTOR_LIST__)/0x4)-0x2)
+ *(.ctors)
+                0x8003daf4        0x4 LONG 0x0
+                0x8003daf8                __CTOR_END__=.
+                0x8003daf8                __DTOR_LIST__=.
+                0x8003daf8                ___DTOR_LIST__=.
+                0x8003daf8        0x4 LONG 0x0 (((__DTOR_END__-__DTOR_LIST__)/0x4)-0x2)
+ *(.dtors)
+                0x8003dafc        0x4 LONG 0x0
+                0x8003db00                __DTOR_END__=.
+ *(.rodata)
+ .rodata        0x8003db00      0x29c S2_Keyboard_Text_Processor.o
+ .rodata        0x8003dd9c      0x253 S2_Serial_Append.o
+ .rodata        0x8003dfef      0xf25 S2_PMI_Synergy_Room_Control_Routing_v3.o
+ .rodata        0x8003ef14      0x3f0 S2_Epson_ASCII_Proc.o
+ .rodata        0x8003f304      0x329 S2_Sharp_LC_32D64U_Processor_v1_0.o
+ .rodata        0x8003f62d      0xf25 S2_PMI_Synergy_Room_Control_Routing_v2.o
+ .rodata        0x80040552      0x3e0 S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1.o
+ .rodata        0x80040932      0x423 S2_Biamp_On_Off_Processor_v7_5_1.o
+ .rodata        0x80040d55      0x4b3 S2_Biamp_Level_Processor_v7_5_1.o
+ .rodata        0x80041208      0x29c S2_KeyProA.o
+ .rodata        0x800414a4     0x1022 S2_Tandberg_C90___C60_Processor_v1_3.o
+ .rodata        0x800424c6      0xc82 S2_Tandberg_C90___C60_Call_Control_v1_3.o
+ .rodata        0x80043148      0x362 S2_Sony_Zoom_Processor_3.o
+ .rodata        0x800434aa      0x40d S2_RVSE2_Device_Usage_Que_v1_1a_.o
+ .rodata        0x800438b7      0x31d S2_RVSE_Device_Usage_v2_1_.o
+ .rodata        0x80043bd4      0xc54 library.o
+ *(.gcc_except_table)
+                0x80044828                .=ALIGN(0x2)
+                0x80044828                __INIT_SECTION__=.
+                0x80044828        0x4 LONG 0x4e560000
+ *(.init)
+                0x8004482c        0x2 SHORT 0x4e5e
+                0x8004482e        0x2 SHORT 0x4e75
+                0x80044830                __FINI_SECTION__=.
+                0x80044830        0x4 LONG 0x4e560000
+ *(.fini)
+                0x80044834        0x2 SHORT 0x4e5e
+                0x80044836        0x2 SHORT 0x4e75
+ *(.lit)
+ *fill*         0x80044838        0x8
+                0x80044840                .=ALIGN(0x10)
+                0x80044840                _etext=.
+                0x80044840                etext=.
+
+.data           0x80044840        0x0
+                0x80044840                copy_start=.
+ *(.shdata)
+ *(.data)
+ *(.gnu.linkonce.d.*)
+                0x80044840                .=ALIGN(0x10)
+                0x80044840                _edata=.
+                0x80044840                copy_end=.
+
+.got
+ *(.got.plt)
+ *(.got)
+
+EntryList       0x80044840      0xff0
+ *(EntryList)
+ EntryList      0x80044840      0x110 S2_Keyboard_Text_Processor.o
+                0x80044840                S2_Keyboard_Text_Processor_Entry
+ EntryList      0x80044950      0x110 S2_Serial_Append.o
+                0x80044950                S2_Serial_Append_Entry
+ EntryList      0x80044a60      0x110 S2_PMI_Synergy_Room_Control_Routing_v3.o
+                0x80044a60                S2_PMI_Synergy_Room_Control_Routing_v3_Entry
+ EntryList      0x80044b70      0x110 S2_Epson_ASCII_Proc.o
+                0x80044b70                S2_Epson_ASCII_Proc_Entry
+ EntryList      0x80044c80      0x110 S2_Sharp_LC_32D64U_Processor_v1_0.o
+                0x80044c80                S2_Sharp_LC_32D64U_Processor_v1_0_Entry
+ EntryList      0x80044d90      0x110 S2_PMI_Synergy_Room_Control_Routing_v2.o
+                0x80044d90                S2_PMI_Synergy_Room_Control_Routing_v2_Entry
+ EntryList      0x80044ea0      0x110 S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1.o
+                0x80044ea0                S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1_Entry
+ EntryList      0x80044fb0      0x110 S2_Biamp_On_Off_Processor_v7_5_1.o
+                0x80044fb0                S2_Biamp_On_Off_Processor_v7_5_1_Entry
+ EntryList      0x800450c0      0x110 S2_Biamp_Level_Processor_v7_5_1.o
+                0x800450c0                S2_Biamp_Level_Processor_v7_5_1_Entry
+ EntryList      0x800451d0      0x110 S2_KeyProA.o
+                0x800451d0                S2_KeyProA_Entry
+ EntryList      0x800452e0      0x110 S2_Tandberg_C90___C60_Processor_v1_3.o
+                0x800452e0                S2_Tandberg_C90___C60_Processor_v1_3_Entry
+ EntryList      0x800453f0      0x110 S2_Tandberg_C90___C60_Call_Control_v1_3.o
+                0x800453f0                S2_Tandberg_C90___C60_Call_Control_v1_3_Entry
+ EntryList      0x80045500      0x110 S2_Sony_Zoom_Processor_3.o
+                0x80045500                S2_Sony_Zoom_Processor_3_Entry
+ EntryList      0x80045610      0x110 S2_RVSE2_Device_Usage_Que_v1_1a_.o
+                0x80045610                S2_RVSE2_Device_Usage_Que_v1_1a__Entry
+ EntryList      0x80045720      0x110 S2_RVSE_Device_Usage_v2_1_.o
+                0x80045720                S2_RVSE_Device_Usage_v2_1__Entry
+                0x80045830                .=ALIGN(0x4)
+
+FunctionList    0x80045830        0x4
+ *(FunctionList)
+ FunctionList   0x80045830        0x4 globals.o
+                0x80045830                g_pFunctions
+                0x80045834                .=ALIGN(0x4)
+
+.bss            0x80045834        0x0
+                0x80045834                .=ALIGN(0x4)
+                0x80045834                __bss_start=.
+ *(.shbss)
+ *(.bss)
+ *(COMMON)
+                0x80045838                _end=ALIGN(0x8)
+                0x80045838                __end=_end
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+LOAD S2_Keyboard_Text_Processor.o
+LOAD S2_Serial_Append.o
+LOAD S2_PMI_Synergy_Room_Control_Routing_v3.o
+LOAD S2_Epson_ASCII_Proc.o
+LOAD S2_Sharp_LC_32D64U_Processor_v1_0.o
+LOAD S2_PMI_Synergy_Room_Control_Routing_v2.o
+LOAD S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1.o
+LOAD S2_Biamp_On_Off_Processor_v7_5_1.o
+LOAD S2_Biamp_Level_Processor_v7_5_1.o
+LOAD S2_KeyProA.o
+LOAD S2_Tandberg_C90___C60_Processor_v1_3.o
+LOAD S2_Tandberg_C90___C60_Call_Control_v1_3.o
+LOAD S2_Sony_Zoom_Processor_3.o
+LOAD S2_RVSE2_Device_Usage_Que_v1_1a_.o
+LOAD S2_RVSE_Device_Usage_v2_1_.o
+LOAD globals.o
+LOAD library.o
+OUTPUT(_S2_OP0209_20190906_DB.spl elf32-m68k)
+
+.comment        0x80045834      0x286
+ .comment       0x80045834       0x26 S2_Keyboard_Text_Processor.o
+ .comment       0x8004585a       0x26 S2_Serial_Append.o
+ .comment       0x80045880       0x26 S2_PMI_Synergy_Room_Control_Routing_v3.o
+ .comment       0x800458a6       0x26 S2_Epson_ASCII_Proc.o
+ .comment       0x800458cc       0x26 S2_Sharp_LC_32D64U_Processor_v1_0.o
+ .comment       0x800458f2       0x26 S2_PMI_Synergy_Room_Control_Routing_v2.o
+ .comment       0x80045918       0x26 S2_BiAmp_AudiaFlex_Command_Processor_IP_v7_5_1.o
+ .comment       0x8004593e       0x26 S2_Biamp_On_Off_Processor_v7_5_1.o
+ .comment       0x80045964       0x26 S2_Biamp_Level_Processor_v7_5_1.o
+ .comment       0x8004598a       0x26 S2_KeyProA.o
+ .comment       0x800459b0       0x26 S2_Tandberg_C90___C60_Processor_v1_3.o
+ .comment       0x800459d6       0x26 S2_Tandberg_C90___C60_Call_Control_v1_3.o
+ .comment       0x800459fc       0x26 S2_Sony_Zoom_Processor_3.o
+ .comment       0x80045a22       0x26 S2_RVSE2_Device_Usage_Que_v1_1a_.o
+ .comment       0x80045a48       0x26 S2_RVSE_Device_Usage_v2_1_.o
+ .comment       0x80045a6e       0x26 globals.o
+ .comment       0x80045a94       0x26 library.o

@@ -1,0 +1,143 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "NEC Multisync Command Processor"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+#HELP_BEGIN
+	Send to ONLY address '1' formatted as "A"
+	Only send in from the OP  code top the Set Value.
+	The module will add everything else including the STX and ETX.
+#HELP_END
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+ANALOG_INPUT SetVol;
+// STRING_INPUT 
+string_input InParamSet[200], InCmdSet[200], InParamGet[200], InCmdGet[200];
+
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT 
+STRING_OUTPUT out;
+
+/*******************************************************************************************
+  SOCKETS
+  (Uncomment and define socket definitions as needed)
+*******************************************************************************************/
+// TCP_CLIENT
+// TCP_SERVER
+// UDP_SOCKET
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+STRING_PARAMETER _SKIP_;
+
+string_function ProcessSend(string cmd)
+{
+   	Integer cmdLength,i,result;
+	cmdLength = len(cmd);
+	Result = Byte(cmd,1);
+
+	for(i = 2 to cmdLength)
+	{
+ 		result = result ^ Byte(cmd,i); 	   	
+	}
+ 
+    out = "\x01" + cmd + chr(low(Result)) + "\x0d";
+}
+Change InParamSet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InParamSet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "\x30\x41\x30\x45%s%s\x02%s\x03" ,mid(sMsgLen,1,1), mid(sMsgLen,2,1), InParamSet);
+	ProcessSend(sTemp);
+	
+}
+Change InCmdSet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InCmdSet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "\x30\x41\x30\x41%s%s\x02%s\x03" ,mid(sMsgLen,1,1), mid(sMsgLen,2,1), InCmdSet);
+	ProcessSend(sTemp);
+	
+}
+
+Change InParamGet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InParamGet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "\x30\x41\x30\x43%s%s\x02%s\x03" ,mid(sMsgLen,1,1), mid(sMsgLen,2,1), InParamGet);
+	ProcessSend(sTemp);
+}
+Change InCmdGet
+{
+	Integer iMsgLen;
+	String sMsgLen[2], sTemp[200];
+	iMsgLen = len(InCmdGet)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "\x30\x41\x30\x41%s%s\x02%s\x03" ,mid(sMsgLen,1,1), mid(sMsgLen,2,1), InCmdGet);
+	ProcessSend(sTemp);
+}
+Change SetVol
+{
+	Long_Integer iVolScale, iMsgLen;
+	String msg[30], sMsgLen[2], sTemp[200], volTemp[10], volTemp2[10];
+	iVolScale = SetVol * 100 / 65535;
+	makeString(volTemp, "%02X", iVolScale);
+	makestring(volTemp2, "%s%s", mid(volTemp,1,1), mid(volTemp,2,1));
+	Makestring(msg, "006200%s", volTemp2);
+	iMsgLen = len(msg)+2;
+	makeString(sMsgLen, "%02X", iMsgLen); 
+	makeString(sTemp, "\x30\x41\x30\x45%s%s\x02%s\x03" ,mid(sMsgLen,1,1), mid(sMsgLen,2,1), msg);
+	ProcessSend(sTemp);
+}

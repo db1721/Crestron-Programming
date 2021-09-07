@@ -1,0 +1,36 @@
+#symbol_name "Serial Append"
+
+#CATEGORY "10" // Serial
+
+#default_volatile
+#HELP_BEGIN
+Takes an incoming string and appends the string defined by 'append'
+then outputs the result to 'OutString'.
+
+STRING INPUT InString     Input string
+
+STRING OUTPUT OutString   Output string
+
+#HELP_END
+
+// Roy Graham
+// Lee Hartman & Sons
+
+/*** IO ***/
+STRING_INPUT InString[100];
+DIGITAL_INPUT Send;
+ 
+STRING_PARAMETER Prefix[100];
+STRING_PARAMETER Suffix[100];
+
+STRING_OUTPUT OutString;
+
+/*** Vars ***/
+//INTEGER i;                 // loop counter
+
+/*** Events ***/
+Push Send
+{
+	OutString = Prefix + InString + Suffix;
+}
+

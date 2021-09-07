@@ -1,0 +1,76 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "Sharp Flatpanel Trail/lead swap"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+
+#HELP_BEGIN
+1d = Lead 2d = Trail
+#HELP_END
+
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+ANALOG_INPUT LeadOrTrail;
+STRING_INPUT In[50];
+// BUFFER_INPUT 
+
+// DIGITAL_OUTPUT 
+// ANALOG_OUTPUT 
+STRING_OUTPUT _SKIP_, Out;
+
+Change In
+{
+	Integer firstSpace, lastSpace;
+	Switch(LeadOrTrail)
+	{
+		Case(1)://Leading
+		{
+			firstSpace = find("\x20", In);
+			lastSpace = Len(In) - 1;
+			Makestring(Out, "%s%s%s\r", left(In, 4), Mid(In, firstSpace, lastSpace - firstSpace + 1), Mid(In, 5, firstSpace - 5)); 
+		}
+		Case(2)://Trailing
+		{
+			Out = In;
+		}
+	}
+}

@@ -1,0 +1,416 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x80000000         0x00500000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x00000000                __DYNAMIC=0x0
+                0x00400000                PROVIDE (__stack, 0x400000)
+                0x00000000                PROVIDE (hardware_init_hook, 0x0)
+                0x00000000                PROVIDE (_hardware_init_hook, 0x0)
+                0x00000000                PROVIDE (software_init_hook, 0x0)
+                0x00000000                PROVIDE (_software_init_hook, 0x0)
+
+.text           0x80000000    0x18460
+ *(.text)
+ .text          0x80000000     0x1fc4 S2_Console_Processor_v3_.o
+                0x80001e0a                S2_Console_Processor_v3__EventHandler
+                0x800012be                S2_Console_Processor_v3_EventHandler00000
+                0x800016b4                S2_Console_Processor_v3_EventHandler00003
+                0x80001410                S2_Console_Processor_v3_EventHandler00001
+                0x80001ed0                S2_Console_Processor_v3__main
+                0x80001562                S2_Console_Processor_v3_EventHandler00002
+                0x80001806                S2_Console_Processor_v3_EventHandler00004
+ .text          0x80001fc4      0x9fa S2_Sleep_timer_countdown.o
+                0x80002974                S2_Sleep_timer_countdownEventHandler00000
+                0x800028ea                S2_Sleep_timer_countdown_EventHandler
+                0x8000288c                S2_Sleep_timer_countdown_main
+                0x80002350                S2_Sleep_timer_countdownEventHandler00001
+                0x80002654                S2_Sleep_timer_countdownEventHandler00003
+                0x800024d2                S2_Sleep_timer_countdownEventHandler00002
+ *fill*         0x800029be        0x2
+ .text          0x800029c0     0x1be8 S2_Fusion_SSI_Device_Usage_Helper_v1_1.o
+                0x8000345c                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00006
+                0x80004306                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00003
+                0x800031ea                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00000
+                0x80003a1c                S2_Fusion_SSI_Device_Usage_Helper_v1_1_EventHandler
+                0x8000407a                S2_Fusion_SSI_Device_Usage_Helper_v1_1_STRUCTUREDEVICE_Constructor
+                0x800040d2                S2_Fusion_SSI_Device_Usage_Helper_v1_1_STRUCTUREDEVICE_Destructor
+                0x80003784                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00008
+                0x80004530                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00005
+                0x800035ae                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00007
+                0x80004418                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00004
+                0x80003b0c                S2_Fusion_SSI_Device_Usage_Helper_v1_1_main
+                0x800041ee                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00002
+                0x800040dc                S2_Fusion_SSI_Device_Usage_Helper_v1_1EventHandler00001
+ .text          0x800045a8      0x3ac S2_Panasonic_PT_EZ370RU_Processor.o
+                0x800045a8                S2_Panasonic_PT_EZ370RU_ProcessorEventHandler00000
+                0x80004826                S2_Panasonic_PT_EZ370RU_Processor_EventHandler
+                0x800048e2                S2_Panasonic_PT_EZ370RU_Processor_main
+ .text          0x80004954     0x1ad8 S2_tascam_cd500.o
+                0x80006366                S2_tascam_cd500EventHandler00005
+                0x80005620                S2_tascam_cd500EventHandler0000A
+                0x80004c14                S2_tascam_cd500EventHandler00002
+                0x80004a94                S2_tascam_cd500EventHandler00001
+                0x80005474                S2_tascam_cd500EventHandler00009
+                0x80005172                S2_tascam_cd500EventHandler00007
+                0x800062a0                S2_tascam_cd500EventHandler00004
+                0x80004e3c                S2_tascam_cd500EventHandler00003
+                0x80006040                S2_tascam_cd500_EventHandler
+                0x80005332                S2_tascam_cd500EventHandler00008
+                0x80005026                S2_tascam_cd500EventHandler00006
+                0x80004954                S2_tascam_cd500EventHandler00000
+                0x80006124                S2_tascam_cd500_main
+ .text          0x8000642c     0x5de4 S2_Oppo_Time_Processor_v1_0.o
+                0x8000bf1c                S2_Oppo_Time_Processor_v1_0_main
+                0x80009f10                S2_Oppo_Time_Processor_v1_0EventHandler00001
+                0x8000a7b4                S2_Oppo_Time_Processor_v1_0EventHandler00003
+                0x8000a8f4                S2_Oppo_Time_Processor_v1_0EventHandler00004
+                0x8000be7c                S2_Oppo_Time_Processor_v1_0_EventHandler
+                0x8000642c                S2_Oppo_Time_Processor_v1_0EventHandler00000
+                0x8000a050                S2_Oppo_Time_Processor_v1_0EventHandler00002
+                0x8000b772                S2_Oppo_Time_Processor_v1_0EventHandler00006
+                0x8000b058                S2_Oppo_Time_Processor_v1_0EventHandler00005
+ .text          0x8000c210      0x808 S2_Analog_to_Number.o
+                0x8000c210                S2_Analog_to_NumberEventHandler00000
+                0x8000c932                S2_Analog_to_Number_EventHandler
+                0x8000c9d2                S2_Analog_to_Number_main
+ .text          0x8000ca18      0x3ee S2_Core_3_XPanel_Web_Configuration_Module_v1_1.o
+                0x8000ca18                S2_Core_3_XPanel_Web_Configuration_Module_v1_1EventHandler00000
+                0x8000ccb0                S2_Core_3_XPanel_Web_Configuration_Module_v1_1_main
+                0x8000cbf2                S2_Core_3_XPanel_Web_Configuration_Module_v1_1_EventHandler
+ *fill*         0x8000ce06        0x2
+ .text          0x8000ce08      0xd16 S2_NV_Analog_to_Disk_v2_2.o
+                0x8000d316                S2_NV_Analog_to_Disk_v2_2_EventHandler
+                0x8000d3d2                S2_NV_Analog_to_Disk_v2_2_main
+                0x8000d0ee                S2_NV_Analog_to_Disk_v2_2EventHandler00000
+ *fill*         0x8000db1e        0x2
+ .text          0x8000db20     0x1a60 S2_CTI_2012_08_29TCP_IP_Time_Updater.o
+                0x8000dd68                S2_CTI_2012_08_29TCP_IP_Time_UpdaterEventHandler00002
+                0x8000dc0c                S2_CTI_2012_08_29TCP_IP_Time_UpdaterEventHandler00000
+                0x8000f2a4                S2_CTI_2012_08_29TCP_IP_Time_Updater_main
+                0x8000ef66                S2_CTI_2012_08_29TCP_IP_Time_UpdaterEventHandler00004
+                0x8000f164                S2_CTI_2012_08_29TCP_IP_Time_Updater_EventHandler
+                0x8000f47c                S2_CTI_2012_08_29TCP_IP_Time_UpdaterEventHandler00001
+                0x8000ee0a                S2_CTI_2012_08_29TCP_IP_Time_UpdaterEventHandler00003
+ .text          0x8000f580     0x5836 library.o
+                0x8001376c                RotateRightLong
+                0x80013d7a                IsSystem
+                0x800136d0                Seed
+                0x80010fc8                Remove
+                0x8001334c                Ltoa
+                0x80013078                Atoi
+                0x800123e0                InitRampInfoArray
+                0x80013b26                Right
+                0x80014b56                LockInputSema
+                0x800135fa                Mod
+                0x800137e2                Getc
+                0x8001352e                SMuldiv
+                0x80013d5c                IsHidden
+                0x80013412                Min
+                0x8001496a                hextosi
+                0x80013f00                WriteIntegerArray
+                0x80014476                GetSignedIntArrayElementPtr
+                0x80012d9a                CheckStructArray
+                0x8001497e                hextosl
+                0x80014086                WriteSignedIntegerArray
+                0x80012a62                InitStringParamArray
+                0x80011d34                ReadSignedLongIntegerArray
+                0x80010c56                GatherToDelimiter
+                0x80012886                InitStringArray
+                0x800133ec                Max
+                0x80013db6                IsReadOnly
+                0x800134f6                SMax
+                0x80010dfa                GatherByLength
+                0x80013286                Chr
+                0x80013ed8                ReadSignedLongInteger
+                0x80013304                Itohex
+                0x80012d0c                GetStructArrayElement
+                0x80013000                UNS_SetByte
+                0x80013afa                ReverseFindi
+                0x800121dc                ReadStringArray
+                0x80014286                GetIntArrayElementPtr
+                0x80013936                Lower
+                0x800136ec                RotateLeft
+                0x80014a9e                ResizeIfAutogrow
+                0x8001250c                CheckInputArray
+                0x8000faee                ResizeStringArray
+                0x80013218                Atosl
+                0x80013040                High
+                0x8001369c                Rnd
+                0x800135be                UMod
+                0x80013742                RotateLeftLong
+                0x80014bca                FindNumericChar
+                0x800146ce                CheckIOArrayBounds2
+                0x80013d14                MakeProgramFilename
+                0x80013512                SMin
+                0x8001386a                Left
+                0x800137ac                CheckBufferThreshold
+                0x80013e90                ReadSignedInteger
+                0x8001306a                LowWord
+                0x8000f580                Bit
+                0x80013e40                ReadLongInteger
+                0x80012e7e                Byte
+                0x8001437e                GetLongArrayElementPtr
+                0x80013acc                ReverseFind
+                0x80013d2a                GetSeries
+                0x80014c96                InitTcpServer
+                0x8001391e                Len
+                0x8001479e                InitializeRampInfoInternal
+                0x80013438                Divide
+                0x80013184                Atol
+                0x80013d20                GetModelNumber
+                0x80014666                CheckIOArrayBounds
+                0x80012566                CheckStringInputArray
+                0x80014148                WriteSignedLongIntegerArray
+                0x80012c56                GetStringArrayElement
+                0x80013390                Ltohex
+                0x800132bc                Itoa
+                0x80013716                RotateRight
+                0x800112b6                InternalReverseFind
+                0x80013e20                WriteLongInteger
+                0x8001278a                InitDynamicStringStruct
+                0x8001267c                SetStringArray
+                0x80011b12                ReadSignedIntegerArray
+                0x800125c0                SetOutputArray
+                0x80013dd0                WriteInteger
+                0x80012bea                InitStructDynamicArray
+                0x80011540                SetString
+                0x80013636                Random
+                0x80013e68                WriteSignedInteger
+                0x8000f7e4                Find
+                0x80013d34                GetProgramNumber
+                0x80013a0a                Mid
+                0x80014c08                InitTcpClient
+                0x800106d2                ResizeStructArray
+                0x8001456e                GetSignedLongArrayElementPtr
+                0x80014990                hextol
+                0x80011f56                ReadString
+                0x8001291c                InitDynamicStringArray
+                0x80014a76                UpperChar
+                0x80013114                Atosi
+                0x80013df8                ReadInteger
+                0x800134aa                Muldiv
+                0x8001262e                SetStringOutputArray
+                0x8001420c                WriteString
+                0x80010146                ResizeIntegerArray
+                0x800124d4                InitInOutArray
+                0x80012b2a                InitNvramStringArray
+                0x800133d4                Abs
+                0x8001357a                SDivide
+                0x800116d0                ReadIntegerArray
+                0x8000f690                CompareStrings
+                0x80014a4e                LowerChar
+                0x80014d26                InitUdpSocket
+                0x80013794                ClearBuffer
+                0x80013be2                Upper
+                0x80012bc6                InitStructArray
+                0x80013cb8                MakeLower
+                0x80013d98                IsVolume
+                0x80011122                RemoveByLength
+                0x80012e16                CheckStringOutputArrayIndex
+                0x80013fc2                WriteLongIntegerArray
+                0x8001484a                InitRampInfoStructArray
+                0x8001305c                HighWord
+                0x8000f958                ResizeString
+                0x80013d3e                IsDirectory
+                0x800118f0                ReadLongIntegerArray
+                0x8001304e                Low
+                0x80010afc                Gather
+                0x80013ce6                MakeUpper
+                0x8001274c                InitStringStruct
+                0x80014736                CheckStringArrayBounds
+                0x8001347c                CheckDenominator
+                0x80014952                hextoi
+                0x80012074                WriteStringArray
+                0x80012f3e                SetByte
+                0x800147f4                InitializeRampInfo
+                0x80014b90                UnLockInputSema
+                0x80013eb8                WriteSignedLongInteger
+                0x8001283e                InitNvramStringStruct
+ *fill*         0x80014db6        0xa
+                0x80014dc0                .=ALIGN(0x10)
+ *(.eh_frame)
+                0x80014dc0                .=ALIGN(0x10)
+ *(.gnu.linkonce.t.*)
+                0x80014dc0                .=ALIGN(0x4)
+                0x80014dc0                __CTOR_LIST__=.
+                0x80014dc0                ___CTOR_LIST__=.
+                0x80014dc0        0x4 LONG 0x0 (((__CTOR_END__-__CTOR_LIST__)/0x4)-0x2)
+ *(.ctors)
+                0x80014dc4        0x4 LONG 0x0
+                0x80014dc8                __CTOR_END__=.
+                0x80014dc8                __DTOR_LIST__=.
+                0x80014dc8                ___DTOR_LIST__=.
+                0x80014dc8        0x4 LONG 0x0 (((__DTOR_END__-__DTOR_LIST__)/0x4)-0x2)
+ *(.dtors)
+                0x80014dcc        0x4 LONG 0x0
+                0x80014dd0                __DTOR_END__=.
+ *(.rodata)
+ .rodata        0x80014dd0      0x5fa S2_Console_Processor_v3_.o
+ .rodata        0x800153ca      0x281 S2_Sleep_timer_countdown.o
+ .rodata        0x8001564b      0x48c S2_Fusion_SSI_Device_Usage_Helper_v1_1.o
+ .rodata        0x80015ad7      0x2ba S2_Panasonic_PT_EZ370RU_Processor.o
+ .rodata        0x80015d91      0x3cf S2_tascam_cd500.o
+ .rodata        0x80016160      0x666 S2_Oppo_Time_Processor_v1_0.o
+ .rodata        0x800167c6      0x24c S2_Analog_to_Number.o
+ .rodata        0x80016a12      0x48d S2_Core_3_XPanel_Web_Configuration_Module_v1_1.o
+ .rodata        0x80016e9f      0x338 S2_NV_Analog_to_Disk_v2_2.o
+ .rodata        0x800171d7      0x619 S2_CTI_2012_08_29TCP_IP_Time_Updater.o
+ .rodata        0x800177f0      0xc54 library.o
+ *(.gcc_except_table)
+                0x80018444                .=ALIGN(0x2)
+                0x80018444                __INIT_SECTION__=.
+                0x80018444        0x4 LONG 0x4e560000
+ *(.init)
+                0x80018448        0x2 SHORT 0x4e5e
+                0x8001844a        0x2 SHORT 0x4e75
+                0x8001844c                __FINI_SECTION__=.
+                0x8001844c        0x4 LONG 0x4e560000
+ *(.fini)
+                0x80018450        0x2 SHORT 0x4e5e
+                0x80018452        0x2 SHORT 0x4e75
+ *(.lit)
+ *fill*         0x80018454        0xc
+                0x80018460                .=ALIGN(0x10)
+                0x80018460                _etext=.
+                0x80018460                etext=.
+
+.data           0x80018460        0x0
+                0x80018460                copy_start=.
+ *(.shdata)
+ *(.data)
+ *(.gnu.linkonce.d.*)
+                0x80018460                .=ALIGN(0x10)
+                0x80018460                _edata=.
+                0x80018460                copy_end=.
+
+.got
+ *(.got.plt)
+ *(.got)
+
+EntryList       0x80018460      0xaa0
+ *(EntryList)
+ EntryList      0x80018460      0x110 S2_Console_Processor_v3_.o
+                0x80018460                S2_Console_Processor_v3__Entry
+ EntryList      0x80018570      0x110 S2_Sleep_timer_countdown.o
+                0x80018570                S2_Sleep_timer_countdown_Entry
+ EntryList      0x80018680      0x110 S2_Fusion_SSI_Device_Usage_Helper_v1_1.o
+                0x80018680                S2_Fusion_SSI_Device_Usage_Helper_v1_1_Entry
+ EntryList      0x80018790      0x110 S2_Panasonic_PT_EZ370RU_Processor.o
+                0x80018790                S2_Panasonic_PT_EZ370RU_Processor_Entry
+ EntryList      0x800188a0      0x110 S2_tascam_cd500.o
+                0x800188a0                S2_tascam_cd500_Entry
+ EntryList      0x800189b0      0x110 S2_Oppo_Time_Processor_v1_0.o
+                0x800189b0                S2_Oppo_Time_Processor_v1_0_Entry
+ EntryList      0x80018ac0      0x110 S2_Analog_to_Number.o
+                0x80018ac0                S2_Analog_to_Number_Entry
+ EntryList      0x80018bd0      0x110 S2_Core_3_XPanel_Web_Configuration_Module_v1_1.o
+                0x80018bd0                S2_Core_3_XPanel_Web_Configuration_Module_v1_1_Entry
+ EntryList      0x80018ce0      0x110 S2_NV_Analog_to_Disk_v2_2.o
+                0x80018ce0                S2_NV_Analog_to_Disk_v2_2_Entry
+ EntryList      0x80018df0      0x110 S2_CTI_2012_08_29TCP_IP_Time_Updater.o
+                0x80018df0                S2_CTI_2012_08_29TCP_IP_Time_Updater_Entry
+                0x80018f00                .=ALIGN(0x4)
+
+FunctionList    0x80018f00        0x4
+ *(FunctionList)
+ FunctionList   0x80018f00        0x4 globals.o
+                0x80018f00                g_pFunctions
+                0x80018f04                .=ALIGN(0x4)
+
+.bss            0x80018f04        0x0
+                0x80018f04                .=ALIGN(0x4)
+                0x80018f04                __bss_start=.
+ *(.shbss)
+ *(.bss)
+ *(COMMON)
+                0x80018f08                _end=ALIGN(0x8)
+                0x80018f08                __end=_end
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+LOAD S2_Console_Processor_v3_.o
+LOAD S2_Sleep_timer_countdown.o
+LOAD S2_Fusion_SSI_Device_Usage_Helper_v1_1.o
+LOAD S2_Panasonic_PT_EZ370RU_Processor.o
+LOAD S2_tascam_cd500.o
+LOAD S2_Oppo_Time_Processor_v1_0.o
+LOAD S2_Analog_to_Number.o
+LOAD S2_Core_3_XPanel_Web_Configuration_Module_v1_1.o
+LOAD S2_NV_Analog_to_Disk_v2_2.o
+LOAD S2_CTI_2012_08_29TCP_IP_Time_Updater.o
+LOAD globals.o
+LOAD library.o
+OUTPUT(_S2_CA3076_7_8_DB_20190715.spl elf32-m68k)
+
+.comment        0x80018f04      0x1c8
+ .comment       0x80018f04       0x26 S2_Console_Processor_v3_.o
+ .comment       0x80018f2a       0x26 S2_Sleep_timer_countdown.o
+ .comment       0x80018f50       0x26 S2_Fusion_SSI_Device_Usage_Helper_v1_1.o
+ .comment       0x80018f76       0x26 S2_Panasonic_PT_EZ370RU_Processor.o
+ .comment       0x80018f9c       0x26 S2_tascam_cd500.o
+ .comment       0x80018fc2       0x26 S2_Oppo_Time_Processor_v1_0.o
+ .comment       0x80018fe8       0x26 S2_Analog_to_Number.o
+ .comment       0x8001900e       0x26 S2_Core_3_XPanel_Web_Configuration_Module_v1_1.o
+ .comment       0x80019034       0x26 S2_NV_Analog_to_Disk_v2_2.o
+ .comment       0x8001905a       0x26 S2_CTI_2012_08_29TCP_IP_Time_Updater.o
+ .comment       0x80019080       0x26 globals.o
+ .comment       0x800190a6       0x26 library.o

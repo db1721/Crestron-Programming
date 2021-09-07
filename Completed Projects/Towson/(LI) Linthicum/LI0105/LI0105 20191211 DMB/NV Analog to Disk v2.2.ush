@@ -1,0 +1,115 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.02.20
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=This module is designed to allow analog signals to remain\\non-volatile,||1
+  Cmn2=and recall their previous values on startup,\\and be irrespective||1
+  Cmn3=of the position of the module in the\\program tree.  This is achieved||1
+  Cmn4=by saving the values to\\NVRAM disk, and recalling them on system||1
+  Cmn5=startup.\\\\The inputs and outputs are to be tied to the same analog\\
+  Cmn6=analog signal, with the input being used to save values, and\\the||1
+  Cmn7=output used to recall values on startup.  After a period\\of time||1
+  Cmn8=with no changes on any signal, all the current values\\are written||1
+  Cmn9=to disk.  On system startup, the values are\\recalled from the disk.
+  Cmn10=\\\\If NVRAM is left as the file path, then NVRAM must be\\initialized||1
+  Cmn11=in the processor.  This module will also generate\\a user error||1
+  Cmn12=on startup if the file doesn't exist (i.e. the\\first time a program||1
+  Cmn13=is run using this module with a given\\instance ID).  This has been||1
+  Cmn14=done intentionally to notify\\the programmer if these files have||1
+  Cmn15=been lost or corrupted in\\later restarts.\\\\INPUTS:\\\\Instance_ID:
+  Cmn16=||2This is an analog value that is used to keep\\              one||1
+  Cmn17=instance of this module separate from other\\              instances.
+  Cmn18=||2In practice, the decimal equivalent\\              of this value||1
+  Cmn19=is appended to the end of the \\              filename.  This value||1
+  Cmn20=is only read on system\\              startup, and should be set||1
+  Cmn21=with an INIT with\\              a '1' on the input.\\||:
+  Cmn22=||B\\In[x]:        To be tied to analog signals for||1
+  Cmn23=store/recall.\\              Must be the same signal as Out[x] of||1
+  Cmn24=the same\\              index for proper operation.\\||;
+  Cmn25=||3\\OUTPUTS:\\\\FileOp_Busy:  This signal goes high during the||1
+  Cmn26=file save/recall\\              operation.  May be tied to an unused||1
+  Cmn27=signal if\\              not needed.\\              \\Out[x]:||3
+  Cmn28=||4To be tied to analog signals for store/recall.\\||<
+  Cmn29=||2Must be the same signal as In[x] of the same\\              index||1
+  Cmn30=for proper operation.\\              \\#DEFINE_CONSTANTS:\\\\IDLE_TIME||1
+  Cmn31=||4The period of time after the last change on any\\||;
+  Cmn32=||3input that the values are stored to disk.\\              \\STARTUP_TIME:
+  Cmn33=||1The time after program initialization when the values\\||8
+  Cmn34=||6are recalled from disk.\\              \\MAX_SIGNALS:  Sets||1
+  Cmn35=the maximum size of the input/output arrays, and\\||>
+  Cmn36=sets the sizes of the file recorded to disk.  All\\||=
+  Cmn37=||1unused inputs are set to zero for predictable\\              behavior||1
+  Cmn38=if inputs/outputs are added later.\\              \\FILE_PATH:||2
+  Cmn39=||2The path and filename to use for storing the values.\\||8
+  Cmn40=||6The Instance_ID and ".dat" will be appended.  Use\\||7
+  Cmn41=||7double backslash (\\) to express a backslash.
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=6
+  Inclusions_CDS=5
+  Name=Analog Non-Volatile to Disk v2.2
+  SmplCName=NV Analog to Disk v2.2.usp
+  Code=1
+  SysRev5=3.137
+  SMWRev=2.02.05
+  OutputCue1=FileOp_Busy
+  OutputSigType1=Digital
+  InputList2Cue1=Instance_ID
+  InputList2SigType1=Analog
+  InputList2Cue2=In[#]
+  InputList2SigType2=Analog
+  OutputList2Cue1=Out[#]
+  OutputList2SigType1=Analog
+  ParamCue1=[Reference Name]
+  MinVariableInputs=0
+  MaxVariableInputs=0
+  MinVariableInputsList2=2
+  MaxVariableInputsList2=51
+  MinVariableOutputs=1
+  MaxVariableOutputs=1
+  MinVariableOutputsList2=1
+  MaxVariableOutputsList2=50
+  MinVariableParams=0
+  MaxVariableParams=0
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=9
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  MPp=1
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_NV_Analog_to_Disk_v2_2
+  SymJam=NonExclusive
+  FileName=NV Analog to Disk v2.2.ush
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]

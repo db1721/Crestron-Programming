@@ -1,0 +1,13 @@
+Crosspoint listing for C:\Users\dbeck\Desktop\Working Code\BU0036\BU0036_DMB_20210309\Code\BU0036.SMW
+
+Note:  Crosspoint symbols with EquipID or ControlID set to 0d are not routeable.
+
+Equipment Crosspoint Routing.                                                                       EquipID
+===========================================================================================================
+No symbols of this type found in the program
+
+Control Crosspoint Routing.                                                                         ControlID
+=============================================================================================================
+S-6.3 in macro S-2.7.3 (Module File C:\Program Files (x86)\Crestron\Cresdb\Modules\Fusion           100
+SSI v2.5- 3 series only.cmc)                                                                        
+

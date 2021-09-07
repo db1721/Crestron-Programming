@@ -1,0 +1,797 @@
+#SYMBOL_NAME "PMI Synergy Room Control Routing v2"
+
+#CATEGORY "46" "PMI Synergy" // Custom
+
+#DEFAULT_NONVOLATILE 
+#ENABLE_TRACE   
+#Print_to_trace
+
+
+//INPUTS  
+ANALOG_INPUT ENABLE_DISP_PWR_FB;
+ANALOG_INPUT DISP_WARMUP_TIME; 
+DIGITAL_INPUT DISP_PWR_FB;
+
+ANALOG_INPUT SRC_REF_VAL;  
+
+ANALOG_INPUT SWT_1_BRAND;
+ANALOG_INPUT SWT_2_BRAND;
+ANALOG_INPUT SWT_3_BRAND;
+ANALOG_INPUT SWT_4_BRAND;
+ANALOG_INPUT SWT_AUD_BRAND;
+
+ANALOG_INPUT SOURCE_RGB_DATA[17];
+ANALOG_INPUT SOURCE_YUV_DATA[17];
+ANALOG_INPUT SOURCE_SVID_DATA[17];
+ANALOG_INPUT SOURCE_COMP_DATA[17];
+ANALOG_INPUT SOURCE_VID_TYPE_DATA[17];
+ANALOG_INPUT SOURCE_AUD_DATA[16];
+ANALOG_INPUT SWT_OUTPUT_VAL[5];
+
+
+
+
+//OUTPUTS               
+DIGITAL_OUTPUT ROOM_ON_FB;
+DIGITAL_OUTPUT DISP_PWR_ON;
+DIGITAL_OUTPUT DISP_PWR_OFF;
+DIGITAL_OUTPUT DISP_RGB_IN;
+DIGITAL_OUTPUT DISP_YUV_IN;
+DIGITAL_OUTPUT DISP_SVID_IN;
+DIGITAL_OUTPUT DISP_COMP_IN;
+
+STRING_OUTPUT SWT_TX$[5];
+ANALOG_OUTPUT SWT_VAL[5];
+
+//VARIABLES 
+INTEGER PWR_WAIT;
+INTEGER iSRC;
+INTEGER LOOP;
+INTEGER SRC_DATA[17][6];
+INTEGER OUT_DATA[5]; 
+    
+STRING KRAMER_INPUTS$[16][1];
+STRING KRAMER_OUTPUTS$[16][1];
+
+STRING OUTPUT1$[8][3];
+STRING OUTPUT2$[8][3];
+STRING OUTPUT3$[8][3];
+STRING OUTPUT4$[8][3];
+STRING OUTPUT5$[8][3];
+STRING OUTPUT6$[8][3];
+STRING OUTPUT7$[8][3];
+STRING OUTPUT8$[8][3]; 
+
+//EVENTS           
+
+CHANGE SRC_REF_VAL
+{    
+	PWR_WAIT = DISP_WARMUP_TIME;
+	iSRC = SRC_REF_VAL;
+	IF(iSRC > 0)
+	{
+		ROOM_ON_FB = 1;
+
+		//SWITCHER CONTROL
+		SWITCH (SWT_1_BRAND)
+		{
+			CASE(1)://CRESTRON
+			{
+				SWT_VAL[1] = SOURCE_RGB_DATA[iSRC];
+			}
+			CASE(2)://EXTRON
+			{
+				SWT_TX$[1] = ITOA(SOURCE_RGB_DATA[iSRC]) + "*" + ITOA(SWT_OUTPUT_VAL[1]) + "%";
+			}
+			CASE(3)://ELAN V883
+			{   
+				SWITCH(SWT_OUTPUT_VAL[1])
+				{
+					CASE(1):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT1$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(2):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT2$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(3):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT3$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(4):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT4$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(5):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT5$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(6):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT6$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(7):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT7$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+					CASE(8):
+					{
+						SWT_TX$[1] = "&V883,KEY," + OUTPUT8$[SOURCE_RGB_DATA[iSRC]] + "\x0D";
+					}
+				}
+			}
+			CASE(4)://ELAN Z881
+			{
+				SWT_TX$[1] = "\x0DV" + ITOA(SWT_OUTPUT_VAL[1]) + ITOA(SOURCE_RGB_DATA[iSRC]);
+			}
+			CASE(5)://KEY DIGITAL
+			{
+				SWT_TX$[1] = "";
+			}
+			CASE(6)://ADA
+			{     
+				IF(SWT_OUTPUT_VAL[1] < 10)
+				{                         
+					IF(SOURCE_RGB_DATA[iSRC] < 10)
+					{
+						SWT_TX$[1] = "`SVD0" + ITOA(SOURCE_RGB_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[1]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[1] = "`SVD" + ITOA(SOURCE_RGB_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[1]) + "\x0D";
+					} 
+				}
+				ELSE IF(SWT_OUTPUT_VAL[1] > 9)
+				{
+					IF(SOURCE_RGB_DATA[iSRC] < 10)
+					{
+						SWT_TX$[1] = "`SVD0" + ITOA(SOURCE_RGB_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[1]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[1] = "`SVD" + ITOA(SOURCE_RGB_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[1]) + "\x0D";
+					} 
+				}
+			}
+			CASE(7)://EXTRON SINGLE OUTUPT
+			{
+				SWT_TX$[1] = ITOA(SOURCE_RGB_DATA[iSRC]) + "!";
+			}
+			CASE(8)://KRAMER PROTOCOL 2000 SWITCH
+			{
+            	SWT_TX$[1] = "\x01" + KRAMER_INPUTS$[SOURCE_RGB_DATA[iSRC]] + KRAMER_OUTPUTS$[SWT_OUTPUT_VAL[1]] + "\x81";
+			}
+		} 
+		SWITCH (SWT_2_BRAND)
+		{
+			CASE(1)://CRESTRON
+			{
+				SWT_VAL[2] = SOURCE_YUV_DATA[iSRC];
+			}
+			CASE(2)://EXTRON
+			{
+				SWT_TX$[2] = ITOA(SOURCE_YUV_DATA[iSRC]) + "*" + ITOA(SWT_OUTPUT_VAL[2]) + "%";
+			}
+			CASE(3)://ELAN V883
+			{
+				SWITCH(SWT_OUTPUT_VAL[2])
+				{
+					CASE(1):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT1$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(2):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT2$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(3):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT3$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(4):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT4$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(5):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT5$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(6):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT6$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(7):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT7$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+					CASE(8):
+					{
+						SWT_TX$[2] = "&V883,KEY," + OUTPUT8$[SOURCE_YUV_DATA[iSRC]] + "\x0D";
+					}
+				}
+			}
+			CASE(4)://ELAN Z881
+			{
+				SWT_TX$[2] = "\x0DV" + ITOA(SWT_OUTPUT_VAL[2]) + ITOA(SOURCE_YUV_DATA[iSRC]);
+			}
+			CASE(5)://KEY DIGITAL
+			{
+				SWT_TX$[2] = "";
+			}
+			CASE(6)://ADA
+			{
+				IF(SWT_OUTPUT_VAL[2] < 10)
+				{                         
+					IF(SOURCE_YUV_DATA[iSRC] < 10)
+					{
+						SWT_TX$[2] = "`SVD0" + ITOA(SOURCE_YUV_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[2]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[2] = "`SVD" + ITOA(SOURCE_YUV_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[2]) + "\x0D";
+					} 
+				}
+				ELSE IF(SWT_OUTPUT_VAL[1] > 9)
+				{
+					IF(SOURCE_YUV_DATA[iSRC] < 10)
+					{
+						SWT_TX$[2] = "`SVD0" + ITOA(SOURCE_YUV_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[2]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[2] = "`SVD" + ITOA(SOURCE_YUV_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[2]) + "\x0D";
+					} 
+				}
+	
+			}
+			CASE(7)://EXTRON SINGLE OUTUPT
+			{
+				SWT_TX$[2] = ITOA(SOURCE_YUV_DATA[iSRC]) + "!";
+			}
+			CASE(8)://KRAMER PROTOCOL 2000 SWITCH
+			{
+            	SWT_TX$[1] = "\x01" + KRAMER_INPUTS$[SOURCE_YUV_DATA[iSRC]] + KRAMER_OUTPUTS$[SWT_OUTPUT_VAL[2]] + "\x81";
+			}
+		} 
+		SWITCH (SWT_3_BRAND)
+		{
+			CASE(1)://CRESTRON
+			{
+				SWT_VAL[3] = SOURCE_SVID_DATA[iSRC];
+			}
+			CASE(2)://EXTRON
+			{
+				SWT_TX$[3] = ITOA(SOURCE_SVID_DATA[iSRC]) + "*" + ITOA(SWT_OUTPUT_VAL[3]) + "%";
+			}
+			CASE(3)://ELAN V883
+			{
+				SWITCH(SWT_OUTPUT_VAL[3])
+				{
+					CASE(1):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT1$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(2):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT2$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(3):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT3$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(4):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT4$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(5):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT5$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(6):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT6$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(7):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT7$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+					CASE(8):
+					{
+						SWT_TX$[3] = "&V883,KEY," + OUTPUT8$[SOURCE_SVID_DATA[iSRC]] + "\x0D";
+					}
+				}
+			}
+			CASE(4)://ELAN Z881
+			{
+				SWT_TX$[3] = "\x0DV" + ITOA(SWT_OUTPUT_VAL[3]) + ITOA(SOURCE_SVID_DATA[iSRC]);
+			}
+			CASE(5)://KEY DIGITAL
+			{
+				SWT_TX$[3] = "";
+			}
+			CASE(6)://ADA
+			{
+				IF(SWT_OUTPUT_VAL[3] < 10)
+				{                         
+					IF(SOURCE_SVID_DATA[iSRC] < 10)
+					{
+						SWT_TX$[3] = "`SVD0" + ITOA(SOURCE_SVID_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[3]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[3] = "`SVD" + ITOA(SOURCE_SVID_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[3]) + "\x0D";
+					} 
+				}
+				ELSE IF(SWT_OUTPUT_VAL[3] > 9)
+				{
+					IF(SOURCE_SVID_DATA[iSRC] < 10)
+					{
+						SWT_TX$[3] = "`SVD0" + ITOA(SOURCE_SVID_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[3]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[3] = "`SVD" + ITOA(SOURCE_SVID_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[3]) + "\x0D";
+					} 
+				}
+			}
+			CASE(7)://EXTRON SINGLE OUTUPT
+			{
+				SWT_TX$[3] = ITOA(SOURCE_SVID_DATA[iSRC]) + "!";
+			}
+			CASE(8)://KRAMER PROTOCOL 2000 SWITCH
+			{
+            	SWT_TX$[1] = "\x01" + KRAMER_INPUTS$[SOURCE_SVID_DATA[iSRC]] + KRAMER_OUTPUTS$[SWT_OUTPUT_VAL[3]] + "\x81";
+			}
+		} 
+		SWITCH (SWT_4_BRAND)
+		{
+			CASE(1)://CRESTRON
+			{
+				SWT_VAL[4] = SOURCE_COMP_DATA[iSRC];
+			}
+			CASE(2)://EXTRON
+			{
+				SWT_TX$[4] = ITOA(SOURCE_COMP_DATA[iSRC]) + "*" + ITOA(SWT_OUTPUT_VAL[4]) + "%";
+			}
+			CASE(3)://ELAN V883
+			{
+				SWITCH(SWT_OUTPUT_VAL[4])
+				{
+					CASE(1):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT1$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(2):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT2$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(3):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT3$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(4):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT4$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(5):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT5$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(6):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT6$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(7):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT7$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+					CASE(8):
+					{
+						SWT_TX$[4] = "&V883,KEY," + OUTPUT8$[SOURCE_COMP_DATA[iSRC]] + "\x0D";
+					}
+				}
+			}
+			CASE(4)://ELAN Z881
+			{
+				SWT_TX$[4] = "\x0DV" + ITOA(SWT_OUTPUT_VAL[4]) + ITOA(SOURCE_COMP_DATA[iSRC]);
+			}
+			CASE(5)://KEY DIGITAL
+			{
+				SWT_TX$[4] = "";
+			}
+			CASE(6)://ADA
+			{
+				IF(SWT_OUTPUT_VAL[4] < 10)
+				{                         
+					IF(SOURCE_COMP_DATA[iSRC] < 10)
+					{
+						SWT_TX$[4] = "`SVD0" + ITOA(SOURCE_COMP_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[4]) + "\x0D";
+					}
+					ELSE IF(SOURCE_COMP_DATA[iSRC] > 9)
+					{
+						SWT_TX$[4] = "`SVD" + ITOA(SOURCE_COMP_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[4]) + "\x0D";
+					} 
+				}
+				ELSE IF(SWT_OUTPUT_VAL[4] > 9)
+				{
+					IF(SOURCE_COMP_DATA[iSRC] < 10)
+					{
+						SWT_TX$[4] = "`SVD0" + ITOA(SOURCE_COMP_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[4]) + "\x0D";
+					}
+					ELSE IF(SOURCE_COMP_DATA[iSRC] > 9)
+					{
+						SWT_TX$[4] = "`SVD" + ITOA(SOURCE_COMP_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[4]) + "\x0D";
+					} 
+				}
+			}
+			CASE(7)://EXTRON SINGLE OUTUPT
+			{
+				SWT_TX$[4] = ITOA(SOURCE_COMP_DATA[iSRC]) + "!";
+			}
+			CASE(8)://KRAMER PROTOCOL 2000 SWITCH
+			{
+            	SWT_TX$[1] = "\x01" + KRAMER_INPUTS$[SOURCE_COMP_DATA[iSRC]] + KRAMER_OUTPUTS$[SWT_OUTPUT_VAL[4]] + "\x81";
+			}
+		}   
+		SWITCH (SWT_AUD_BRAND)
+		{   
+			CASE(1)://CRESTRON
+			{
+				SWT_VAL[5] = SOURCE_AUD_DATA[iSRC];
+			}
+			CASE(2)://EXTRON
+			{
+				SWT_TX$[5] = ITOA(SOURCE_AUD_DATA[iSRC]) + "*" + ITOA(SWT_OUTPUT_VAL[5]) + "$";
+			}
+			CASE(3)://ELAN V883
+			{
+			SWITCH(SWT_OUTPUT_VAL[5])
+				{
+					CASE(1):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT1$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+				CASE(2):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT2$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+					CASE(3):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT3$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+					CASE(4):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT4$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+					CASE(5):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT5$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+					CASE(6):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT6$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+					CASE(7):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT7$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+					CASE(8):
+					{
+						SWT_TX$[5] = "&V883,KEY," + OUTPUT8$[SOURCE_AUD_DATA[iSRC]] + "\x0D";
+					}
+				}
+			}
+			CASE(4)://ELAN Z881
+			{
+				SWT_TX$[5] = "\x0DV" + ITOA(SWT_OUTPUT_VAL[5]) + ITOA(SOURCE_AUD_DATA[iSRC]);
+			}
+			CASE(5)://KEY DIGITAL
+			{
+				SWT_TX$[5] = "";
+			}
+			CASE(6)://ADA
+			{
+				IF(SWT_OUTPUT_VAL[5] < 10)
+				{                         
+					IF(SOURCE_AUD_DATA[iSRC] = 0)
+					{
+						SWT_TX$[5] = "`SRMOFR0" + ITOA(SWT_OUTPUT_VAL[5]) + "\x0D";
+					}
+					ELSE IF(SOURCE_AUD_DATA[iSRC] < 10)
+					{
+						SWT_TX$[5] = "`SAD0" + ITOA(SOURCE_AUD_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[5]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[5] = "`SAD" + ITOA(SOURCE_AUD_DATA[iSRC]) + "R0" + ITOA(SWT_OUTPUT_VAL[5]) + "\x0D";
+					} 
+				}
+				ELSE IF(SWT_OUTPUT_VAL[5] > 9)
+				{
+					IF(SOURCE_AUD_DATA[iSRC] = 0)
+					{
+						SWT_TX$[5] = "`SRMOFR" + ITOA(SWT_OUTPUT_VAL[5]) + "\x0D";
+					}
+					ELSE IF(SOURCE_AUD_DATA[iSRC] < 10)
+					{
+						SWT_TX$[5] = "`SAD0" + ITOA(SOURCE_AUD_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[5]) + "\x0D";
+					}
+					ELSE IF(SOURCE_RGB_DATA[iSRC] > 9)
+					{
+						SWT_TX$[5] = "`SAD" + ITOA(SOURCE_AUD_DATA[iSRC]) + "R" + ITOA(SWT_OUTPUT_VAL[5]) + "\x0D";
+					} 
+				}
+			}
+			CASE(7)://EXTRON SINGLE OUTUPT
+			{
+				SWT_TX$[5] = ITOA(SOURCE_AUD_DATA[iSRC]) + "!";
+			}
+		}
+	}
+
+	ELSE
+	{
+		ROOM_ON_FB = 0;
+		SWITCH (SWT_AUD_BRAND)
+		{
+			CASE(1)://CRESTRON
+			{
+				SWT_VAL[5] = 0;
+			}
+			CASE(2)://EXTRON
+			{
+				SWT_TX$[5] = "0*" + ITOA(SWT_OUTPUT_VAL[5]) + "$";
+			}
+		}
+	} 
+	
+	SWITCH (ENABLE_DISP_PWR_FB)
+	{
+		CASE(1)://DISPLAY POWER FB CONDITIONAL ENABLED
+		{
+			IF(iSRC > 0)
+			{
+				IF((SOURCE_VID_TYPE_DATA[iSRC] > 0)&&(SOURCE_VID_TYPE_DATA[iSRC] < 5))//NOT AN AUDIO ONLY SOURCE
+				{
+					IF(DISP_PWR_FB = 0)//DISPLAY IS OFF...
+					{
+						PULSE(50,DISP_PWR_ON); 
+						PRINT("POWER WAIT = %u, IT SHOULD BE %u",PWR_WAIT,DISP_WARMUP_TIME);
+						WAIT(PWR_WAIT)
+						{
+							SWITCH(SOURCE_VID_TYPE_DATA[iSRC])//CHECK VIDEO TYPE THEN PULSE APPROPRIATE INPUT ON DISPLAY
+							{
+								CASE(1)://RGB
+								{
+									PULSE(50,DISP_RGB_IN);
+								}
+								CASE(2)://YUV
+								{
+									PULSE(50,DISP_YUV_IN);
+								}
+								CASE(3)://SVIDEO
+								{
+									PULSE(50,DISP_SVID_IN);
+								}
+								CASE(4)://COMPOSITE
+								{
+									PULSE(50,DISP_COMP_IN);
+								}
+							}  
+						}
+					}
+					ELSE
+					{
+					 	SWITCH(SOURCE_VID_TYPE_DATA[iSRC])//CHECK VIDEO TYPE THEN PULSE APPROPRIATE INPUT ON DISPLAY
+						{                                                              
+							
+							CASE(1)://RGB
+							{
+								PULSE(50,DISP_RGB_IN); 
+								PRINT("PULSING RGB IN");
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+							CASE(2)://YUV
+							{
+								PULSE(50,DISP_YUV_IN);  
+								PRINT("PULSING YUV IN");                              
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+							CASE(3)://SVIDEO
+							{
+								PULSE(50,DISP_SVID_IN); 
+								PRINT("PULSING SVID IN");                             
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+							CASE(4)://COMPOSITE
+							{
+								PULSE(50,DISP_COMP_IN);  
+								PRINT("PULSING COMP IN");                             
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+						}    
+						
+					}
+				}
+				ELSE IF(SOURCE_VID_TYPE_DATA[iSRC] = 5)//AUDIO ONLY SOURCE
+				{
+					IF(DISP_PWR_FB = 1)
+					{
+						PULSE(50,DISP_PWR_OFF);
+					}
+				}			
+			}
+		}  
+		CASE(0)://DISPLAY POWER FB CONDITIONAL DISABLED
+		{
+			IF(iSRC > 0)
+			{
+				IF((SOURCE_VID_TYPE_DATA[iSRC] > 0)&&(SOURCE_VID_TYPE_DATA[iSRC] < 5))//NOT AN AUDIO ONLY SOURCE
+				{
+					PULSE(50,DISP_PWR_ON); 
+					PRINT("POWER WAIT = %u, IT SHOULD BE %u",PWR_WAIT,DISP_WARMUP_TIME);
+					WAIT(PWR_WAIT)
+					{			
+						SWITCH(SOURCE_VID_TYPE_DATA[iSRC])//CHECK VIDEO TYPE THEN PULSE APPROPRIATE INPUT ON DISPLAY
+						{
+							CASE(1)://RGB
+							{
+								PULSE(50,DISP_RGB_IN);
+								
+								PRINT("PULSING RGB IN");
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+							CASE(2)://YUV
+							{
+								PULSE(50,DISP_YUV_IN);                                
+								
+								PRINT("PULSING YUV IN");
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+							CASE(3)://SVIDEO
+							{
+								PULSE(50,DISP_SVID_IN);                               
+								
+								PRINT("PULSING SVID IN");
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+							CASE(4)://COMPOSITE
+							{
+								PULSE(50,DISP_COMP_IN);                               
+								
+								PRINT("PULSING COMP IN");
+								PRINT ("ACTIVE_CASE = %u",SOURCE_VID_TYPE_DATA[iSRC]);
+							}
+						}  
+					}
+				}
+				ELSE IF(SOURCE_VID_TYPE_DATA[iSRC] = 5)//AUDIO ONLY SOURCE
+				{
+					PULSE(50,DISP_PWR_OFF);
+				}			
+			}
+		}
+	}
+	IF(iSRC = 0)
+	{
+//		IF(SOURCE_VID_TYPE_DATA[iSRC] = 0)
+//		{
+			PULSE(50,DISP_PWR_OFF);		
+//		}
+	}
+}
+
+//MAIN
+FUNCTION MAIN()
+{
+	KRAMER_INPUTS$[0] = "\x80";
+	KRAMER_INPUTS$[1] = "\x81";
+	KRAMER_INPUTS$[2] = "\x82";
+	KRAMER_INPUTS$[3] = "\x83";
+	KRAMER_INPUTS$[4] = "\x84";
+	KRAMER_INPUTS$[5] = "\x85";
+	KRAMER_INPUTS$[6] = "\x86";
+	KRAMER_INPUTS$[7] = "\x87";
+	KRAMER_INPUTS$[8] = "\x88";
+	KRAMER_INPUTS$[9] = "\x89";
+	KRAMER_INPUTS$[10] = "\x8A";
+	KRAMER_INPUTS$[11] = "\x8B";
+	KRAMER_INPUTS$[12] = "\x8C";
+	KRAMER_INPUTS$[13] = "\x8D";
+	KRAMER_INPUTS$[14] = "\x8E";
+	KRAMER_INPUTS$[15] = "\x8F";
+	KRAMER_INPUTS$[16] = "\x90";
+                    
+	KRAMER_OUTPUTS$[0] = "\x80";
+	KRAMER_OUTPUTS$[1] = "\x81";
+	KRAMER_OUTPUTS$[2] = "\x82";
+	KRAMER_OUTPUTS$[3] = "\x83";
+	KRAMER_OUTPUTS$[4] = "\x84";
+	KRAMER_OUTPUTS$[5] = "\x85";
+	KRAMER_OUTPUTS$[6] = "\x86";
+	KRAMER_OUTPUTS$[7] = "\x87";
+	KRAMER_OUTPUTS$[8] = "\x88";
+	KRAMER_OUTPUTS$[9] = "\x89";
+	KRAMER_OUTPUTS$[10] = "\x8A";
+	KRAMER_OUTPUTS$[11] = "\x8B";
+	KRAMER_OUTPUTS$[12] = "\x8C";
+	KRAMER_OUTPUTS$[13] = "\x8D";
+	KRAMER_OUTPUTS$[14] = "\x8E";
+	KRAMER_OUTPUTS$[15] = "\x8F";
+	KRAMER_OUTPUTS$[16] = "\x90";
+
+
+	OUTPUT1$[1] = "000"; 
+	OUTPUT1$[2] = "001";
+	OUTPUT1$[3] = "002";
+	OUTPUT1$[4] = "003";
+	OUTPUT1$[5] = "004";
+	OUTPUT1$[6] = "005";
+	OUTPUT1$[7] = "006";
+	OUTPUT1$[8] = "007";
+	
+	OUTPUT2$[1] = "008"; 
+	OUTPUT2$[2] = "009";
+	OUTPUT2$[3] = "010";
+	OUTPUT2$[4] = "011";
+	OUTPUT2$[5] = "012";
+	OUTPUT2$[6] = "013";
+	OUTPUT2$[7] = "014";
+	OUTPUT2$[8] = "015";
+	
+	OUTPUT3$[1] = "016"; 
+	OUTPUT3$[2] = "017";
+	OUTPUT3$[3] = "018";
+	OUTPUT3$[4] = "019";
+	OUTPUT3$[5] = "020";
+	OUTPUT3$[6] = "021";
+	OUTPUT3$[7] = "022";
+	OUTPUT3$[8] = "023";
+	
+	OUTPUT4$[1] = "024"; 
+	OUTPUT4$[2] = "025";
+	OUTPUT4$[3] = "026";
+	OUTPUT4$[4] = "027";
+	OUTPUT4$[5] = "028";
+	OUTPUT4$[6] = "029";
+	OUTPUT4$[7] = "030";
+	OUTPUT4$[8] = "031";
+	
+	OUTPUT5$[1] = "032"; 
+	OUTPUT5$[2] = "033";
+	OUTPUT5$[3] = "034";
+	OUTPUT5$[4] = "035";
+	OUTPUT5$[5] = "036";
+	OUTPUT5$[6] = "037";
+	OUTPUT5$[7] = "038";
+	OUTPUT5$[8] = "039";
+	
+	OUTPUT6$[1] = "040"; 
+	OUTPUT6$[2] = "041";
+	OUTPUT6$[3] = "042";
+	OUTPUT6$[4] = "043";
+	OUTPUT6$[5] = "044";
+	OUTPUT6$[6] = "045";
+	OUTPUT6$[7] = "046";
+	OUTPUT6$[8] = "047";
+	
+	OUTPUT7$[1] = "048"; 
+	OUTPUT7$[2] = "049";
+	OUTPUT7$[3] = "050";
+	OUTPUT7$[4] = "051";
+	OUTPUT7$[5] = "052";
+	OUTPUT7$[6] = "053";
+	OUTPUT7$[7] = "054";
+	OUTPUT7$[8] = "055";
+	
+	OUTPUT8$[1] = "056"; 
+	OUTPUT8$[2] = "057";
+	OUTPUT8$[3] = "058";
+	OUTPUT8$[4] = "059";
+	OUTPUT8$[5] = "060";
+	OUTPUT8$[6] = "061";
+	OUTPUT8$[7] = "062";
+	OUTPUT8$[8] = "063"; 
+	
+}

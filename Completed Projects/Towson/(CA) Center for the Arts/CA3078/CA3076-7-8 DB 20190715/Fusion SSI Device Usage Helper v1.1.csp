@@ -1,0 +1,303 @@
+/*
+Brian J. Magrogan
+Fusion Device Usage Helper
+*/
+
+#Category "4" // Device Interface
+#Symbol_Name "Fusion SSI Device Usage Helper v1.1"
+#Default_Volatile
+#Enable_Stack_Checking
+#Enable_Trace
+#Print_To_Trace
+
+
+/*** Help ***/
+
+#Help_Begin
+Gathers device usage statistics that will be sent to Fusion for reporting purpose
+
+*** Revision History ***
+Version 1.0.0 - Initial Release
+
+Version 1.1
+
+Redifined the Queue Name "System_Powered_Off_Held" to "Restart_Counters"  the use case is anytime you need to resart the counter at zero, like at midnight so the log data is accurate
+to the date.
+
+Added flag for reset to preven math while in action.
+
+#Help_End
+
+
+/*** Constants ***/
+
+#Define_Constant cnDebug						0
+
+#Define_Constant cnFalse						0
+#Define_Constant cnTrue							1
+
+#Define_Constant cnModeDontCount 				0
+#Define_Constant cnModeCount     				1
+
+#Define_Constant cnMaxAssetIDLength				50
+#Define_Constant cnMaxAssetTypeLength			50
+#Define_Constant cnMaxAssetNameLength			50
+#Define_Constant cnMaxMeetingIDLength			50
+#Define_Constant cnMinMeetingIDLength			5
+
+#Define_Constant cnMaxDevices					16
+
+#Define_Constant cnTransmitCurrentMeetingID		1
+#Define_Constant cnTransmitPreviousMeetingID	2
+#Define_Constant cnTransmitAllDevices			99
+                    
+
+/*** Structures ***/
+
+Structure StructureDevice
+{
+	string 	sAssetType$[cnMaxAssetTypeLength];
+	string 	sAssetName$[cnMaxAssetNameLength];
+	string	sAssetID$[cnMaxAssetIDLength];
+	integer	nInUse;
+	integer nCurrentMinutes;
+	integer nCurrentSeconds;
+};
+
+
+/*** I/O ***/
+
+Digital_Input	_skip_, Enable_Transmit_On_Meeting_Change_Held, _skip_, Clock_b, _skip_, Restart_Counters, _skip_, Device_In_Use_Held[cnMaxDevices, cnMaxDevices]; 
+String_Input	_skip_, Meeting_ID$[cnMaxMeetingIDLength], _skip_, Asset_ID$[cnMaxDevices][cnMaxAssetIDLength], _skip_, Asset_Type$[cnMaxDevices][cnMaxAssetTypeLength],
+				_skip_, Asset_Name$[cnMaxDevices][cnMaxAssetNameLength], _skip_, Asset_Type_Direct$[cnMaxDevices][cnMaxAssetTypeLength],
+				_skip_, Asset_Name_Direct$[cnMaxDevices, cnMaxDevices][cnMaxAssetNameLength];
+						  
+String_Output 	_skip_, Device_Usage_tx$;
+Analog_Output	_skip_, _skip_, _skip_, _skip_, _skip_, Current_Usage_Minutes_fb[cnMaxDevices, cnMaxDevices]; 
+
+
+/*** Parameters ***/
+
+Integer_Parameter	DebugMode; 
+
+#Begin_Parameter_Properties DebugMode
+	propValidUnits = unitDecimal;
+	propDefaultValue= 0d;
+	propList={0d, "Debug Mode Off"}, {1d, "Debug Mode On"};
+#End_Parameter_Properties
+
+
+/*** Variables ***/
+
+String		g_sPreviousMeetingID$[cnMaxMeetingIDLength], g_sCurrentMeetingID$[cnMaxMeetingIDLength], g_sCurrentDate$[20], g_sCompareDate$[20];
+
+StructureDevice	 g_oDevices[cnMaxDevices];
+
+
+/*** Functions ***/
+
+Function fnTransmitUsageData(integer nIndex, integer nMeetingType)
+{
+	integer nMinutesUsed;
+	string sAssetID$[cnMaxAssetIDLength], sMeetingID$[cnMaxMeetingIDLength], sTime$[20];
+	
+	//Format: "USAGE||-||-||TIME||Device_Type||Device_Name||-||Usage_Minutes||-||Asset_ID||Meeting_ID"
+
+	//If minutes = 0 and seconds > 0, force minutes to 1
+	if(g_oDevices[nIndex].nCurrentMinutes = 0 && g_oDevices[nIndex].nCurrentSeconds > 0)
+	{
+		Current_Usage_Minutes_fb[nIndex] = 1;
+		nMinutesUsed = 1;
+	}
+	else
+	{
+		Current_Usage_Minutes_fb[nIndex] = g_oDevices[nIndex].nCurrentMinutes;
+		nMinutesUsed = g_oDevices[nIndex].nCurrentMinutes;
+	}
+
+	if(g_sCompareDate$ != date(3)) //Update the date
+	{
+     	makestring(g_sCurrentDate$, "%s", date(3));
+		makestring(g_sCompareDate$, "%s", date(3));
+		makestring(g_sCurrentDate$, "%s-%s-%s", left(g_sCurrentDate$, 4), mid(g_sCurrentDate$, 6, 2), right(g_sCurrentDate$, 2));
+	}
+	makestring(sTime$, "%s", time());
+	
+	//Set Asset & Meeting ID's
+	
+	if(len(g_oDevices[nIndex].sAssetID$) > 0)
+	{
+		makestring(sAssetID$, "%s", g_oDevices[nIndex].sAssetID$);
+	}
+	else
+	{
+		makestring(sAssetID$, "-");
+	}	
+  
+  	if(nMeetingType = cnTransmitCurrentMeetingID) //Use current meeting ID
+  	{
+		if(len(g_sCurrentMeetingID$) > cnMinMeetingIDLength)
+		{
+			makestring(sMeetingID$, "%s", g_sCurrentMeetingID$);
+		}
+		else
+		{
+			makestring(sMeetingID$, "-");
+		}  	
+  	}
+	else if(nMeetingType = cnTransmitPreviousMeetingID)
+	{
+		if(len(g_sPreviousMeetingID$) > cnMinMeetingIDLength)
+		{
+			makestring(sMeetingID$, "%s", g_sPreviousMeetingID$);
+		}
+		else
+		{
+			makestring(sMeetingID$, "-");
+		}  	
+	}	
+	
+	makestring (Device_Usage_tx$, "USAGE||%s||%s||TIME||%s||%s||-||%s||-||%s||%s||\n", g_sCurrentDate$, sTime$, g_oDevices[nIndex].sAssetType$, g_oDevices[nIndex].sAssetName$, itoa(nMinutesUsed), sAssetID$, sMeetingID$);
+}
+
+
+/*** Events ***/
+
+Threadsafe Change Meeting_ID$
+{
+	integer nIndex;
+	
+	if(Enable_Transmit_On_Meeting_Change_Held)
+	{
+		if(Meeting_ID$ <> g_sPreviousMeetingID$)
+		{
+			for(nIndex = 1 to cnMaxDevices)
+			{
+				if(g_oDevices[nIndex].nInUse = cnTrue) //Transmit Data
+				{
+					fnTransmitUsageData(nIndex, cnTransmitPreviousMeetingID);
+				
+					//Reset the counters
+					g_oDevices[nIndex].nCurrentMinutes = 0;
+					g_oDevices[nIndex].nCurrentSeconds = 0;
+				}			 
+			}
+		}		
+	}
+	
+	makestring(g_sCurrentMeetingID$, "%s", Meeting_ID$);
+	makestring(g_sPreviousMeetingID$, "%s", Meeting_ID$);
+}
+
+Change Asset_Type$
+{
+    integer nIndex;
+
+	nIndex = getlastmodifiedarrayindex(); 	
+
+	makestring(g_oDevices[nIndex].sAssetType$, "%s", Asset_Type$[nIndex]);
+}
+
+Change Asset_Name$
+{
+	integer nIndex;
+
+	nIndex = getlastmodifiedarrayindex();
+	
+	makestring(g_oDevices[nIndex].sAssetName$, "%s", Asset_Name$[nIndex]); 	
+}
+
+Change Asset_Type_Direct$
+{
+	integer nIndex;
+
+	nIndex = getlastmodifiedarrayindex(); 	
+
+	makestring(g_oDevices[nIndex].sAssetType$, "%s", Asset_Type_Direct$[nIndex]);
+}
+
+Change Asset_Name_Direct$
+{
+	integer nIndex;
+
+	nIndex = getlastmodifiedarrayindex();
+	
+	makestring(g_oDevices[nIndex].sAssetName$, "%s", Asset_Name_Direct$[nIndex]); 	
+}
+
+Push Device_In_Use_Held
+{
+    integer nIndex;
+
+	nIndex = getlastmodifiedarrayindex();
+
+	g_oDevices[nIndex].nInUse = cnTrue;
+}
+
+Release Device_In_Use_Held
+{
+	integer nIndex;
+
+	nIndex = getlastmodifiedarrayindex();
+
+	if(g_oDevices[nIndex].nInUse = cnTrue) //Transmit Data
+	{
+		g_oDevices[nIndex].nInUse = cnFalse;
+		if(g_oDevices[nIndex].nCurrentMinutes > 0 || g_oDevices[nIndex].nCurrentSeconds > 0) //We have usage
+		{
+			fnTransmitUsageData(nIndex, cnTransmitCurrentMeetingID);
+			g_oDevices[nIndex].nCurrentMinutes = 0;
+			g_oDevices[nIndex].nCurrentSeconds = 0;
+		}
+	}
+}
+
+Push Clock_b
+{
+  	integer nIndex;
+
+	for(nIndex = 1 to cnMaxDevices)
+	{
+		if(g_oDevices[nIndex].nInUse = cnTrue) //This device is in use
+		{
+			g_oDevices[nIndex].nCurrentSeconds = g_oDevices[nIndex].nCurrentSeconds + 30;
+			if(g_oDevices[nIndex].nCurrentSeconds > 59)
+			{
+				g_oDevices[nIndex].nCurrentMinutes = g_oDevices[nIndex].nCurrentMinutes + 1;
+				g_oDevices[nIndex].nCurrentSeconds = g_oDevices[nIndex].nCurrentSeconds - 60;
+				Current_Usage_Minutes_fb[nIndex] = g_oDevices[nIndex].nCurrentMinutes;
+			}
+		}
+	}
+}
+
+Push Restart_Counters
+{
+	integer nIndex;
+	
+	for(nIndex = 1 to cnMaxDevices)
+	{
+		if(g_oDevices[nIndex].nInUse = cnTrue) //Transmit Data
+		{
+			fnTransmitUsageData(nIndex, cnTransmitPreviousMeetingID);
+				
+			//Reset the counters
+			g_oDevices[nIndex].nCurrentMinutes = 0;
+			g_oDevices[nIndex].nCurrentSeconds = 0;
+		}			 
+	}
+}
+
+/*** Main ***/
+
+Function Main()
+{
+	WaitForInitializationComplete();
+
+	makestring(g_sCurrentDate$, "%s", date(3));
+	makestring(g_sCurrentDate$, "%s-%s-%s", left(g_sCurrentDate$, 4), mid(g_sCurrentDate$, 6, 2), right(g_sCurrentDate$, 2));
+	makestring(g_sCompareDate$, "%s", date(3));
+}
+
+
+

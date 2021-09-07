@@ -1,0 +1,151 @@
+[
+Version=1
+]
+[
+ObjTp=FSgntr
+Sgntr=UserMacro
+RelVrs=4.08.15
+IntStrVrs=2
+MinSMWVrs=2.05.04
+
+MinTIOVrs=0
+SavedBy=SMW3.11.06
+]
+[
+ObjTp=Hd
+S0Nd=1
+S1Nd=2
+SLNd=3
+PrNm=Panasonic PT-AR100.umc
+CmVr=3.00
+DbVr=65.00.006.00
+DvcDbVr=89.00.003.00
+PgmNm=RMD
+DlrNm=UMI
+CltNm=Panasonic PT-AR100
+JpNo=01
+Incl=362,378,380,405,407,408,409,478,522,537,554,586,590,611,624,767,830,883,1032,1062,1079,1134,1157,1199,1220,1222,1299,1348,1439,1472,1473,1499,1746,1803,1975,2229,2354,2514,2523,2532,2706,1766,2574,2651,2817,2886,
+SmVr=1045
+DvVr=1045
+TpN1=1
+TpN2=2
+TpN3=3
+TpN4=4
+TpN5=5
+DT=Video/Data Projector
+DST=LCD Projector
+Mfg=Panasonic
+NumMdl=1
+Mdl1=PT-AR100
+APg=0
+StdCmd=1
+FltTmp=1
+FpCS=0
+EnType=0
+ZeroOnIoOk=0
+Cmn1=©2004-12 dimeo/design LLC All Rights Reserved.
+]
+[
+ObjTp=Bk
+Nm1=\
+Sx1=0
+Sy1=0
+Mx1=0
+]
+[
+ObjTp=Bw
+H=1
+Lx=0
+Ly=0
+Rx=1241
+Ry=954
+Xm=-1
+Ym=-1
+SH=10
+Z=100
+Ht=3
+Hi=12
+]
+[
+ObjTp=Symbol
+Name=Panasonic PT-AR100
+Code=1
+SmplCName=Panasonic PT-AR100.umc
+Smpl-C=3
+CompilerTimePrecision=Single_Or_Double_Precision
+Hint=Panasonic PT-AR100
+SMWRev=2.05.22
+TIORev=0
+HelpID=1055
+DT=Video/Data Projector
+DST=LCD Projector
+Mfg=Panasonic
+NumMdl=1
+Mdl1=PT-AR100
+APg=0
+StdCmd=1
+FltTmp=1
+FpCS=0
+NumFixedInputs=14
+NumFixedOutputs=1
+NumFixedParams=2
+MinVariableInputs=0
+MinVariableInputsList2=0
+MinVariableInputsList3=0
+MinVariableOutputs=0
+MinVariableOutputsList2=0
+MinVariableOutputsList3=0
+MinVariableParams=0
+SymbolTree=24
+InputSigType1=Serial
+InputSigType2=Digital|Analog|Serial|String
+InputSigType3=Digital
+InputSigType4=Digital
+InputSigType5=Digital|Analog|Serial|String
+InputSigType6=Digital
+InputSigType7=Digital
+InputSigType8=Digital
+InputSigType9=Digital
+InputSigType10=Digital
+InputSigType11=Digital
+InputSigType12=Digital|Analog|Serial|String
+InputSigType13=Digital
+OutputSigType1=Serial
+ParamSigType1=String
+ParamSigType2=String
+InputCue1=rx$
+InputCue2=[~UNUSED~]
+InputCue3=power_on
+InputCue4=power_off
+InputCue5=[~UNUSED~]
+InputCue6=component
+InputCue7=svideo
+InputCue8=video
+InputCue9=hdmi1
+InputCue10=hdmi2
+InputCue11=rgb1
+InputCue12=[~UNUSED~]
+InputCue13=blank_on
+InputCue14=blank_off
+OutputCue1=tx$
+ParamCue1=settings
+ParamCue2=copyright
+MPp=2
+Pp1=1
+Pp2=2
+CnxLogic1=S SER/Model:134
+CnxLogic2=C O 0001 I Q:tx$
+CnxLogic3=C I 0001 O Q:rx$
+CnxLogic4=S SER/Baud:9600
+CnxLogic5=S SER/Parity:N
+CnxLogic6=S SER/Databits:8
+CnxLogic7=S SER/Stopbits:1
+CnxLogic8=S SER/SWHandshaking:(None)
+CnxLogic9=S SER/HWHandshaking:(None)
+CnxLogic10=S SER/Protocol:(RS232)
+FileName=Panasonic PT-AR100.umc
+EncodingType=0
+ZeroOnIoOk=0
+]
+FeSchVr=001
+¶¬ÊäæÒŞÜzbº¶ÄÔ¨àzŒ¦ÎÜèä¦ÎÜèäzªæÊäšÂÆäŞ¤ÊØ¬äæzh\`p\bj’Üè¦èä¬äæzdšÒÜ¦š®¬äæzd\`j\<d:d>šÒÜ¨’¬äæz`¦ÂìÊÈ„òz¦š®f\<d:b>\`lº¶ÄÔ¨àzÈ¦`œÈzb¦bœÈzd¦˜œÈzf äœÚz ÂÜÂæŞÜÒÆ@ ¨Z‚¤b<d:`>\êÚÆ†Ú¬äzf\<d:`>ˆÄ¬äzlj\<d:`>\<d:`>l\<d:`>ˆìÆˆÄ¬äzpr\<d:`>\<d:`>f\<d:`> ÎÚœÚz¤šˆˆØäœÚzªš’†ØèœÚz ÂÜÂæŞÜÒÆ@ ¨Z‚¤b<d:`>”àœŞz`b’ÜÆØzfldXfnpXfp`Xh`jXh`nXh`pXh`rXhnpXj<d:d>XjfnX<d:j>hXjplXjr`Xl<d:b>XldhXnlnXpf`X<d:p>fXb`fdXb`ldXb`nrX<d:b>fhX<d:b>jnX<d:b><d:r>Xb<d:d>`Xb<f:d>Xbd<d:r>XbfhpXbhfrXbhndXbhnfXbh<d:r>XbnhlXbp`fXbrnjX<f:d>rXdfjhXdjbhXdjdfXdjfdXdn`lXbn<d:l>XdjnhXdljbXdpbnXd<d:p>lX¦Ú¬äzb`hjˆì¬äzb`hj¨àœbzb¨àœdzd¨àœfzf¨àœhzh¨àœjzjˆ¨z¬ÒÈÊŞ^ˆÂèÂ@ äŞÔÊÆèŞäˆ¦¨z˜†ˆ@ äŞÔÊÆèŞäšÌÎz ÂÜÂæŞÜÒÆœêÚšÈØzbšÈØbz ¨Z‚¤b<d:`>‚ Îz`¦èÈ†ÚÈzbŒØè¨ÚàzbŒà†¦z`ŠÜ¨òàÊz`´ÊäŞÜ’ŞÖz`†ÚÜb{Rd<d:`>hZbd@ÈÒÚÊŞ^ÈÊæÒÎÜ@<d:˜>†@‚<d:Ø>@¤ÒÎĞèæ@¤ÊæÊäìÊÈ\º¶ÄÔ¨àz„ÖœÚbz¸¦ğbz`¦òbz`šğbz`º¶ÄÔ¨àz„îzb˜ğz`˜òz`¤ğzbdhb¤òzrjh°ÚzZb²ÚzZb¦zb`´zb<d:`>èzfÒT  TôlhhjbjTŠ  Tzbdº¶ÄÔ¨àz¦òÚÄŞØœÂÚÊz ÂÜÂæŞÜÒÆ@ ¨Z‚¤b<d:`>†ŞÈÊzb¦ÚàØ†œÂÚÊz ÂÜÂæŞÜÒÆ@ ¨Z‚¤b<d:`>\êÚÆ¦ÚàØZ†zf†ŞÚàÒØÊä¨ÒÚÊ äÊÆÒæÒŞÜz¦ÒÜÎØÊ¾ä¾ˆŞêÄØÊ¾ äÊÆÒæÒŞÜÒÜèz ÂÜÂæŞÜÒÆ@ ¨Z‚¤b<d:`>¦š®¤Êìzd\`j\<d:d>¨’¤Êìz`ÊØà’ˆzb`<d:j>ˆ¨z¬ÒÈÊŞ^ˆÂèÂ@ äŞÔÊÆèŞäˆ¦¨z˜†ˆ@ äŞÔÊÆèŞäšÌÎz ÂÜÂæŞÜÒÆœêÚšÈØzbšÈØbz ¨Z‚¤b<d:`>‚ Îz`¦èÈ†ÚÈzbŒØè¨ÚàzbŒà†¦z`œêÚŒÒğÊÈ’ÜàêèæzbhœêÚŒÒğÊÈêèàêèæzbœêÚŒÒğÊÈ ÂäÂÚæzdšÒÜ¬ÂäÒÂÄØÊ’Üàêèæz`šÒÜ¬ÂäÒÂÄØÊ’Üàêèæ˜Òæèdz`šÒÜ¬ÂäÒÂÄØÊ’Üàêèæ˜Òæèfz`šÒÜ¬ÂäÒÂÄØÊêèàêèæz`šÒÜ¬ÂäÒÂÄØÊêèàêèæ˜Òæèdz`šÒÜ¬ÂäÒÂÄØÊêèàêèæ˜Òæèfz`šÒÜ¬ÂäÒÂÄØÊ ÂäÂÚæz`¦òÚÄŞØ¨ä<d:Ê>zdh’Üàêè¦ÒÎ¨òàÊbz¦ÊäÒÂØ’Üàêè¦ÒÎ¨òàÊdzˆÒÎÒèÂØø‚ÜÂØŞÎø¦ÊäÒÂØø¦èäÒÜÎ’Üàêè¦ÒÎ¨òàÊfzˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊhzˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊjzˆÒÎÒèÂØø‚ÜÂØŞÎø¦ÊäÒÂØø¦èäÒÜÎ’Üàêè¦ÒÎ¨òàÊlzˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊnzˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊpzˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊrzˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊb`zˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊ<d:b>zˆÒÎÒèÂØ’Üàêè¦ÒÎ¨òàÊbdzˆÒÎÒèÂØø‚ÜÂØŞÎø¦ÊäÒÂØø¦èäÒÜÎ’Üàêè¦ÒÎ¨òàÊbfzˆÒÎÒèÂØêèàêè¦ÒÎ¨òàÊbz¦ÊäÒÂØ ÂäÂÚ¦ÒÎ¨òàÊbz¦èäÒÜÎ ÂäÂÚ¦ÒÎ¨òàÊdz¦èäÒÜÎ’Üàêè†êÊbzäğH’Üàêè†êÊdz¶üªœª¦Šˆüº’Üàêè†êÊfzàŞîÊä¾ŞÜ’Üàêè†êÊhzàŞîÊä¾Ş<d:Ì>’Üàêè†êÊjz¶üªœª¦Šˆüº’Üàêè†êÊlzÆŞÚàŞÜÊÜè’Üàêè†êÊnzæìÒÈÊŞ’Üàêè†êÊpzìÒÈÊŞ’Üàêè†êÊrzĞÈÚÒb’Üàêè†êÊb`zĞÈÚÒd’Üàêè†êÊ<d:b>zäÎÄb’Üàêè†êÊbdz¶üªœª¦Šˆüº’Üàêè†êÊbfzÄØÂÜÖ¾ŞÜ’Üàêè†êÊbhzÄØÂÜÖ¾Ş<d:Ì>êèàêè†êÊbzèğH ÂäÂÚ†êÊbzæÊ<d:è>ÒÜÎæ ÂäÂÚ†êÊdzÆŞàòäÒÎĞèš àzd àbzb àdzd†Üğ˜ŞÎÒÆbz¦@¦Š¤^šŞÈÊØtbfh†Üğ˜ŞÎÒÆdz†@@<f:`>b@’@¢tèğH†Üğ˜ŞÎÒÆfz†@’@<f:`>b@@¢täğH†Üğ˜ŞÎÒÆhz¦@¦Š¤^„ÂêÈtrl<d:`>†Üğ˜ŞÎÒÆjz¦@¦Š¤^ ÂäÒèòtœ†Üğ˜ŞÎÒÆlz¦@¦Š¤^ˆÂèÂÄÒèætp†Üğ˜ŞÎÒÆnz¦@¦Š¤^¦èŞàÄÒèætb†Üğ˜ŞÎÒÆpz¦@¦Š¤^¦®ÂÜÈæĞÂÖÒÜÎtPœŞÜÊR†Üğ˜ŞÎÒÆrz¦@¦Š¤^®ÂÜÈæĞÂÖÒÜÎtPœŞÜÊR†Üğ˜ŞÎÒÆb`z¦@¦Š¤^ äŞèŞÆŞØtP¤¦dfdRŒÒØÊœÂÚÊz ÂÜÂæŞÜÒÆ@ ¨Z‚¤b<d:`>\êÚÆŠÜÆŞÈÒÜÎ¨òàÊz`´ÊäŞÜ’ŞÖz`º¶ÄÔ¨àz¦Úzb¦Ú†zbjnœÚz†ÊÜèäÂØ@†ŞÜèäŞØ@šŞÈêØÊæÄÔ¬Êäzb†ŒzdÜb’zbÜbzbÚ’zbÚzbèzbÚ zb bzº¶ÄÔ¨àz¦Úzd¦Ú†zbjnœÚzœÊèîŞäÖ@šŞÈêØÊæÄÔ¬Êäzb†ŒzdÜb’zbÜbzbÚ’zbÚzbèzbÚ zb bzº¶ÄÔ¨àz¦Úzf¦Ú†zbjnœÚzŠèĞÊäÜÊèÄÔ¬Êäzb†ŒzdÜb’zbÜbzbÚ’zbÚzbèzbÚ zb bzº¶ÄÔ¨àz¦Úzh¦Ú†zbjlœÚz˜ŞÎÒÆÄÔ¬Êäzb†ŒzdÚ†zd†bzn†dzpº¶ÄÔ¨àz¦Úzj¦Ú†zbjnœÚzˆÊÌÒÜÊ‚äÎêÚÊÜèæÄÔ¬Êäzb†ŒzdÜb’zbÜbzbÚ†zb†bzlÚ’zbÚzbèzbÚ zb bzº¶ÄÔ¨àz¦Úzl¦Ú†z<d:j>œÚz‚äÎêÚÊÜè@ˆÊÌÒÜÒèÒŞÜÄÔ¬Êäzb äzj†ŒzdÜb’zbhÜbzbÚ’zbh’bzrj’dzh’fzj’hzl’jzh’lzp’nzr’pzb`’rzn’b`z<d:b>’<d:b>zbd’bdzh’bfzbh’bhzbjÚzbèzbbzrhÚ zd bzæÊ<d:è>ÒÜÎæ dzÆŞàòäÒÎĞèš àzd àbzb àdzdº¶ÄÔ¨àz¦Úzn¦Ú†zbjlœÚz¦ª„¦²¦¨ŠšÄÔ¬Êäzb äzh†Œzd†ÚÜbzÄÂæÒÆÚ†zb†bzb`º¶ÄÔ¨àz¦Úzp¦Ú†zbjlœÚz¦ª„¦²¦¨ŠšÄÔ¬Êäzb äzh†Œzd†ÚÜbzæÄÚ†zb†bzrº¶ÄÔ¨àz¦Úzr¦Ú†zdpjœÚz¬ÒäèêÂØ@¦ÊäÒÂØ@ˆäÒìÊä@ÌŞä@šÂÆäŞ@†Ş<d:Ü>ÊÆèÒŞÜÄÔ¬Êäzb äzp†ŒzdÜb’zhÜbzdÚ’zh’bzrhÚzdèzdbzrjÚ zp bz dzrl<d:`> fzœ hzp jzb lzPœŞÜÊR nzPœŞÜÊR pzP¤¦dfdRº¶ÄÔ¨àz¦Úzb`¦Ú†zb`bœÚz¦ÊäÒÂØ@’^ÄÔ¬Êäzb äzn†ŒzdÜb’zbdÜbzdÚ’zbd’bzrj’fzj’hzl’jzp’lzr’nzb`’pzn’rz<d:b>’b`zbd’<d:b>zbh’bdzbjÚzdèzdbzrhÚ zbd bz¸ğ`f dz¸ğ`d œ fz¸ğ`d Œ hz¸ğ`d<d:’>¦t† b jz¸ğ`d<d:’>¦t¦¬ˆ lz¸ğ`d<d:’>¦t¬’ˆ nz¸ğ`d<d:’>¦tˆb pz¸ğ`d<d:’>¦tˆd rz¸ğ`d<d:’>¦t¤b b`z¸ğ`d¦tb <d:b>z¸ğ`d¦t` bdzº¶ÄÔ¨àz¦ÎzhœÚz¶üªœª¦Šˆüº¦Î¨àzfbº¶ÄÔ¨àz¦ÎzjœÚzàŞîÊä¾ŞÜº¶ÄÔ¨àz¦ÎzlœÚzàŞîÊä¾Ş<d:Ì>º¶ÄÔ¨àz¦ÎznœÚzĞÈÚÒbº¶ÄÔ¨àz¦ÎzpœÚzÆŞÚàŞÜÊÜèº¶ÄÔ¨àz¦ÎzrœÚzæìÒÈÊŞº¶ÄÔ¨àz¦Îzb`œÚzìÒÈÊŞº¶ÄÔ¨àz¦Îz<d:b>œÚzĞÈÚÒdº¶ÄÔ¨àz¦ÎzbdœÚzäÎÄbº¶ÄÔ¨àz¦ÎzbhœÚzÄØÂÜÖ¾ŞÜº¶ÄÔ¨àz¦ÎzbjœÚzÄØÂÜÖ¾Ş<d:Ì>º¶ÄÔ¨àz¦ÎzrhœÚzèğH¦Î¨àzhº¶ÄÔ¨àz¦ÎzrjœÚzäğH¦Î¨àzhº¶ÄÔ¨àzˆàzb¨àzbˆz¨¤ªŠˆ¬zrl<d:`>@pœb@¦èäÂÒÎĞèœŞ¦zŒ‚˜¦ŠŠÜÆŒÚèz`ˆ¬˜Œzb¦ÎÜz`º¶ÄÔ¨àzˆàzd¨àzbˆz¨¤ªŠˆ¬{Rd<d:`>hZd`bd@ÈÒÚÊŞ^ÈÊæÒÎÜ@<d:˜>†œŞ¦zŒ‚˜¦ŠŠÜÆŒÚèz`ˆ¬˜Œzb¦ÎÜz`º

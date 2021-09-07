@@ -1,0 +1,625 @@
+/*******************************************************************************************
+  SIMPL+ Module infommation
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:	CrestronJapan
+System Name:
+System Number:
+Programmer:		Lim
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME " DENON DN-700R v1.0 RECEIVER EXTRACK"
+// #HINT ""
+//#DEFINE_CONSTANT
+// #CATEGORY "" 
+//#CATEGORY "24" 
+// #DEFAULT_VOLATILE
+//#DEFAULT_NONVOLATILE
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+BUFFER_INPUT From_device$[1024];
+
+/*****   Current Status List ******/
+string_output To_device$;
+String_output Date_time_Year_Month$,Date_time_Time$; 
+String_output Total_Track_Number$;
+String_output Current_Track_Number$;
+String_output Current_Track_Name$;
+String_output Hot_Start_Play_Number$ ;
+String_output Elapse_Time$;
+String_output Remain_Time$;
+String_output Record_Remain_Time$;
+String_output Current_Media_SD1_size$,Current_Media_SD2_size$,Current_Media_USB_size$;
+String_output Current_Media_Folder_Name_Media$,Current_Media_Folder_Name_Name$;
+String_output Record_Volume_Left$,Record_Volume_Right$;
+String_output Pitch_OnOff$,Pitch_Value$;
+String_output Total_Mark_Number$;
+String_output Mark_Time$;
+/*****   User Preset Select ******/
+String_output Preset_Title_Name_Nos_1$;
+String_output Preset_Title_Name_Nos_2$;
+String_output Preset_Title_Name_Nos_3$;
+/*****   Preset Setting ******/
+String_output Skip_Back_Time$;
+/*****   Archive Control ******/
+String_output Schedule_Day_Of_Week_Week$,Schedule_Day_Of_Week_Time$;
+String_output Schedule_Date_Date$,Schedule_Date_Time$;
+String_output Server_IP_Address$;
+String_output Server_Name$;
+String_output Server_Folder_Name$;
+/*****   Record/Play Timer ******/
+String_output Time_Rec_Set_Day_Of_Week_Week$, Time_Rec_Set_Day_Of_Week_Start_Time$; 
+String_output Time_Rec_Set_Day_Of_Week_End_Time$, Time_Rec_Set_Day_Of_Week_User_Area$;
+String_output Time_Rec_Set_Date_And_Time_Date$,Time_Rec_Set_Date_And_Time_Start_Time$;
+String_output Time_Rec_Set_Date_And_Time_End_Time$, Time_Rec_Set_Date_And_Time_User_Area$;
+String_output Time_Play_Set_Day_Of_Week_Week$, Time_Play_Set_Day_Of_Week_Time$, Time_Play_Set_Day_Of_Week_Name$;
+String_output Time_Play_Set_Date_And_Time_Date$, Time_Play_Set_Date_And_Time_Time$, Time_Play_Set_Date_And_Time_Name$;
+String_output Current_Rec_Timer_Number$;
+String_output Current_Play_Timer_Number$;
+String_output Reserved_Rec_Timer_Number$;
+String_output Reserved_Play_Timer_Number$;
+/*****   Hot List ******/
+String_output Hot_Start_Set_File_infom_Number$, Hot_Start_Set_File_infom_File_Name$, Hot_Start_Set_File_infom_Time$;
+/*****   System Setting ******/
+String_output Rec_Folder_Fixed_Name$;
+String_output User_Area_Name$;
+String_output Mic_Input_Sens_Left_Value$, Mic_Input_Sens_Right_Value$;
+String_output Input_Trium_Left_Value$, Input_Trium_Right_Value$;
+String_output Output_Trium_Left_Value$, Output_Trium_Right_Value$;
+String_output Machine_Name$;
+String_output Ip_Address$;
+DIGITAL_OUTPUT Ip_Address_DHCP_FB;
+String_output Mask_IP$;
+String_output Gateway_IP$;
+String_output Server_IP$;
+String_output Ip_Control_Port$;
+String_output NTP_Server_IP$;
+DIGITAL_OUTPUT NTP_Server_IP_FB;
+String_output System_Log_IP$;
+DIGITAL_OUTPUT System_Log_IP_FB;
+String_output Time_Zone$;
+String_output DST_Offset_Time$;
+String_output DST_Start_Date_Date$, DST_Start_Date_Time$;
+String_output DST_End_Date_Date$, DST_End_Date_Time$;
+/*****   File List Control ******/
+String_output Track_Name$;
+String_output Track_Size$;
+String_output Current_Track_time$;
+String_output Total_Folder_Number$;
+String_output Folder_Name$;
+String_output Current_Track_Artist_Name$;
+String_output Current_Track_Title_Name$;
+String_output Current_Track_Albun_Name$;
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+INTEGER i, RX_OK;
+STRING  TEMP$[256];
+STRING	TEMP2$[16];
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/	
+String_function IP_DOT_F(string DATA$)
+{
+string A$[4],B$[4],C$[4],D$[4], OUT$[20];
+
+A$ = left(DATA$,3);
+B$ = MID(DATA$,4,3);
+C$ = MID(DATA$,7,3);
+D$ = Right(DATA$,3);
+OUT$ = A$ + "." + B$ + "." + C$ + "." + D$; 
+return (OUT$); // 
+}
+
+String_function hh_mm_F(string DATA$) // add ":" to hour and minute timer
+{
+string A$[4],B$[4], OUT$[20];
+A$ = left(DATA$,2);
+B$ = Right(DATA$,2);
+OUT$ = A$ + ":" + B$ ; 
+return (OUT$);
+}
+
+String_function hhh_mm_ss_F(string DATA$) // add ":" to hour and minute timer
+{
+string A$[4],B$[4], C$[4],OUT$[20];
+A$ = left(DATA$,3);
+B$ = Mid(DATA$,4,2);
+C$ = Right(DATA$,2);
+OUT$ = A$ + ":" + B$ + ":" + C$ ; 
+return (OUT$);
+}
+
+String_function yy_mm_dd_F(string DATA$) // add ":" to hour and minute timer
+{
+string A$[4],B$[4], C$[4],OUT$[20];
+A$ = left(DATA$,2);
+B$ = Mid(DATA$,3,2);
+C$ = Right(DATA$,2);
+OUT$ = "20"+A$ + "\x20Month\x20" + B$ + "\x20Day\x20" + C$ ; 
+return (OUT$);
+}
+
+
+String_function mm_dd_F(string DATA$) // add ":" to hour and minute timer
+{
+string A$[4],B$[4],OUT$[20];
+A$ = left(DATA$,2);
+B$ = Right(DATA$,2);
+OUT$ = "Month\x20" + A$ + "\x20Day\x20" + B$ ; 
+return (OUT$);
+}
+
+
+String_function Rec_level_F(string DATA$)
+{
+string OUT$[3];
+
+If (find("+A",DATA$ ))
+	{
+     OUT$ = "+10";
+	}
+else If (find( "+",DATA$ ))
+	{
+     OUT$ = DATA$;
+	}
+else
+	{
+     OUT$ = "-" + DATA$;
+	}
+return (OUT$);
+}
+
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+change From_device$
+{
+if (RX_OK)
+	{
+	RX_OK = off;
+	while (Len(From_device$))
+		{
+		IF (Find("\x0D",From_device$))
+			{
+			
+	        TEMP$ = Remove ("\x0D",From_device$);
+            TEMP$ = MID( TEMP$,find("@",TEMP$),(len(TEMP$)+1));
+           
+       
+  /*****   Current Status List ******/
+
+			if (Find("@0Dt",TEMP$)) // find Date and Time
+				{
+				Date_time_Year_Month$ = yy_mm_dd_f( MID(TEMP$,5,6));
+
+                Date_time_Time$ = hh_mm_F(MID(TEMP$,11,4));
+				}
+			Else if (Find("@0Tt",TEMP$)) // find Total Track Number
+				{
+                Total_Track_Number$ = MID( TEMP$,5,4);
+				}
+           	Else if (Find("@0Tr",TEMP$)) // find Current Track number playing
+				{
+				TEMP2$= MID( TEMP$,5,4);
+                Current_Track_Number$ =TEMP2$;
+  				To_device$ = "@0?Tn" + right(TEMP2$, 3) +"\r";
+				}
+           	Else if (Find("@0Tn",TEMP$)) // find Hot Start play number
+				{
+					if (Find("@0Tn\r",TEMP$))
+					{
+						Current_Track_Name$ = "";
+					}
+					else
+					{
+						Current_Track_Name$ = MID( TEMP$,(REVERSEFIND("/", TEMP$)+1),(LEN(TEMP$)-REVERSEFIND("/", TEMP$)-1));//only file name
+					}
+				}
+           	Else if (Find("@0HP",TEMP$)) // find Hot Start play number
+				{
+                Hot_Start_Play_Number$ = MID( TEMP$,5,2);
+				}
+           	Else if (Find("@0ET",TEMP$)) // find Elapse time
+				{
+                Elapse_Time$ = hhh_mm_ss_F(MID( TEMP$,5,7));
+				}
+			Else if (Find("@0RM",TEMP$)) // find Remain Times
+				{
+                Remain_Time$ = hhh_mm_ss_F(MID( TEMP$,5,7));
+				}
+
+			Else if (Find("@0RT",TEMP$)) // find Record Remain Times
+				{
+                Record_Remain_Time$ = hhh_mm_ss_F(MID( TEMP$,5,7));
+				}
+			Else if (Find("@0FES1",TEMP$)) // find Current Media Free Capacity
+				{
+                Current_Media_SD1_Size$ = MID( TEMP$,7,(LEN(TEMP$)-7));
+				}
+			Else if (Find("@0FES2",TEMP$)) // find Current Media Free Capacity
+				{
+                Current_Media_SD2_Size$ = MID( TEMP$,7,(LEN(TEMP$)-7));
+				}
+			Else if (Find("@0FEUS",TEMP$)) // find Current Media Free Capacity
+				{
+                Current_Media_USB_Size$ = MID( TEMP$,7,(LEN(TEMP$)-7));
+				}
+			Else if (Find("@0SF",TEMP$)) // find Current Media Floder Name
+				{
+                 Current_Media_Folder_Name_Media$ =  MID( TEMP$,5,1);
+                 Current_Media_Folder_Name_Name$ = MID( TEMP$,6,(LEN(TEMP$)-6));
+				}
+			Else if (Find("@0RV",TEMP$)) // find Record Volume
+				{
+                 Record_Volume_Left$ =  Rec_level_F(MID( TEMP$,5,2));
+                 Record_Volume_Right$ =  Rec_level_F(MID( TEMP$,7,2));
+				}
+			Else if ((Find("@0PTON",TEMP$))||(Find("@0PTOF",TEMP$))) // find Pitch
+				{
+                Pitch_OnOff$ =  MID( TEMP$,5,2);
+				TEMP2$ =  MID( TEMP$,7,4);
+ 				Pitch_Value$ =  LEFT( TEMP2$,3)+ "." + RIGHT( TEMP2$,1);
+				}
+			Else if (Find("@0Tm",TEMP$)) // find Total Mark Number
+				{
+                Total_Mark_Number$ =  MID( TEMP$,5,2);  
+				}
+			Else if (Find("@0Mt",TEMP$)) // find Mark Time
+				{
+                TEMP2$ =  MID( TEMP$,5,8); 
+				
+                Mark_Time$ = left(temp2$,2)+ ":" + mid(temp2$, 3,2) + ":"  + mid(temp2$, 5,2) + ":" + right(temp2$ , 2);
+				}
+ 
+  /*****   User Preset Select ******/
+
+ 			Else if (Find("@0PN1",TEMP$)) // find Preset Title No 1
+				{
+                Preset_Title_Name_Nos_1$= MID( TEMP$,6,(LEN(TEMP$)-6));
+ 				}
+           	Else if (Find("@0PN2",TEMP$)) // find Preset Title No 2
+				{
+                Preset_Title_Name_Nos_2$= MID( TEMP$,6,(LEN(TEMP$)-6));
+ 				}
+           	Else if (Find("@0PN3",TEMP$)) // find Preset Title No 3
+				{
+                Preset_Title_Name_Nos_3$= MID( TEMP$,6,(LEN(TEMP$)-6)); 
+				}
+
+  /*****   Preset Setting ******/
+
+           	Else if (Find("@0SB",TEMP$)) // find Skip Back Time
+				{
+                Skip_Back_Time$ = MID( TEMP$,5,3);
+				}
+  /*****   Archive Control ******/
+
+           	Else if (Find("@0asDW",TEMP$)) // find Schedule Day Of Week and time
+				{
+                Schedule_Day_Of_Week_Week$ = MID( TEMP$,7,7);
+ 				Schedule_Day_Of_Week_Time$ = hh_mm_F(MID( TEMP$,14,4));
+				}
+			Else if (Find("@0asDT",TEMP$)) // find Schedule Date and Time
+				{
+                Schedule_Date_Date$ = MID( TEMP$,7,6);
+ 				Schedule_Date_Time$ = hh_mm_F(MID( TEMP$,13,4));                 
+				}
+			Else if (Find("@0AI",TEMP$)) // find Srever IP Address
+				{
+                Server_IP_Address$ = IP_DOT_F(MID( TEMP$,5,12));  
+				}
+			Else if (Find("@0AU",TEMP$)) // find Server Name 
+				{
+                Server_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5)); 
+				}
+			Else if (Find("@0AO",TEMP$)) // find Server Floder Name
+				{
+                Server_Folder_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5));
+				}
+  /*****   Record/Play Timer ******/
+
+			Else if (Find("@0ShDW",TEMP$)) // find Time Recording Setting ,Day of week
+				{
+                Time_Rec_Set_Day_Of_Week_Week$ = MID( TEMP$,7,7);
+				Time_Rec_Set_Day_Of_Week_Start_Time$ = hh_mm_F(MID( TEMP$,14,4));
+                Time_Rec_Set_Day_Of_Week_End_Time$ = hh_mm_F(MID( TEMP$,18,4));
+                Time_Rec_Set_Day_Of_Week_User_Area$ = " ";
+				Time_Rec_Set_Day_Of_Week_User_Area$ = MID( TEMP$,22,(LEN(TEMP$)-22));
+				}
+			Else if (Find("@0ShDT",TEMP$)) // find Time Recording Setting ,Date And Time
+				{
+                Time_Rec_Set_Date_And_Time_Date$ = yy_mm_dd_F(MID( TEMP$,7,6));
+				Time_Rec_Set_Date_And_Time_Start_Time$ = hh_mm_F(MID( TEMP$,13,4));
+                Time_Rec_Set_Date_And_Time_End_Time$ = hh_mm_F(MID( TEMP$,17,4));
+                Time_Rec_Set_Date_And_Time_User_Area$ = " ";
+				Time_Rec_Set_Date_And_Time_User_Area$ = MID( TEMP$,21,(LEN(TEMP$)-21));
+                 
+				}
+			Else if (Find("@0TPDW",TEMP$)) // find Time Playing Setting ,Day of week
+				{
+                Time_Play_Set_Day_Of_Week_Week$ = MID( TEMP$,7,7);
+				Time_Play_Set_Day_Of_Week_Time$ = hh_mm_F(MID( TEMP$,14,4));
+                Time_Play_Set_Day_Of_Week_Name$ = " ";
+				Time_Play_Set_Day_Of_Week_Name$ = MID( TEMP$,18,(LEN(TEMP$)-18));
+                
+				}
+			Else if (Find("@0TPDT",TEMP$)) // find Time Playing Setting ,Date And Time
+				{
+                Time_Play_Set_Date_And_Time_Date$ = yy_mm_dd_F(MID( TEMP$,7,6));
+				Time_Play_Set_Date_And_Time_Time$ = hh_mm_F(MID( TEMP$,13,4));
+                Time_Play_Set_Date_And_Time_Name$ = " ";
+				Time_Play_Set_Date_And_Time_Name$ = MID( TEMP$,17,(LEN(TEMP$)-17));                 
+				}
+
+			Else if (Find("@0CtRE",TEMP$)) // find Current Recording Timer Number
+				{
+                Current_Rec_Timer_Number$ = MID( TEMP$,7,2); 
+				}
+			Else if (Find("@0CtPL",TEMP$)) // find Current Playing Timer Number
+				{
+                 Current_Play_Timer_Number$ = MID( TEMP$,7,2);  
+				}
+			Else if (Find("@0RtRE",TEMP$)) // find Reserved Recording Timer Number
+				{
+                 Reserved_Rec_Timer_Number$  = MID( TEMP$,7,2); 
+				}
+			Else if (Find("@0RtPL",TEMP$)) // find Reserved Playing Timer Number
+				{
+                Reserved_Play_Timer_Number$  = MID( TEMP$,7,2); 
+				}
+  /*****   Hot List ******/
+
+
+			Else if (Find("@0Hs",TEMP$)) // find Hot Start Set File infommation
+				{
+				if(len(TEMP$)<8)
+				{
+                	Hot_Start_Set_File_infom_Number$ = MID( TEMP$,5,2);
+					Hot_Start_Set_File_infom_File_Name$	="";
+					Hot_Start_Set_File_infom_Time$ ="";			
+				}
+				else
+				{
+                	Hot_Start_Set_File_infom_Number$ = MID( TEMP$,5,2);
+					Hot_Start_Set_File_infom_File_Name$ = MID( TEMP$,(find(":",TEMP$)+1),(ReverseFind(":",TEMP$)-(find(":",TEMP$)+1)));
+  					temp2$ = MID( TEMP$,(ReverseFind(":",TEMP$)+1),(len(TEMP$)- (ReverseFind(":",TEMP$)+1)));
+					Hot_Start_Set_File_infom_Time$ =  left (temp2$, 3)+ ":" + mid(temp2$ ,4,2) + ":"+ mid(temp2$ ,6,2) + ":"+Right(temp2$, 3);
+				}
+				}
+
+  /*****   System Setting ******/
+			Else if (Find("@0RfFX",TEMP$)) // find Record floder Fixed Name
+				{
+                Rec_Folder_Fixed_Name$ = MID( TEMP$,7,(LEN(TEMP$)-7));
+				}
+			Else if (Find("@0UA",TEMP$)) // find User Area Name
+				{
+                 User_Area_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5));
+				}
+			Else if (Find("@0MsL",TEMP$)) // find Mic Input Sens Left Channel
+				{
+                 Mic_Input_Sens_Left_Value$  = "-" + MID( TEMP$,6,2);
+				}
+			Else if (Find("@0MsR",TEMP$)) // find Mic Input Sens Right Channel
+				{
+                Mic_Input_Sens_Right_Value$  = "-" + MID( TEMP$,6,2);
+				}
+			Else if (Find("@0ItL",TEMP$)) // find Input Trium Left Value
+				{
+				TEMP2$ = MID( TEMP$,6,3);
+				IF (FIND( "\x0D" ,TEMP2$))
+					{
+                	Input_Trium_Left_Value$ = LEFT(TEMP2$,1) + "." + MID(TEMP2$,2,1); // Return @0ItL00\X0D
+					}
+				ELSE 
+					{
+					Input_Trium_Left_Value$ = LEFT(TEMP2$,2) + "." +MID(TEMP2$,3,1);
+					}
+				}
+			Else if (Find("@0ItR",TEMP$)) // find Input Trium Right Value
+				{
+				TEMP2$ = MID( TEMP$,6,3);
+				IF (FIND( "\x0D" ,TEMP2$))
+					{
+                	Input_Trium_Right_Value$ = LEFT(TEMP2$,1) + "." + MID(TEMP2$,2,1); // Return @0ItR00\X0D
+					}
+				ELSE 
+					{
+					Input_Trium_Right_Value$ = LEFT(TEMP2$,2) + "." +MID(TEMP2$,3,1);
+					}
+				}
+			Else if (Find("@0OtL",TEMP$)) // find Output Trium Left Value
+				{
+				TEMP2$ = MID( TEMP$,6,3);
+				IF (FIND( "\x0D" ,TEMP2$))
+					{
+                	Output_Trium_Left_Value$ = LEFT(TEMP2$,1) + "." + MID(TEMP2$,2,1); // Return @0OtL00\X0D
+					}
+				ELSE 
+					{
+					Output_Trium_Left_Value$ = LEFT(TEMP2$,2) + "." +MID(TEMP2$,3,1);
+					}
+
+				}
+			Else if (Find("@0OtR",TEMP$)) // find Output Trium Right Value
+				{
+				TEMP2$ = MID( TEMP$,6,3);
+				IF (FIND( "\x0D" ,TEMP2$))
+					{
+                	Output_Trium_Right_Value$ = LEFT(TEMP2$,1) + "." + MID(TEMP2$,2,1); // Return @0OtR00\X0D
+					}
+				ELSE 
+					{
+					Output_Trium_Right_Value$ = LEFT(TEMP2$,2) + "." +MID(TEMP2$,3,1);
+					}
+
+				}
+			Else if (Find("@0MN",TEMP$)) // find MAchine Name
+				{
+                 Machine_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5));
+				}
+			Else if (Find("@0IP",TEMP$)) // find IP address
+				{
+				IF (Find("AUTO",TEMP$))
+					{
+					Ip_Address_DHCP_FB = On;
+                    Ip_Address$ = "";
+					}
+				Else
+					{PRINT("IP FIX");
+					Ip_Address_DHCP_FB = Off;
+                 	Ip_Address$ = IP_DOT_F(MID( TEMP$,5,12));
+					}
+				}
+			Else if (Find("@0SM",TEMP$)) // find Subnet Mask IP
+				{
+                  Mask_IP$ = IP_DOT_F(MID( TEMP$,5,12));                
+				}
+			Else if (Find("@0GW",TEMP$)) // find Gateway IP
+				{
+                  Gateway_IP$ = IP_DOT_F(MID( TEMP$,5,12));                  
+				}
+			Else if (Find("@0DN",TEMP$)) // find DNS Server IP
+				{
+                  Server_IP$ = IP_DOT_F(MID( TEMP$,5,12));                 
+				}
+			Else if (Find("@0Ip",TEMP$)) // find IP control Port
+				{
+                  Ip_Control_Port$ = MID( TEMP$,5,5);                   
+				}
+			Else if (Find("@0NP",TEMP$)) // find NTP Server IP
+				{
+				IF (Find("DISABLE",TEMP$))
+					{
+					NTP_Server_IP_FB = Off;
+                    NTP_Server_IP$ ="";
+					}
+				Else
+					{
+					NTP_Server_IP_FB = On;
+                 	NTP_Server_IP$ = IP_DOT_F(MID( TEMP$,5,12));
+					}
+				}
+			Else if (Find("@0Sl",TEMP$)) // find System Log IP
+				{
+				IF (Find("DISABLE",TEMP$))
+					{
+					System_Log_IP_FB = Off;
+                    System_Log_IP$ = "";
+					}
+				Else
+					{
+					System_Log_IP_FB = On;
+                 	System_Log_IP$ = IP_DOT_F(MID( TEMP$,5,12));
+					}
+				}
+
+			Else if (Find("@0TZ",TEMP$)) // find Time Zone
+				{
+
+				temp2$ = MID( TEMP$,5,1);
+
+                 Time_Zone$ = temp2$ + hh_mm_f(MID( TEMP$,6,4)) ;                  
+				}
+			Else if (Find("@0do",TEMP$)) // find DST Offset time
+				{
+                DST_Offset_Time$ = hh_mm_f(MID( TEMP$,5,4));  
+				}
+			Else if (Find("@0ds",TEMP$)) // find DST Start Date
+				{
+                DST_Start_Date_Date$ = mm_dd_F(MID( TEMP$,5,4));
+  				DST_Start_Date_Time$ = hh_mm_f(MID( TEMP$,9,4));
+				}
+			Else if (Find("@0de",TEMP$)) // find DST End Date
+				{
+                DST_End_Date_Date$ = mm_dd_F(MID( TEMP$,5,4));
+  				DST_End_Date_Time$ = hh_mm_f(MID( TEMP$,9,4));                 
+				}
+
+  /*****   File List Control ******/
+
+
+			Else if (Find("@0tn",TEMP$)) // find Track name
+				{
+                Track_Name$ = MID( TEMP$,5,(LEN(TEMP$)));
+ 				}
+			Else if (Find("@0ts",TEMP$)) // find Track Size
+				{
+                Track_Size$ = MID( TEMP$,5,(LEN(TEMP$)));
+ 
+				}
+			Else if (Find("@0tl",TEMP$)) // find Current Track Time
+				{
+                Current_Track_time$ = MID( TEMP$,5,7);
+				}
+			Else if (Find("@0Tf",TEMP$)) // find Tolal Folder Number
+				{
+                Total_Folder_Number$ = MID( TEMP$,5,4);
+				}
+			Else if (Find("@0Fn",TEMP$)) // find Folder Name
+				{
+                Folder_Name$ = MID( TEMP$,5,(LEN(TEMP$)));
+				}
+			Else if (Find("@0at",TEMP$)) // find Current Track Artist Name
+				{
+                Current_Track_Artist_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5));
+				}
+			Else if (Find("@0ti",TEMP$)) // find Current Track Title Name
+				{
+                Current_Track_Title_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5)); 
+				}
+			Else if (Find("@0al",TEMP$)) // find Current Track Title Album
+
+				{
+                Current_Track_Albun_Name$ = MID( TEMP$,5,(LEN(TEMP$)-5));                 
+				}
+
+   /*****   End ******/
+
+ 
+           Else Clearbuffer(TEMP$);
+
+
+			} 
+
+ 		}
+        RX_OK = on;
+	}
+		
+}
+
+/******************************************************************************************* =
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+RX_OK = on;
+}

@@ -1,0 +1,573 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: Crestron Electronics
+System Name:
+System Number:
+Programmer:	PAC
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "BiAmp AudiaFlex Dialer Processor v7.5.1"
+// #HINT ""
+#DEFINE_CONSTANT	OFFTOON			110
+#DEFINE_CONSTANT	ONTOOFF			260
+#DEFINE_CONSTANT	MAXPRESETS		16
+#DEFINE_CONSTANT	ciMAXENTRIES	16
+
+#DEFINE_CONSTANT	csSENDNAME		"Send Name\x0D\x0A"
+
+#CATEGORY "0"
+#DEFAULT_VOLATILE
+// #ENABLE_TRACE
+// #DEFAULT_NONVOLATILE
+
+#HELP_BEGIN
+	Only to be used in conjunction with the BiAmp Audia Flex Dialer Module v7.5.1
+#HELP_END
+
+DIGITAL_INPUT	On_Hook, Off_Hook, KeyboardGo, Clear, Back, Dial, Redial, Clear_Last#_Dialed, 
+				Preset_Store, Get_Names, First, Scroll_Up, Scroll_Down, Poll, Dial_Entry[ciMAXENTRIES],
+				Presets[MAXPRESETS];
+DIGITAL_OUTPUT	On_Hook_FB, Off_Hook_FB, Start_Up_Out, Incoming_Call, Error; 
+ANALOG_INPUT	MaxCharacters, KeyboardAn, aPreset, Entries_Per_Page;
+STRING_INPUT	Header$[50], Address$[5], Instance$[50];
+BUFFER_INPUT	From_Smpl$[100];
+STRING_OUTPUT	Phone_Number$, Caller_ID_Name_Text, Caller_ID_Number_Text, To_Device, Entry_Name$[ciMAXENTRIES];
+
+INTEGER	iMaxChars, iPreset, iHook, iDisplayEntryNumber[ciMAXENTRIES], iEntriesPerPage,
+		iOffset, iIncoming, iMarker1, iMarker2, iMarker3, iMarker4, iMarker5, iMarker6,
+		iMarker7, iMarker8, iCounter1, errorReceived;
+STRING	TempDial$[100], sHeader[50], Num$[50], sNUM2[10], Last_Num_Dialed$[50], Preset_Ram[MAXPRESETS][40],
+		sEntryName[ciMAXENTRIES][40], sLabelCompare$[40], sHookStateCompare$[40], sInstance[52],
+		sSendName[20], sTempName[50], sTempNumber[50], sCallerIdCompare$[40];
+
+Function fIncomingCallTimeOut()
+{
+	wait(1000, wIncomingCallTimeOut)
+	{
+		if(iIncoming = 1)
+		{
+			iIncoming = 0;
+			Incoming_Call = iIncoming;
+			sTempNumber = "";
+			sTempName = "";
+			Caller_ID_Number_Text = sTempNumber;
+			Caller_ID_Name_Text = sTempName;
+		}
+	}
+}
+
+string_Function processData(string tempData)
+{
+	string returnString[250];
+	integer iA, iP, iEntry, iB;
+	returnString = "";
+	if(find("hello", tempData) > 0)
+	{
+		errorReceived = 0;
+		Error = errorReceived;
+		To_Device = tempData;
+	}
+	else if(find(csSENDNAME, tempData) > 0)
+	{
+		errorReceived = 0;
+		Error = errorReceived;
+		Start_Up_out = 1;
+		sSendName = left(tempData, len(tempData) - 2);
+	}
+	else if(find("-ERR", tempData) > 0)
+	{
+		errorReceived = 1;
+		Error = errorReceived;
+	}
+	else if(find(sHookStateCompare$, tempData) > 0) 
+	{
+		errorReceived = 0;
+		Error = errorReceived;
+		iHook = atoi(mid(tempData, len(sHookStateCompare$) + 1, len(tempData) - len(sHookStateCompare$)));
+		if (iHook = 1)
+		{
+			Off_Hook_FB = 0;
+			On_Hook_FB = 1;
+		}
+		else if (iHook = 0)
+		{
+			On_Hook_FB = 0;
+			Off_Hook_FB = 1;
+		}
+		if(iIncoming = 1)
+		{
+			cancelwait(wIncomingCallTimeOut);
+			iIncoming = 0;
+			Incoming_Call = iIncoming;
+			sTempNumber = "";
+			sTempName = "";
+			Caller_ID_Number_Text = sTempNumber;
+			Caller_ID_Name_Text = sTempName;
+		}
+	}
+	else if(find(sLabelCompare$, tempData) > 0)
+	{
+		errorReceived = 0;
+		Error = errorReceived;
+		iEntry = atoi(mid(tempData, len(sLabelCompare$), len(tempData) - len(sLabelCompare$)));
+		iA = find("\x20", tempData, len(sLabelCompare$) + 2);
+		iB = find("\x0D", tempData);
+		sEntryName[iEntry] = mid(tempData, iA + 1, iB - iA - 1);
+		if(iEntry = ciMAXENTRIES)
+		{
+			iOffset = 0;
+			for(iP = 1 to iEntriesPerPage)
+			{
+				iDisplayEntryNumber[iP] = iP;
+				Entry_Name$[iP] = sEntryName[iP];
+			}
+		}
+	}
+	else if(find(sCallerIDCompare$, tempData) > 0)
+	{
+		errorReceived = 0;
+		Error = errorReceived;
+		iMarker1 = find("\x22", tempData);
+		iMarker2 = find("\x22", tempData, iMarker1 + 1);
+		if((iMarker1 <> 0) && (iMarker2 <> 0))
+		{
+			iCounter1 = 0;
+			while((byte(tempData, iMarker2 - 1) = byte("\x5C", 1)) && (iCounter1 <= 10))
+			{
+				iMarker2 = find("\x22", tempData, iMarker2 + 1);
+				iCounter1 = iCounter1 + 1;
+			}
+			iMarker3 = find("\x22", tempData, iMarker2 + 1);
+			if(iMarker3 <> 0)
+			{
+				iCounter1 = 0;
+				while((byte(tempData, iMarker3 - 1) = byte("\x5C", 1)) && (iCounter1 <= 10))
+				{
+					iMarker3 = find("\x22", tempData, iMarker3 + 1);
+					iCounter1 = iCounter1 + 1;
+				}
+				iMarker4 = find("\x22", tempData, iMarker3 + 1);
+				if(iMarker4 <> 0)
+				{
+					iCounter1 = 0;
+					while((byte(tempData, iMarker4 - 1) = byte("\x5C", 1)) && (iCounter1 <= 10))
+					{
+						iMarker4 = find("\x22", tempData, iMarker4 + 1);
+						iCounter1 = iCounter1 + 1;
+					}
+					iMarker5 = find("\x22", tempData, iMarker4 + 1);
+					if(iMarker5 <> 0)
+					{
+						iCounter1 = 0;
+						while((byte(tempData, iMarker5 - 1) = byte("\x5C", 1)) && (iCounter1 <= 10))
+						{
+							iMarker5 = find("\x22", tempData, iMarker5 + 1);
+							iCounter1 = iCounter1 + 1;
+						}
+						iMarker6 = find("\x22", tempData, iMarker5 + 1);
+						if(iMarker6 <> 0)
+						{
+							iCounter1 = 0;
+							while((byte(tempData, iMarker6 - 1) = byte("\x5C", 1)) && (iCounter1 <= 10))
+							{
+								iMarker6 = find("\x22", tempData, iMarker6 + 1);
+								iCounter1 = iCounter1 + 1;
+							}
+						}
+					}
+				}
+			}
+			if((iMarker3 <> 0) && (iMarker4 <> 0))
+			{
+				sTempNumber = mid(tempData, iMarker3 + 1, iMarker4 - iMarker3);
+				iMarker7 = find("\x22", sTempNumber);
+				if((iMarker7 > 0) && (byte(tempData, iMarker7 - 1) = byte("\x5C", 1)))
+				{
+					iMarker8 = find("\x22", sTempNumber, iMarker7 + 1);
+				}
+				if((iMarker8 > 0) && (byte(tempData, iMarker8 - 1) = byte("\x5C", 1)))
+				{
+					makestring(sTempNumber, "%s%s%s", left(sTempNumber, iMarker7 - 2), mid(sTempNumber, iMarker7, (iMarker8 -  2) - iMarker7), right(sTempNumber, len(sTempNumber) - iMarker8 + 1));
+				}
+				sTempNumber = left(sTempNumber, (len(sTempNumber) - 1));
+			}
+			else
+			{
+				sTempNumber = "";
+			}
+			if((iMarker5 <> 0) && (iMarker6 <> 0))
+			{
+				sTempName = mid(tempData, iMarker5 + 1, iMarker6 - iMarker5);
+				iMarker7 = find("\x22", sTempName);
+				if((iMarker7 > 0) && (byte(tempData, iMarker7 - 1) = byte("\x5C", 1)))
+				{
+					iMarker8 = find("\x22", sTempName, iMarker7 + 1);
+				}
+				if((iMarker8 > 0) && (byte(tempData, iMarker8 - 1) = byte("\x5C", 1)))
+				{
+					makestring(sTempName, "%s%s%s", left(sTempName, iMarker7 - 2), mid(sTempName, iMarker7, (iMarker8 -  2) - iMarker7), right(sTempName, len(sTempName) - iMarker8 + 1));
+				}
+				sTempName = left(sTempName, len(sTempName) - 1);
+			}
+			else
+			{
+				sTempName = "";
+			}
+			Caller_ID_Number_Text = sTempNumber;
+			Caller_ID_Name_Text = sTempName;
+		}
+		else
+		{
+			sTempNumber = "";
+			sTempName = "";
+			Caller_ID_Number_Text = sTempNumber;
+			Caller_ID_Name_Text = sTempName;
+		}
+	}
+	else if(find("RING", tempData) > 0)
+	{
+		errorReceived = 0;
+		Error = errorReceived;
+		iIncoming = 1;
+		Incoming_Call = iIncoming;
+		fIncomingCallTimeOut();
+		delay(100);
+		makestring(returnString, "GETD %s TICIDUSER %s\x0A", Address$, sInstance);
+		makestring(sCallerIDCompare$, "#GETD %s TICIDUSER %s\x20", Address$, sInstance);
+	}
+	return(returnString);
+}
+
+PUSH On_Hook
+{
+	if(errorReceived = 0)
+	{
+		makestring(To_Device, "SET %s TIHOOKSTATE %s 1\x0A", Address$, sInstance);
+		delay(OFFTOON);
+		makestring(To_Device, "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);
+		makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+		if(iIncoming = 1)
+		{
+			cancelwait(wIncomingCallTimeOut);
+			iIncoming = 0;
+			Incoming_Call = iIncoming;
+			sTempNumber = "";
+			sTempName = "";
+			Caller_ID_Number_Text = sTempNumber;
+			Caller_ID_Name_Text = sTempName;
+		}
+	}
+}
+
+PUSH Off_Hook
+{
+	if(errorReceived = 0)
+	{
+		makestring(To_Device, "SET %s TIHOOKSTATE %s 0\x0A", Address$, sInstance);
+		delay(ONTOOFF);
+		makestring(To_Device, "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);
+		makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+		if(iIncoming = 1)
+		{
+			cancelwait(wIncomingCallTimeOut);
+			iIncoming = 0;
+			Incoming_Call = iIncoming;
+		}
+	}
+}
+
+PUSH Clear_Last#_Dialed
+{
+	ClearBuffer(Last_Num_Dialed$);
+}
+
+PUSH Dial
+{
+	if((len(TempDial$) > 0) && (iHook = 1) && (errorReceived = 0))
+	{
+		makestring(To_Device, "%s%s\x0A", sHeader, TempDial$);
+		Last_Num_Dialed$ = TempDial$;
+		delay(ONTOOFF);
+		makestring(To_Device, "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);
+		makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+	}
+}
+	
+PUSH ReDial
+{
+	if((len(Last_Num_Dialed$) > 0) && (iHook = 1) && (errorReceived = 0))
+	{
+		makestring(To_Device, "%s%s\x0A", sHeader, Last_Num_Dialed$);
+		Phone_Number$ = Last_Num_Dialed$;
+		delay(ONTOOFF);
+		makestring(To_Device,  "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);
+		makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+	}
+}
+
+CHANGE Header$
+{
+	sHeader = header$;
+}
+
+PUSH KeyboardGo
+{
+	if((iHook = 0) && (errorReceived = 0))
+	{
+		if(len(TempDial$) < MaxCharacters)
+		{
+			TempDial$ = TempDial$ + chr(KeyboardAn);
+			Phone_Number$ = TempDial$;
+			Last_Num_Dialed$ = TempDial$;
+			makestring(To_Device,  "%s%s\x0A", sHeader, chr(KeyBoardAn));
+		}
+		else if(len(TempDial$) >= MaxCharacters)
+		{
+			TempDial$ = right(TempDial$, MaxCharacters - 1);
+			TempDial$ = TempDial$ + chr(KeyboardAn);
+			Phone_Number$ = TempDial$;
+			Last_Num_Dialed$ = TempDial$;
+			makestring(To_Device,  "%s%s\x0A", sHeader, chr(KeyBoardAn));
+		}
+	}
+	else if(iHook = 1) 
+	{
+		if(len(TempDial$) < MaxCharacters)
+		{
+			TempDial$ = TempDial$ + chr(KeyboardAn);
+			Phone_Number$ = TempDial$;
+		}
+		else if(len(TempDial$) >= MaxCharacters)
+		{
+			TempDial$ = right(TempDial$, MaxCharacters - 1);
+			TempDial$ = TempDial$ + chr(KeyboardAn);
+			Phone_Number$ = TempDial$;
+		}
+	}
+}
+
+PUSH Clear
+{
+	ClearBuffer(TempDial$);
+	Phone_number$ = "";
+}
+    
+PUSH Back
+{
+	if(len(TempDial$) > 0)
+	{
+		TempDial$ = left(TempDial$, len(TempDial$) - 1);
+		Phone_Number$ = TempDial$;
+	}
+}
+	
+Push Presets
+{
+	integer Index;
+	if(errorReceived = 0)
+	{
+		Index = getlastmodifiedarrayindex();
+		if(iHook = 1)
+		{
+			if(len(Preset_Ram[Index]) > 1)
+			{
+				Phone_Number$ = Preset_Ram[Index];
+				makestring(To_Device, "%s%s\x0A", sHeader, Preset_Ram[Index]);
+				wait(300)
+				{
+					makestring(To_Device, "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);		
+					makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+				}
+			}
+		}
+	}
+}
+
+Push Preset_Store
+{
+	Preset_Ram[aPreset] = TempDial$;
+}
+
+Push Get_Names
+{
+	Integer a;
+	if(errorReceived = 0)
+	{
+		for(a = 1 to ciMAXENTRIES)
+		{
+			makestring(To_Device, "GETD %s TISDLABEL %s %u\x0A", Address$, sInstance, a);
+			makestring(sLabelCompare$, "#GETD %s TISDLABEL %s\x20", Address$, sInstance);
+		}
+	}
+}
+
+Push First
+{
+	Integer iO;
+	iOffset = 0;
+	for(iO = (iOffset + 1) to (iOffset + iEntriesPerPage))
+	{
+		iDisplayEntryNumber[iO] = iO;
+		Entry_Name$[iO] = sEntryName[iO];
+	}
+}
+
+Push Scroll_Up
+{
+	Integer iO;
+	if(iOffset > 0)
+	{
+		iOffset = iOffset - 1;
+		for(iO = (iOffset + 1) to (iOffset + iEntriesPerPage))
+		{
+			iDisplayEntryNumber[iO] = iO;
+			Entry_Name$[iO] = sEntryName[iO];
+		}
+	}
+}
+
+Push Scroll_Down
+{
+	Integer iO;
+	iOffset = iOffset + 1;
+	if(iOffset <= (ciMAXENTRIES - iEntriesPerPage))
+	{
+		for(iO = (iOffset + 1) to (iOffset + iEntriesPerPage))
+		{
+			iDisplayEntryNumber[iO] = iO;
+			Entry_Name$[iO] = sEntryName[iO];
+		}
+	}
+	else
+	{
+		iOffset = iOffset - 1;
+	}
+}
+
+Push Poll
+{
+	makestring(To_Device, "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);		
+	makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+}
+
+Push Dial_Entry
+{
+	Integer iTemp;
+	if(errorReceived = 0)
+	{
+		iTemp = getlastmodifiedarrayindex();
+		makestring(To_Device, "DIAL %s TISPEEDDIAL %s %u\x0A", Address$, sInstance, iDisplayEntryNumber[iTemp + iOffset]);
+		wait(300)
+		{
+			makestring(To_Device, "GETD %s TIHOOKSTATE %s\x0A", Address$, sInstance);
+			makestring(sHookStateCompare$, "#GETD %s TIHOOKSTATE %s\x20", Address$, sInstance);
+		}
+	}
+}
+
+CHANGE Instance$
+{
+	if(find("\x20", Instance$) > 0)
+	{
+		makestring(sInstance, "\x22%s\x22", left(Instance$, 50));
+	}
+	else
+	{
+		sInstance = left(Instance$, 50);
+	}
+	makestring(To_Device, "%s=%s\x0D\x0A", sSendName, sInstance);
+}
+
+#if_series3
+threadsafe CHANGE From_SMPL$
+{
+	string Temp$[100], tempSend[250];
+	
+	while(1)
+	{
+		try
+		{
+			Temp$ = gather("\n", FROM_SMPL$);
+			tempSend = processData(temp$);
+			if(len(tempSend) > 0)
+			{
+				To_Device = tempSend;
+				tempSend = "";
+			}
+			Temp$ = "";
+		}
+		catch
+		{
+			generateusernotice("BiAmp Dialer: From_SMPL$: trouble parsing: %s", getexceptionmessage());
+		}
+	}
+}
+#else
+integer Semaphore;
+CHANGE From_SMPL$
+{
+	string Temp$[100], tempSend[250];
+	integer iA, iP, iEntry, iB;
+	
+	if(Semaphore = 0)
+	{
+		Semaphore = 1; 
+		while(1)
+		{
+			Temp$ = gather("\n", FROM_SMPL$);
+			tempSend = processData(temp$);
+			if(len(tempSend) > 0)
+			{
+				To_Device = tempSend;
+				tempSend = "";
+			}
+			Temp$ = "";
+		}
+		Semaphore = 0;
+	}
+}
+#ENDIF	
+Change Entries_Per_Page
+{
+	Start_Up_Out = 0;
+	if(Entries_Per_Page <= ciMAXENTRIES)
+	{
+		iEntriesPerPage = Entries_Per_Page;
+	}
+	else
+	{
+		iEntriesPerPage = ciMAXENTRIES;
+	}
+}
+
+Function Main()
+{
+	waitforinitializationcomplete();
+#if_series2
+	Semaphore = 0;
+#endif
+	clearbuffer(sHeader);
+	errorReceived = 0;
+	Error = errorReceived;
+	iPreset = 0;
+	Phone_Number$ = "";
+	TempDial$ = "";
+	iOffset = 0;
+	iHook = 1;
+	Off_Hook_FB = 0;
+	On_Hook_FB = 1;
+	iIncoming = 0;
+	Incoming_Call = iIncoming;
+	sTempNumber = "";
+	sTempName = "";
+	Caller_ID_Number_Text = sTempNumber;
+	Caller_ID_Name_Text = sTempName;
+}

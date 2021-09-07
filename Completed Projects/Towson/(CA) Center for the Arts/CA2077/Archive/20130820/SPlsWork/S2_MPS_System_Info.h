@@ -1,0 +1,174 @@
+#ifndef __S2_MPS_SYSTEM_INFO_H__
+#define __S2_MPS_SYSTEM_INFO_H__
+
+
+
+
+/*
+* Constructor and Destructor
+*/
+
+/*
+* DIGITAL_INPUT
+*/
+#define __S2_MPS_System_Info_GO_DIG_INPUT 0
+
+
+/*
+* ANALOG_INPUT
+*/
+
+#define __S2_MPS_System_Info_IPAIN$_STRING_INPUT 0
+#define __S2_MPS_System_Info_IPAIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __IPAIN$, __S2_MPS_System_Info_IPAIN$_STRING_MAX_LEN );
+#define __S2_MPS_System_Info_IPMIN$_STRING_INPUT 1
+#define __S2_MPS_System_Info_IPMIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __IPMIN$, __S2_MPS_System_Info_IPMIN$_STRING_MAX_LEN );
+#define __S2_MPS_System_Info_DEFRIN$_STRING_INPUT 2
+#define __S2_MPS_System_Info_DEFRIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __DEFRIN$, __S2_MPS_System_Info_DEFRIN$_STRING_MAX_LEN );
+#define __S2_MPS_System_Info_DHCPIN$_STRING_INPUT 3
+#define __S2_MPS_System_Info_DHCPIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __DHCPIN$, __S2_MPS_System_Info_DHCPIN$_STRING_MAX_LEN );
+#define __S2_MPS_System_Info_WINSIN$_STRING_INPUT 4
+#define __S2_MPS_System_Info_WINSIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __WINSIN$, __S2_MPS_System_Info_WINSIN$_STRING_MAX_LEN );
+#define __S2_MPS_System_Info_HOSTNAMEIN$_STRING_INPUT 5
+#define __S2_MPS_System_Info_HOSTNAMEIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __HOSTNAMEIN$, __S2_MPS_System_Info_HOSTNAMEIN$_STRING_MAX_LEN );
+#define __S2_MPS_System_Info_DOMAINNAMEIN$_STRING_INPUT 6
+#define __S2_MPS_System_Info_DOMAINNAMEIN$_STRING_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __DOMAINNAMEIN$, __S2_MPS_System_Info_DOMAINNAMEIN$_STRING_MAX_LEN );
+
+#define __S2_MPS_System_Info_FROMCONSOLE$_BUFFER_INPUT 7
+#define __S2_MPS_System_Info_FROMCONSOLE$_BUFFER_MAX_LEN 1000
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __FROMCONSOLE$, __S2_MPS_System_Info_FROMCONSOLE$_BUFFER_MAX_LEN );
+
+
+/*
+* DIGITAL_OUTPUT
+*/
+#define __S2_MPS_System_Info_BUSY_DIG_OUTPUT 0
+#define __S2_MPS_System_Info_ERROR_DIG_OUTPUT 1
+
+
+/*
+* ANALOG_OUTPUT
+*/
+
+#define __S2_MPS_System_Info_OPS$_STRING_OUTPUT 0
+#define __S2_MPS_System_Info_PROGRAM$_STRING_OUTPUT 1
+#define __S2_MPS_System_Info_COMPILED$_STRING_OUTPUT 2
+#define __S2_MPS_System_Info_IPA$_STRING_OUTPUT 3
+#define __S2_MPS_System_Info_IPM$_STRING_OUTPUT 4
+#define __S2_MPS_System_Info_DEFR$_STRING_OUTPUT 5
+#define __S2_MPS_System_Info_DHCP$_STRING_OUTPUT 6
+#define __S2_MPS_System_Info_WINS$_STRING_OUTPUT 7
+#define __S2_MPS_System_Info_VERSION$_STRING_OUTPUT 8
+#define __S2_MPS_System_Info_MAC$_STRING_OUTPUT 9
+#define __S2_MPS_System_Info_HOSTNAME$_STRING_OUTPUT 10
+#define __S2_MPS_System_Info_DOMAINNAME$_STRING_OUTPUT 11
+#define __S2_MPS_System_Info_DNS1$_STRING_OUTPUT 12
+#define __S2_MPS_System_Info_DNS2$_STRING_OUTPUT 13
+#define __S2_MPS_System_Info_TIME_DATE$_STRING_OUTPUT 14
+#define __S2_MPS_System_Info_TOCONSOLE$_STRING_OUTPUT 15
+
+
+/*
+* Direct Socket Variables
+*/
+
+
+
+
+/*
+* INTEGER_PARAMETER
+*/
+/*
+* SIGNED_INTEGER_PARAMETER
+*/
+/*
+* LONG_INTEGER_PARAMETER
+*/
+/*
+* SIGNED_LONG_INTEGER_PARAMETER
+*/
+/*
+* INTEGER_PARAMETER
+*/
+/*
+* SIGNED_INTEGER_PARAMETER
+*/
+/*
+* LONG_INTEGER_PARAMETER
+*/
+/*
+* SIGNED_LONG_INTEGER_PARAMETER
+*/
+/*
+* STRING_PARAMETER
+*/
+
+
+/*
+* INTEGER
+*/
+
+
+/*
+* LONG_INTEGER
+*/
+
+
+/*
+* SIGNED_INTEGER
+*/
+
+
+/*
+* SIGNED_LONG_INTEGER
+*/
+
+
+/*
+* STRING
+*/
+#define __S2_MPS_System_Info_TEMPSTRING$_STRING_MAX_LEN 200
+CREATE_STRING_STRUCT( S2_MPS_System_Info, __TEMPSTRING$, __S2_MPS_System_Info_TEMPSTRING$_STRING_MAX_LEN );
+
+/*
+* STRUCTURE
+*/
+
+START_GLOBAL_VAR_STRUCT( S2_MPS_System_Info )
+{
+   void* InstancePtr;
+   struct GenericOutputString_s sGenericOutStr;
+   unsigned short LastModifiedArrayIndex;
+
+   unsigned short __MARKER1;
+   unsigned short __MARKER2;
+   unsigned short __SEMAPHORE;
+   unsigned short __COUNTER;
+   unsigned short __BUSYINT;
+   unsigned short __COUNT;
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __TEMPSTRING$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __IPAIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __IPMIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __DEFRIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __DHCPIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __WINSIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __HOSTNAMEIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __DOMAINNAMEIN$ );
+   DECLARE_STRING_STRUCT( S2_MPS_System_Info, __FROMCONSOLE$ );
+};
+
+START_NVRAM_VAR_STRUCT( S2_MPS_System_Info )
+{
+};
+
+DEFINE_WAITEVENT( S2_MPS_System_Info, __SPLS_TMPVAR__WAITLABEL_0__ );
+
+
+#endif //__S2_MPS_SYSTEM_INFO_H__
+

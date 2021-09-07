@@ -1,0 +1,17 @@
+<Device Model="CP4N">
+   <Network Type="Cresnet" Id="01"/>
+   <Network Type="Ethernet" Id="02">
+      <Device Model="TSW-760" DeviceId="05"/>
+      <Device Model="DM-NVX-E30" DeviceId="41" Name="Lec Computer"/>
+      <Device Model="DM-NVX-E30" DeviceId="42" Name="BluRay"/>
+      <Device Model="DM-NVX-E30" DeviceId="43" Name="Laptop"/>
+      <Device Model="DM-NVX-E760" DeviceId="44" Name="Control Room"/>
+      <Device Model="DM-NVX-E30" DeviceId="45" Name="Cam1"/>
+      <Device Model="DM-NVX-E30" DeviceId="46" Name="Cam2"/>
+      <Device Model="DM-NVX-36x" DeviceId="51" Name="Projector"/>
+      <Device Model="DM-NVX-D30" DeviceId="52" Name="SMP1"/>
+      <Device Model="DM-NVX-D30" DeviceId="53" Name="SMP2"/>
+      <Device Model="DM-NVX-D30" DeviceId="54" Name="MediaPort1"/>
+      <Device Model="DM-NVX-D30" DeviceId="55" Name="Mediaport2"/>
+   </Network>
+</Device>

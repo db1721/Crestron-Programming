@@ -1,0 +1,94 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=CresSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.02.20
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=||2This module provides control and true feedback for the Sanyo PLC-
+  Cmn2=XU100 LCD projector.
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,310,718,756,854,
+  Exclusions_CDS=6
+  Inclusions_CDS=5
+  Name=Sanyo PLC-XU100 Feedback Processor (cm)
+  SmplCName=Sanyo PLC-XU100 Feedback Processor.csp
+  Code=1
+  InputCue1=Volume_Up
+  InputSigType1=Digital
+  InputCue2=Volume_Down
+  InputSigType2=Digital
+  OutputCue1=Volume_Ramp_Done
+  OutputSigType1=Digital
+  InputList2Cue1=From_Module$
+  InputList2SigType1=Serial
+  InputList2Cue2=From_Device$
+  InputList2SigType2=Serial
+  OutputList2Cue1=Power_In
+  OutputList2SigType1=Analog
+  OutputList2Cue2=Input_In
+  OutputList2SigType2=Analog
+  OutputList2Cue3=Video_Mute_In
+  OutputList2SigType3=Analog
+  OutputList2Cue4=Aspect_In
+  OutputList2SigType4=Analog
+  OutputList2Cue5=Volume_In
+  OutputList2SigType5=Analog
+  OutputList2Cue6=Audio_Mute_In
+  OutputList2SigType6=Analog
+  OutputList2Cue7=Image_In
+  OutputList2SigType7=Analog
+  OutputList2Cue8=Freeze_In
+  OutputList2SigType8=Analog
+  OutputList2Cue9=Lamp_Hours_In
+  OutputList2SigType9=Analog
+  ParamCue1=[Reference Name]
+  MinVariableInputs=2
+  MaxVariableInputs=2
+  MinVariableInputsList2=2
+  MaxVariableInputsList2=2
+  MinVariableOutputs=1
+  MaxVariableOutputs=1
+  MinVariableOutputsList2=9
+  MaxVariableOutputsList2=9
+  MinVariableParams=0
+  MaxVariableParams=0
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=0
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  MPp=1
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_Sanyo_PLC_XU100_Feedback_Processor
+  SymJam=NonExclusive
+  FileName=Sanyo PLC-XU100 Feedback Processor.csh
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
